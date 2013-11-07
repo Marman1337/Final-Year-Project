@@ -17,8 +17,8 @@
 function vad = harmfreq_MOLRT_VAD(y,fs)
 
 % Parameters that one could tune for desired performance/application  
-winTime = 0.025; % frame length (sec)
-shiftTime = 0.005; % frame shift (sec)
+winTime = 0.05; % frame length (sec)
+shiftTime = 0.01; % frame shift (sec)
 M = 8; % No. of single-observation (SO) LRs to sum over to obtain the 
         % multiple-observation (MO) LR
 thres = 20; % threshold for miss/FA trade-off
@@ -183,8 +183,8 @@ if nargin == 2, scale = 0; end
 %[w,ierr] = besselmx(double('I'),nu,z,scale); % original code - does not work
 %w = besselj(nu,z); % Bessel function of the 1st kind
 %w = besseli(nu,z); % Modified Bessel function of the 1st kind
-%w = bessely(nu,z); % Bessel function of the 2nd kind
-w = besselk(nu,z); % Modified Bessel function of the 2nd kind
+w = bessely(nu,z); % Bessel function of the 2nd kind
+%w = besselk(nu,z); % Modified Bessel function of the 2nd kind
 %w = besselh(nu,z); % Bessel function of the 3rd kind
 % clean up w in case besselmx left an all-zero imaginary part
 if ~isempty(w) && all(all(imag(w) == 0)), w = real(w); end
