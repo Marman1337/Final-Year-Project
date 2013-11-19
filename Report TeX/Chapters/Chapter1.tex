@@ -76,21 +76,19 @@ Figure \ref{fig:VADStructure} shows a high-level structure of a Voice Activity D
 
 \subsection{Pre-processing}
 
-Describe pre-processing
+The noisy speech signal is first passed to a pre-processing module which might perform a variety of tasks before the actual voice detection takes place. The module might perform noise estimation and suppression in the signal in order to improve performance of the VAD. Additionally, during pre-processing the input signal is often split into frames which are typically 10-50 ms long.
 
 \subsection{Feature Extraction}
 
-Describe feature extraction
+The purpose of the feature extraction module is to compute the speech features for each frame which are suitable for for the speech/non-speech classification. These can be time-domain [ADD REFERENCE], frequency-domain [ADD REFERENCE], cepstral-domain [ADD REFERENCE] features or other, depending on the specific VAD algorithm. Ideally, in order to acheve the overall VAD system robustness, the selected signal characteristics should not be easily corruptible by the background noise. Additionally, the algorithms for feature extraction should be of low computational complexity for their potential usefulness in real-time applications. The output of this module is therefore a vector $\mathbf{x}$ of features for each of the frames computed in the pre-processing stage.
 
 \subsection{Classification}
 
-Describe classification
+The classification module assigns a binary class (speech/non-speech) to each frame based on the feature vector $\mathbf{x}$ received from the previous processing stage. Classification might be based on a variety of decision rules, ranging from simple thresholding [ADD REFERENCE] to more advanced methods such as statistical likelihood ratio tests [ADD REFERENCE] or machine learning [ADD REFERENCE]. Obviously, the classifier performance degrades with the increasing power of the background noise, therefore there is a need also at this stage for a robust decision making rule. Some researchers [ADD REFERENCE] considered a combination of multiple decision rules in making the final classification.
 
 \subsection{Post-processing}
 
-Describe post-processing
-
-The noisy speech signal is passed to a pre-processing module which might perform a variety of tasks, including noise suppression in order to improve the performance of the actual VAD algorithm. Additionally, during pre-processing the signal is often split into frames which are typically 20-100 ms long. In the next step, a number of features is calculated for each frame. These can be time-domain, frequency-domain, cepstral-domain features or other, depending on the specific VAD algorithm. The extracted information is passed to a classification module, which makes a decision whether to label each frame as speech or non-speech. The classification can be based on a variety of decision rules, starting from simple thresholding to more advanced methods such as machine learning or statistics. The last block, post-processing, often tries to \emph{smooth} the VAD decisions in order to reduce the number of false positives and false negatives. For example, if among 50 consecutive frames, each of 20 ms duration, only one is classified as speech, the post-processing module might change the decision for this particular frame, since it is highly unlikely for speech to be active during such short-time window.
+The last module, post-processing, often tries to \emph{smooth} the VAD decisions in order to reduce the number of false positives and false negatives. For example, if among 50 consecutive frames, each of 20 ms duration, only one is classified as speech, the post-processing module might change the decision for this particular frame, since it is highly unlikely for speech to be active during such short-time window.
 
 %----------------------------------------------------------------------------------------
 %	SECTION 4 - Thesis organisation
