@@ -38,15 +38,15 @@ In Automatic Speech Recognition (ASR), it is of importance to first extract the 
 
 \subsection{Speech Coding and Transmission}
 
-It has been calculated that during a typical phone conversation each person speaks, on average, no more than 50\% of the time \citep{GSMControl}. Therefore, signal transmission would be greatly optimised if each transmitter could be switched-off half of the time, causing the system capacity to double. Such approach is known as discontinuous transmission (DTX). Alternatively, a dual-mode encoding technique could be employed, which uses a higher bit-rate for coding the voice-active frames and lower for silence/noise.
+A typical phone conversation involves each person speaking on average no more than 50\% of the time \citep{GSMControl}. Using this fact it can be concluded that signal transmission would be greatly optimised if each transmitter was switched-off half of the time. Such approach could cause the overall system capacity to double. The technique of interrupted transmission during periods of silence is known as discontinuous transmission (DTX). In order to work properly, it requires a precise Voice Activity Detection to direct the operation of a transmitter between being switched on or off. As an alternate method to stopping the transmission, a dual-mode encoding technique could be employed, which uses a higher bit-rate for coding the voice-active frames and lower for silence/noise. The latter is precisely what the popular ITU-T G.729 Annex B \cite{G729} standard does, transmitting the voice-active parts at a fixed bit rate of 8 kb/s while the noisy ones at only 15 b/frame.
 
-Figure \ref{fig:DTXVAD} shows a structure of a dual-mode coding and transmission system, in which the VAD module is used to direct the incoming signal into either the active or inactive speech encoder. The noise can be either transmitted at a much lower bit-rate or the transmission might be switched off completely. In case of a stopped transmission, the receiving end often implements a \emph{comfort noise} \citep{GSMControl,RamirezGorriz} generation module, which creates a synthetic signal similar to the background noise at the transmitter so that the listener does not notice the rapid, inconvenient switching during the conversation.
+Figure \ref{fig:DTXVAD} shows a structure of a dual-mode coding and transmission system, in which the VAD module is used to direct the incoming signal into either the active or inactive speech encoder. The noise can be either transmitted at a much lower bit-rate or the transmission might be switched off completely. In case of a stopped transmission, the receiving end often implements a \emph{comfort noise} \citep{GSMControl,G729,RamirezGorriz} generation module, which creates a synthetic signal similar to the background noise at the transmitter so that the listener does not notice the rapid, inconvenient switching during the conversation.
 
 \begin{figure}[htbp]
 	\centering
 		\includegraphics[width=1\columnwidth]{Figures/DTXVAD.png}
 		\rule{37em}{0.5pt}
-	\caption[Dual-mode transmission system with Voice Activity Detection module]{Block diagram of an dual-mode transmission system with Voice Activity Detection module \cite{RamirezGorriz}}
+	\caption[Dual-mode transmission system with Voice Activity Detection module]{Block diagram of an dual-mode transmission system with Voice Activity Detection module \cite{G729}}
 	\label{fig:DTXVAD}
 \end{figure}
 
@@ -56,7 +56,7 @@ Speech enhancement aims to improve the intelligibility and quality of speech sig
 \begin{equation}
 |S(f)| = |Y(f)| - |N(f)|
 \end{equation}
-where $|Y(f)|$ is the amplitude spectrum of the corrupted speech, $|S(f)|$ of the clean speech and $|N(f)|$ of the noise. In order for this technique to work, the noise needs to be additive, stationary and uncorrelated with the clean speech signal. Additionally, one needs to know the spectrum of the noise, which in real-world applications where a variety of different noise types are encountered, is a nontrivial problem. A robust Voice Activity Detector can become very useful in this task by identifying the voice-inactive frames of a signal from which the noise statistics could be estimated.
+where $|Y(f)|$ is the amplitude spectrum of the corrupted speech, $|S(f)|$ of the clean speech and $|N(f)|$ of the noise. In order for this technique to work, the noise needs to be additive, stationary and uncorrelated with the clean speech signal. Additionally, one needs to estimate the spectrum of the noise, which in real-world applications where a variety of different, often nonstationary, noise types are encountered, is a nontrivial problem. A robust Voice Activity Detector can become very useful in this task by identifying the voice-inactive frames of a signal from which the noise statistics could be estimated. A precise VAD can also become useful in applications dealing with slowly varying piecewise stationary noises, where the noise statistics can be adaptively estimated based on the most recent VAD decisions.
 
 %----------------------------------------------------------------------------------------
 %	SECTION 3 - Structure of a typical VAD system
@@ -64,7 +64,7 @@ where $|Y(f)|$ is the amplitude spectrum of the corrupted speech, $|S(f)|$ of th
 
 \section{Structure of a typical VAD system}
 
-Figure \ref{fig:VADStructure} shows a high-level structure of a Voice Activity Detector, however only the two middle blocks are considered a core of a typical VAD system. The noisy speech signal is passed to a pre-processing module which might perform a variety of tasks, including noise suppression in order to improve the performance of the actual VAD algorithm. Additionally, during pre-processing the signal is often split into frames which are typically 20-100 ms long each. In the next step, a number of features is calculated for each frame. These can be time-domain, frequency-domain, cepstral-domain or other, depending on the specific VAD algorithm. The extracted features are passed to a classification module, which makes a decision whether to label each frame as speech or non-speech. The classification can be based on a variety of techniques, starting from simple thresholding to more advanced methods such as machine learning or statistics. The last block, post-processing, often tries to \emph{smooth} the VAD decisions in order to reduce the number of false positives and false negatives. For example, if during 50 frames, each of 20 ms long, only one is classified as speech, the post-processing module might actually change the decision for this frame, since it is highly unlikely for speech to be active during such short time-window.
+Figure \ref{fig:VADStructure} shows a high-level structure of a Voice Activity Detector, however only the two middle blocks are considered a core of a typical VAD system.
 
 \begin{figure}[htbp]
 	\centering
@@ -73,6 +73,24 @@ Figure \ref{fig:VADStructure} shows a high-level structure of a Voice Activity D
 	\caption[Block diagram of a typical Voice Activity Detection system]{Block diagram of a typical Voice Activity Detection system}
 	\label{fig:VADStructure}
 \end{figure}
+
+\subsection{Pre-processing}
+
+Describe pre-processing
+
+\subsection{Feature Extraction}
+
+Describe feature extraction
+
+\subsection{Classification}
+
+Describe classification
+
+\subsection{Post-processing}
+
+Describe post-processing
+
+The noisy speech signal is passed to a pre-processing module which might perform a variety of tasks, including noise suppression in order to improve the performance of the actual VAD algorithm. Additionally, during pre-processing the signal is often split into frames which are typically 20-100 ms long. In the next step, a number of features is calculated for each frame. These can be time-domain, frequency-domain, cepstral-domain features or other, depending on the specific VAD algorithm. The extracted information is passed to a classification module, which makes a decision whether to label each frame as speech or non-speech. The classification can be based on a variety of decision rules, starting from simple thresholding to more advanced methods such as machine learning or statistics. The last block, post-processing, often tries to \emph{smooth} the VAD decisions in order to reduce the number of false positives and false negatives. For example, if among 50 consecutive frames, each of 20 ms duration, only one is classified as speech, the post-processing module might change the decision for this particular frame, since it is highly unlikely for speech to be active during such short-time window.
 
 %----------------------------------------------------------------------------------------
 %	SECTION 4 - Thesis organisation
