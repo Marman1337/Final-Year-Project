@@ -74,9 +74,9 @@
 %----------------------------------------------------------------------------------------
 %	MARGINS
 %----------------------------------------------------------------------------------------
-\setmarginsrb           { 1.5in}  % left margin
+\setmarginsrb           { 1.2in}  % left margin
                         { 1in}  % top margin
-                        { 1.5in}  % right margin
+                        { 1.2in}  % right margin
                         { 1in}  % bottom margin
                         {  20pt}  % head height
                         {0.25in}  % head sep
