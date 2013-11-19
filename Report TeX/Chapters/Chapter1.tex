@@ -64,7 +64,7 @@ where $|Y(f)|$ is the amplitude spectrum of the corrupted speech, $|S(f)|$ of th
 
 \section{Structure of a typical VAD system}
 
-Figure \ref{fig:VADStructure} shows a high-level structure of a Voice Activity Detector, however only the two middle blocks are considered a core of a typical VAD system. The noisy speech signal is passed to a pre-processing module which might perform a variety of processing tasks, including noise estimation and suppression in order to improve the performance of the actual VAD algorithm. Additionally, during pre-processing the signal is often split into frames which are typically 20-100 ms long. In the next step, 
+Figure \ref{fig:VADStructure} shows a high-level structure of a Voice Activity Detector, however only the two middle blocks are considered a core of a typical VAD system. The noisy speech signal is passed to a pre-processing module which might perform a variety of tasks, including noise suppression in order to improve the performance of the actual VAD algorithm. Additionally, during pre-processing the signal is often split into frames which are typically 20-100 ms long each. In the next step, a number of features is calculated for each frame. These can be time-domain, frequency-domain, cepstral-domain or other, depending on the specific VAD algorithm. The extracted features are passed to a classification module, which makes a decision whether to label each frame as speech or non-speech. The classification can be based on a variety of techniques, starting from simple thresholding to more advanced methods such as machine learning or statistics. The last block, post-processing, often tries to \emph{smooth} the VAD decisions in order to reduce the number of false positives and false negatives. For example, if during 50 frames, each of 20 ms long, only one is classified as speech, the post-processing module might actually change the decision for this frame, since it is highly unlikely for speech to be active during such short time-window.
 
 \begin{figure}[htbp]
 	\centering
@@ -73,3 +73,9 @@ Figure \ref{fig:VADStructure} shows a high-level structure of a Voice Activity D
 	\caption[Block diagram of a typical Voice Activity Detection system]{Block diagram of a typical Voice Activity Detection system}
 	\label{fig:VADStructure}
 \end{figure}
+
+%----------------------------------------------------------------------------------------
+%	SECTION 4 - Thesis organisation
+%----------------------------------------------------------------------------------------
+
+\section{Thesis organisation}
