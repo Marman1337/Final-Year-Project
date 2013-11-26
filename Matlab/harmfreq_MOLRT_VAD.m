@@ -18,7 +18,7 @@ function vad = harmfreq_MOLRT_VAD(y,fs)
 
 % Parameters that one could tune for desired performance/application  
 winTime = 0.05; % frame length (sec)
-shiftTime = 0.01; % frame shift (sec)
+shiftTime = 0.05; % frame shift (sec)
 M = 8; % No. of single-observation (SO) LRs to sum over to obtain the 
         % multiple-observation (MO) LR
 thres = 20; % threshold for miss/FA trade-off
