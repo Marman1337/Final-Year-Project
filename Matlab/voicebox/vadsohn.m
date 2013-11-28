@@ -271,6 +271,7 @@ if nargout>1
     zo.nv=nv+nd+nb;                      % number of previous speech samples
 end
 if (~nargout || any(m=='p')) && nr>0
+    figure;
     ax=subplot(212);
     plot((nv+nd+[0 nr*ni])/fs,[qq.pr qq.pr],'r:',(nv+nd+ni*nj/2+(0:nw-1)*ni*nj)/fs,max(reshape(prsp(1:nw*nj),nj,[]),[],1).','b-' );
     set(gca,'ylim',[-0.05 1.05]);
@@ -278,6 +279,7 @@ if (~nargout || any(m=='p')) && nr>0
     ylabel('Pr(speech)');
     ax(2)=subplot(211);
     plot((nv+(1:ns))/fs,s);
+    hold on; plot((nv+(1:ns))/fs,1.1.*max(s).*vs,'g');
     ylabel('Speech');
     title('Sohn VAD');
     linkaxes(ax,'x');
