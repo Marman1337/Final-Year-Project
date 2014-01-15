@@ -22,13 +22,18 @@ for i=1:size(pn,1)
     % perform VAD on the noisy speech using
     % (1) no speech enhancement
     %[ noEnhance, noEnhancepre ] = sohn1VAD(noisySpeech,fs,0.05,0);
-    [ noEnhance, noEnhancepre ] = simpleVAD(noisySpeech,fs,0.05,0);
+    %[ noEnhance, noEnhancepre ] = simpleVAD(noisySpeech,fs,0.05,0);
+    [ noEnhance, noEnhancepre ] = LTSDVAD(noisySpeech,fs,0.05,0);
+    
     % (2) spectral subtraction speech enhancement
     %[ enhancesub, enhancesubpre ] = sohn1VAD(noisySpeech,fs,0.05,1);
-    [ enhancesub, enhancesubpre ] = simpleVAD(noisySpeech,fs,0.05,1);
+    %[ enhancesub, enhancesubpre ] = simpleVAD(noisySpeech,fs,0.05,1);
+    [ enhancesub, enhancesubpre ] = LTSDVAD(noisySpeech,fs,0.05,1);
+    
     % (3) MMSE speech enhancement
     %[ enhancemmse, enhancemmsepre ]  = sohn1VAD(noisySpeech,fs,0.05,2);
-    [ enhancemmse, enhancemmsepre ]  = simpleVAD(noisySpeech,fs,0.05,2);
+    %[ enhancemmse, enhancemmsepre ]  = simpleVAD(noisySpeech,fs,0.05,2);
+    [ enhancemmse, enhancemmsepre ]  = LTSDVAD(noisySpeech,fs,0.05,2);
     
     figure('units','normalized','outerposition',[0 0.04 1 0.96])
     subplot(3,1,1);
