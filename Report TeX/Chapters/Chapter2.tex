@@ -70,7 +70,7 @@ Block diagram of the AMR Option 1 VAD is presented in Figure \ref{fig:AMR1}. The
 The input signal is first passed through a series of nine band-pass filters which split the time-domain signal into different frequency bands based on the Table \ref{AMR1filterbank}. The signal level $level[n]$ is calculated at the output of each filter as a sum of the absolute values of all samples in the current frame. The VAD feature is then computed according to the Equation \ref{AMR1SNR}
 
 \begin{equation}
-SNR = \sum_{n=1}^{9} MAX(1.0, \frac{level[n]}{bckr\_est[n]})^{2} 
+\text{SNR} = \sum_{n=1}^{9} \max (1.0, \frac{level[n]}{bckr\_est[n]})^{2} 
 \label{AMR1SNR}
 \end{equation}
 
@@ -125,9 +125,9 @@ Block diagram of TIA/EIA IS-733 VAD is presented in Figure \ref{fig:IS733}. The 
 
 \section{Other VAD algorithms}
 
-Apart from standard VAD algorithms described in the previous section, many independent researchers have made numerous attempts to develop novel noise-robust voice detection methods. A summary of selected techniques is presented below.
+Apart from standard VAD algorithms described in the previous section, many independent researchers have made numerous attempts to develop novel noise-robust voice detection methods. A summary of selected techniques is presented below. [ADD SOME GENERAL OVERVIEW OF THE VAD ALGORITHMS HERE]
 
-\subsection{Sohn's Statistical Model-Based VAD}
+\subsection{Sohn \emph{et al.} Statistical Model-Based VAD}
 
 'A Statistical Model-Based Voice Activity Detector' proposed by Sohn \emph{et al.} \cite{Sohn} is one of the most widely cited VAD algorithms due to its ease of implementation and robustness. The initial algorithm has been developed in \cite{SohnInitial} and extended to improve noise-robustness in \citep{Sohn}. Block diagram of Sohn's VAD is presented in Figure \ref{fig:Sohn}.
 
@@ -151,6 +151,34 @@ The measure which is used for the preliminary VAD decision (i.e. before the hang
 \log \Lambda = \frac{1}{L} \sum_{k=0}^{L-1} \log \frac{1}{1+\xi_k} e^{\frac{\gamma_k\xi_k}{1+\xi_k}}
 \end{equation}
 
-where $L$ is the number of samples in each frame, $\xi_k$ is the \emph{a priori} SNR and $\gamma_k$ is the \emph{a posteriori} SNR. In order for the algorithm to work properly, one needs to estimate the $\xi_k$ and $\gamma_k$. This can be done with aid of any noise estimation procedure (e.g. \cite{MSnoise} or \cite{MMSEnoise}). The VAD feature is thresholded by an empirically determined constant for the preliminary decision.
+where $L$ is the number of samples in each frame, $\xi_k$ is the \emph{a priori} SNR and $\gamma_k$ is the \emph{a posteriori} SNR. In order for the algorithm to work properly, one needs to estimate the $\xi_k$ and $\gamma_k$. This can be done with aid of any noise estimation procedure (e.g. \cite{MSnoise} or \cite{MMSEnoise}), whose accuracy influences the noise robustness of the algorithm. The VAD feature is thresholded by an empirically determined constant for the preliminary decision.
 
-Sohn \emph{et al.} also proposed a Hidden Markov model (HMM) hang-over scheme in order to improve accuracy of the algorithm. The scheme is based on the fact that there is greater than $\frac{1}{2}$ probability of the next frame having the same classification as the previous frame than otherwise.
+Sohn \emph{et al.} also proposed a Hidden Markov model (HMM) hang-over scheme in order to improve accuracy of the algorithm for the low-energy beginnings and endings of the speech utterances. The scheme is based on the fact that there is greater than $\frac{1}{2}$ probability of the next frame having the same classification as the previous frame than otherwise.
+
+\subsection{Ramirez \emph{et al.} Long-Term Spectral Divergence VAD}
+
+Another popular and widely cited algorithm is the Ramirez \emph{et al.} \cite{LTSD} VAD based on the long-term speech information. The main assumption of the algorithm is that the most discriminative speech/non-speech information lies on the shape of the magnitude spectrum of the analysed signal. However, instead of considering each frame independently, the algorithm also includes the information contained in the neighbouring frames. This is achieved by computing the so-called long-term spectral envelope (LTSE) which incorporates information contained in the current frame as well as $N$ preceding and succeeding frames i.e. $2N+1$ frames in total for every calculation. Based on the LTSE, the long-term spectral divergence (LTSD) is calculated which serves as the VAD decision rule. In Ramirez's study, it has been established that the best performance is achieved for $N=6$ however this value is likely to be dependent on the particular application as well as the level of noise.
+
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=0.9\columnwidth]{Figures/LTSD.png}
+		\rule{37em}{0.5pt}
+	\caption[Block diagram of the Long-Term Spectral Divergence VAD]{Block diagram of the Long-Term Spectral Divergence VAD \cite{LTSD}}
+	\label{fig:LTSD}
+\end{figure}
+
+Block diagram of the LTSD-based VAD is presented in Figure \ref{fig:LTSD}. The algorithm starts with an assumption that the first $N$ frames of each utterance do not contain any speech and that the average magnitude spectrum of the noise can be estimated from them. After that, the LTSE for each frame is computed according to Equation \ref{LTSE} where $X(k,l)$ is the amplitude spectrum at frequency $k$ for frame $l$.
+
+\begin{equation}
+\text{LTSE}(k,l) = \max \left \{ X(k,l-N),\ldots,X(k,l),\ldots,X(k,l+N) \right \}
+\label{LTSE}
+\end{equation}
+
+The LTSD is obtained from Equation \ref{LTSDeq} where $M$ is the number of frequency bins in the DFT and $N(k)$ is the average noise amplitude spectrum at frequency $k$ as estimated before. Essentially what the equation describes is the average deviation of the LTSE from the noise statistics at each frequency bin. In other words, this measure might be interpreted as a variation of the estimated \emph{a posteriori} signal-to-noise ratio, which is an idea exploited in many VAD algorithms.
+
+\begin{equation}
+\text{LTSD}(l) = 10log_{10} \left ( \frac{1}{M} \sum_{k=0}^{M-1} \frac{\text{LTSE}^{2}(k,l)}{N^{2}(k)} \right )
+\label{LTSDeq}
+\end{equation}
+
+Eventually, the LTSD feature is thresholded to form a preliminary VAD decision after which the hang-over scheme is applied.
