@@ -67,11 +67,11 @@ Block diagram of the AMR Option 1 VAD is presented in Figure \ref{fig:AMR1}. The
 	\label{fig:AMR1}
 \end{figure}
 
-The input signal is first passed through a series of nine band-pass filters which split the time-domain signal into different frequency bands based on the Table \ref{AMR1filterbank}. The signal level $level[n]$ is calculated at the output of each filter as a sum of the absolute values of all samples in the current frame. The VAD feature is then computed according to the Equation \ref{AMR1SNR}
+The input signal is first passed through a series of nine band-pass filters which split the time-domain signal into different frequency bands based on the Table \ref{tab:AMR1filterbank}. The signal level $level[n]$ is calculated at the output of each filter as a sum of the absolute values of all samples in the current frame. The VAD feature is then computed according to the Equation \ref{eq:AMR1SNR}
 
 \begin{equation}
 \text{SNR} = \sum_{n=1}^{9} \max (1.0, \frac{level[n]}{bckr\_est[n]})^{2} 
-\label{AMR1SNR}
+\label{eq:AMR1SNR}
 \end{equation}
 
 where $bckr\_est[n]$ is the estimated level of noise at frequency band $n$. The VAD feature from the above equation is compared to a threshold in order to classify the current frame. The threshold is determined based on the estimated average background noise level which is the sum of $bckr\_est[n]$ for all $n$. As a final processing step, AMR Option 1 VAD includes a hang-over scheme in order to detect the low-energy endings of speech bursts.
@@ -92,7 +92,7 @@ where $bckr\_est[n]$ is the estimated level of noise at frequency band $n$. The 
 \multicolumn{1}{ |c| }{Filter 9} & 3000 - 4000 Hz \\ \hline
 \end{tabular}
 \caption[Cut-off frequencies for the ETSI AMR1 band-pass filters]{Cut-off frequencies for the ETSI AMR1 band-pass filters \citep{AMR}}
-\label{AMR1filterbank}
+\label{tab:AMR1filterbank}
 \end{table}
 
 Block diagram of ETSI AMR Option 2 VAD is presented in Figure \ref{fig:AMR2}. The concept is similar to Option 1 VAD, however the incoming signal is split into different frequencies not by time-domain band-pass filtering, but by first computing the Discrete Fourier Transform (DFT) of the signal and performing further analysis in the frequency domain. The frequencies are clustered into bands (channels) and the energy of each channel is calculated \citep{Cornu}. In the next processing steps, SNR of each channel is calculated and transformed to a \emph{voice metric} by a specific function which results in the final VAD feature to be classified by using a threshold. An additional part of the system performs updates of the noise statistics based on the spectral deviation estimate.
@@ -123,13 +123,13 @@ Block diagram of TIA/EIA IS-733 VAD is presented in Figure \ref{fig:IS733}. The 
 %	SECTION 2 - Other VAD algorithms
 %----------------------------------------------------------------------------------------
 
-\section{Other VAD algorithms}
+\section{Noise-robust VAD algorithms}
 
 Apart from standard VAD algorithms described in the previous section, many independent researchers have made numerous attempts to develop novel noise-robust voice detection methods. A summary of selected techniques is presented below. [ADD SOME GENERAL OVERVIEW OF THE VAD ALGORITHMS HERE]
 
-\subsection{Sohn \emph{et al.} Statistical Model-Based VAD}
+\subsection{Likelihood Ratio Test VADs}
 
-'A Statistical Model-Based Voice Activity Detector' proposed by Sohn \emph{et al.} \cite{Sohn} is one of the most widely cited VAD algorithms due to its ease of implementation and robustness. The initial algorithm has been developed in \cite{SohnInitial} and extended to improve noise-robustness in \citep{Sohn}. Block diagram of Sohn's VAD is presented in Figure \ref{fig:Sohn}.
+'A Statistical Model-Based Voice Activity Detector' proposed by Sohn \emph{et al.} \cite{Sohn} is one of the most widely cited VAD algorithms due to its ease of implementation, robustness and extensibility. Sohn's approach served as a base for many other researchers who tried to improve on the original idea \cite{ImprovedLikelihood, Tan, Cho}. The initial algorithm has been developed in \cite{SohnInitial} and extended to improve noise-robustness in \citep{Sohn}. Block diagram of Sohn's VAD is presented in Figure \ref{fig:Sohn}.
 
 \begin{figure}[htbp]
 	\centering
@@ -151,11 +151,20 @@ The measure which is used for the preliminary VAD decision (i.e. before the hang
 \log \Lambda = \frac{1}{L} \sum_{k=0}^{L-1} \log \frac{1}{1+\xi_k} e^{\frac{\gamma_k\xi_k}{1+\xi_k}}
 \end{equation}
 
-where $L$ is the number of samples in each frame, $\xi_k$ is the \emph{a priori} SNR and $\gamma_k$ is the \emph{a posteriori} SNR. In order for the algorithm to work properly, one needs to estimate the $\xi_k$ and $\gamma_k$. This can be done with aid of any noise estimation procedure (e.g. \cite{MSnoise} or \cite{MMSEnoise}), whose accuracy influences the noise robustness of the algorithm. The VAD feature is thresholded by an empirically determined constant for the preliminary decision.
+where $L$ is the number of samples in each frame, $\xi_k$ is the \emph{a priori} SNR and $\gamma_k$ is the \emph{a posteriori} SNR. In order for the algorithm to work, one needs to obtain the values for $\xi_k = \frac{\left | S_k \right |^{2}}{\left | N_k \right |^{2}}$ and $\gamma_k = \frac{\left | X_k \right |^{2}}{\left | N_k \right |^{2}}$ where $\left | X_k \right |^{2}, \left | S_k \right |^{2}, \left | N_k \right |^{2}$ are the PSDs of the noisy speech, clean speech and noise respectively. $\left | N_k \right |^{2}$ can be obtained by means of any noise estimation procedure (e.g. \cite{MSnoise} or \cite{MMSEnoise}), whose accuracy influences the noise robustness of the algorithm. The VAD feature is thresholded by an empirically determined constant for the preliminary decision. Finally, authors proposed a Hidden Markov model (HMM) hang-over scheme in order to improve accuracy of the algorithm for the low-energy beginnings and endings of the speech utterances.
 
-Sohn \emph{et al.} also proposed a Hidden Markov model (HMM) hang-over scheme in order to improve accuracy of the algorithm for the low-energy beginnings and endings of the speech utterances. The scheme is based on the fact that there is greater than $\frac{1}{2}$ probability of the next frame having the same classification as the previous frame than otherwise.
+While the original idea to the derivation of the unknown \emph{a priori} SNR $\xi_k$ involved the Maximum Likelihood estimator $\xi_k^{ML} = \gamma_k - 1$, in \cite{Sohn} a limitation of the procedure has been identified which makes it biased towards $H_1$. In an effort to improve the algorithm, authors proposed a decision-directed (DD) estimation procedure which reduces the fluctuation of the likelihood ratios by using a MMSE short-time spectral amplitude estimator \cite{Ephraim} and a first-order low pass filter.
 
-\subsection{Ramirez \emph{et al.} Long-Term Spectral Divergence VAD}
+In an effort to further improve the LRT-based algorithm, Cho \emph{et al.} \cite{Cho} investigated the DD approach with particular interest in the detection errors occurring at the endings of speech utterances. It was determined that the frequent misdetections are due to the delay in the DD \emph{a priori} SNR estimator, which prevents the estimated value to drop quick enough for the likelihood ratio to stay above the threshold during the short, low-energy speech offset regions. In order to alleviate this problem, authors proposed a smoothed likelihood ratio (SRT), which delays the sudden drops in the LR at the speech offset regions due to the constant $\alpha \approx 0.9$. The SRT is defined in Equation \ref{eq:SRT} where $n$ relates to the frame number while $k$ is the frequency bin. The final VAD decision is calculated by taking a geometric mean of the SRTs from all frequency bins.
+
+\begin{equation}
+\Phi_{(n,k)} = e^{\alpha \log \Phi_{(n-1,k)} + (1-\alpha) \log \Lambda_{(n,k)}}
+\label{eq:SRT}
+\end{equation}
+
+Another improvement for the LRT-based VAD came from Ramirez \emph{et al.} who investigated the use of multiple observations 
+
+\subsection{Long-Term Spectral Divergence VAD}
 
 Another popular and widely cited algorithm is the Ramirez \emph{et al.} \cite{LTSD} VAD based on the long-term speech information. The main assumption of the algorithm is that the most discriminative speech/non-speech information lies on the shape of the magnitude spectrum of the analysed signal. However, instead of considering each frame independently, the algorithm also includes the information contained in the neighbouring frames. This is achieved by computing the so-called long-term spectral envelope (LTSE) which incorporates information contained in the current frame as well as $N$ preceding and succeeding frames i.e. $2N+1$ frames in total for every calculation. Based on the LTSE, the long-term spectral divergence (LTSD) is calculated which serves as the VAD decision rule. In Ramirez's study, it has been established that the best performance is achieved for $N=6$ however this value is likely to be dependent on the particular application as well as the level of noise.
 
@@ -167,18 +176,59 @@ Another popular and widely cited algorithm is the Ramirez \emph{et al.} \cite{LT
 	\label{fig:LTSD}
 \end{figure}
 
-Block diagram of the LTSD-based VAD is presented in Figure \ref{fig:LTSD}. The algorithm starts with an assumption that the first $N$ frames of each utterance do not contain any speech and that the average magnitude spectrum of the noise can be estimated from them. After that, the LTSE for each frame is computed according to Equation \ref{LTSE} where $X(k,l)$ is the amplitude spectrum at frequency $k$ for frame $l$.
+Block diagram of the LTSD-based VAD is presented in Figure \ref{fig:LTSD}. The algorithm starts with an assumption that the first $N$ frames of each utterance do not contain any speech and that the average magnitude spectrum of the noise can be estimated from them. After that, the LTSE for each frame is computed according to Equation \ref{eq:LTSE} where $X(k,l)$ is the amplitude spectrum at frequency $k$ for frame $l$.
 
 \begin{equation}
 \text{LTSE}(k,l) = \max \left \{ X(k,l-N),\ldots,X(k,l),\ldots,X(k,l+N) \right \}
-\label{LTSE}
+\label{eq:LTSE}
 \end{equation}
 
-The LTSD is obtained from Equation \ref{LTSDeq} where $M$ is the number of frequency bins in the DFT and $N(k)$ is the average noise amplitude spectrum at frequency $k$ as estimated before. Essentially what the equation describes is the average deviation of the LTSE from the noise statistics at each frequency bin. In other words, this measure might be interpreted as a variation of the estimated \emph{a posteriori} signal-to-noise ratio, which is an idea exploited in many VAD algorithms.
+The LTSD is obtained from Equation \ref{eq:LTSD} where $M$ is the number of frequency bins in the DFT and $N(k)$ is the average noise amplitude spectrum at frequency $k$ as estimated before. Essentially what the equation describes is the average deviation of the LTSE from the noise statistics at each frequency bin. In other words, this measure might be interpreted as a variation of the estimated \emph{a posteriori} signal-to-noise ratio, which is an idea exploited in many VAD algorithms.
 
 \begin{equation}
-\text{LTSD}(l) = 10log_{10} \left ( \frac{1}{M} \sum_{k=0}^{M-1} \frac{\text{LTSE}^{2}(k,l)}{N^{2}(k)} \right )
-\label{LTSDeq}
+\text{LTSD}(l) = 10 \log_{10} \left ( \frac{1}{M} \sum_{k=0}^{M-1} \frac{\text{LTSE}^{2}(k,l)}{N^{2}(k)} \right )
+\label{eq:LTSD}
 \end{equation}
 
 Eventually, the LTSD feature is thresholded to form a preliminary VAD decision after which the hang-over scheme is applied.
+
+\subsection{Entropy-based VADs}
+
+In contrast to the energy-based methods, some researchers explored the idea of using entropy for Voice Activity Detection. Entropy, as originally defined by Shannon \cite{Shannon}, is a measure of uncertainty in a random variable, given by the equation:
+
+\begin{equation}
+E = - \sum_{i=1}^{N} p_i \log_2 p_i
+\label{eq:entropy}
+\end{equation}
+
+where $p_i$ is the probability of an event $i$ taking place in a system where $N$ distinct events might occur. In case of VAD, $p_i$ often relates to either a single bin in a histogram of the amplitudes of a signal or a single frequency in the magnitude or power spectrum.
+
+The purely time-domain approach to VAD using entropy has been explored by Weaver \emph{et al.} in \cite{Weaver}. Block diagram of the key parts of the algorithm is presented in Figure \ref{fig:Weaver}. Authors propose to first calculate the histogram of the amplitudes of the signal and then assign an entropy measure to each frame, as defined in Equation \ref{eq:entropy}, where $p_i$ is the normalised (such that $\sum_{i=1}^{N} p_i = 1$) mass of the $i$-th bin of the histogram.
+
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=0.9\columnwidth]{Figures/Weaver.png}
+		\rule{37em}{0.5pt}
+	\caption[Block diagram of the time-domain entropy-based VAD]{Block diagram of the time-domain entropy-based VAD \cite{Weaver}}
+	\label{fig:Weaver}
+\end{figure}
+
+While this approach is more noise-robust than the simple energy-based methods, especially for the stationary narrowband noise types, its performance is significantly affected by the various coloured noises. In order to mitigate this weakness, authors propose to use a weighting filter in order to enhance the typical speech frequencies, however it needs to be kept in mind that if we are faced with a noise with spectral characteristics very similar to speech (especially in case of the \emph{babble noise}), the filter would become essentially useless as it would emphasise the noise frequencies as well.
+
+A frequency domain approach to using entropy for VAD has been considered by Renevey \emph{et al.} in \cite{Renevey}. Instead of first computing the histogram of the amplitudes of the input signal, the frequency-domain algorithm starts with calculating the power spectrum of each frame. Entropy of the spectrum is then calculated by means of the following equation:
+
+\begin{equation}
+E( \left |  Y \left ( \omega, t \right ) \right |^{2} ) = - \sum_{i=1}^{L} P( \left |  Y \left ( \omega_i, t \right ) \right |^{2} ) \log \left( P( \left |  Y \left ( \omega_i, t \right ) \right |^{2} ) \right)
+\end{equation}
+
+where $P( \left |  Y \left ( \omega_i, t \right ) \right |^{2} )$ denotes the fraction of the sum of all harmonics which is attributable to the current frequency $i$.
+
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=0.9\columnwidth]{Figures/Renevey.png}
+		\rule{37em}{0.5pt}
+	\caption[Block diagram of the frequency-domain entropy-based VAD]{Block diagram of the frequency-domain entropy-based VAD \cite{Renevey}}
+	\label{fig:Renevey}
+\end{figure}
+
+All entropy-based approaches to VAD are most effective for the white noise and alike, since the distribution of entropy for speech is much different from the one for noise. The completely unpredictable nature of white noise yields high entropy values, while the more organised and predictable clean speech signals present a naturally lower entropy. Both the time and frequency domain algorithms' performance drops significantly for a variety of coloured noise types. In order to improve the performance for in such environments, authors of \cite{Renevey} propose using a "whitening" filter which divides the spectrum of the current frame by an average of all frames.
