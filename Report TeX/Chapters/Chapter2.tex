@@ -12,7 +12,7 @@
 
 \section{Standard VAD algorithms}
 
-Being an important tool in many speech processing applications, a number of VAD algorithms have been subject to standardisation by various organisations such as the International Telecommunication Union (ITU-T), European Telecommunications Standards Institute (ETSI), Telecommunications Industry Association (TIA) or Electronic Industries Alliance (EIA). Most standardised algorithms use the energy of the input signal as a Voice Activity Detection feature. It is important to note that the standardised VAD approaches have been developed for use in the telecommunications industry, with particular emphasis on the application for discontinuous transmission (DTX), which may make them less appropriate for other speech processing tasks such as speech recognition.
+Being an important tool in many speech processing applications, a number of VAD algorithms have been subject to standardisation by various organisations such as the International Telecommunication Union (ITU-T), European Telecommunications Standards Institute (ETSI), Telecommunications Industry Association (TIA) or Electronic Industries Alliance (EIA). Most standardised algorithms use the energy of the input signal as a Voice Activity Detection feature. It is important to note that the standardised VAD approaches have been developed for use in the telecommunications industry, with particular emphasis on the application for discontinuous transmission (DTX), which may make them less appropriate for other speech processing tasks such as speech recognition. Nevertheless, these algorithms often serve as a benchmark for the newly developed VADs, whose performance is often compared to the standard ones.
 
 In the rest of this section, three standard VAD algorithms are going to be described:
 \begin{itemize}
@@ -119,8 +119,11 @@ Block diagram of TIA/EIA IS-733 VAD is presented in Figure \ref{fig:IS733}. The 
 	\label{fig:IS733}
 \end{figure}
 
+\subsection{Summary}
+
+
 %----------------------------------------------------------------------------------------
-%	SECTION 2 - Other VAD algorithms
+%	SECTION 2 - Noise-robust VAD algorithms
 %----------------------------------------------------------------------------------------
 
 \section{Noise-robust VAD algorithms}
@@ -128,8 +131,9 @@ Block diagram of TIA/EIA IS-733 VAD is presented in Figure \ref{fig:IS733}. The 
 Apart from standard VAD algorithms described in the previous section, many independent researchers have made numerous attempts to develop novel noise-robust voice detection methods. A summary of selected techniques is presented below. [ADD SOME GENERAL OVERVIEW OF THE VAD ALGORITHMS HERE]
 
 \subsection{Likelihood Ratio Test VADs}
+\label{ssec:LRT}
 
-'A Statistical Model-Based Voice Activity Detector' proposed by Sohn \emph{et al.} \cite{Sohn} is one of the most widely cited VAD algorithms due to its ease of implementation, robustness and extensibility. Sohn's approach served as a base for many other researchers who tried to improve on the original idea \cite{ImprovedLikelihood, Tan, Cho}. The initial algorithm has been developed in \cite{SohnInitial} and extended to improve noise-robustness in \citep{Sohn}. Block diagram of Sohn's VAD is presented in Figure \ref{fig:Sohn}.
+'A Statistical Model-Based Voice Activity Detector' proposed by Sohn \emph{et al.} \cite{Sohn} is one of the most widely cited VAD algorithms due to its ease of implementation, robustness and extensibility. The idea of using a Likelihood Ratio Test (LRT) has been considered by many other researchers who tried to improve on the original approach \cite{ImprovedLikelihood, Cho}. The initial algorithm has been developed in \cite{SohnInitial} and extended to improve noise-robustness in \citep{Sohn}. Block diagram of Sohn's VAD is presented in Figure \ref{fig:Sohn}.
 
 \begin{figure}[htbp]
 	\centering
@@ -139,7 +143,7 @@ Apart from standard VAD algorithms described in the previous section, many indep
 	\label{fig:Sohn}
 \end{figure}
 
-The algorithm is based on a Likelihood Ratio Test to discriminate between two hypotheses:
+The algorithm is based on a LRT to discriminate between two hypotheses:
 \begin{itemize}
 \item[] $H_0$ - speech absent
 \item[] $H_1$ - speech present
@@ -158,11 +162,11 @@ While the original idea to the derivation of the unknown \emph{a priori} SNR $\x
 In an effort to further improve the LRT-based algorithm, Cho \emph{et al.} \cite{Cho} investigated the DD approach with particular interest in the detection errors occurring at the endings of speech utterances. It was determined that the frequent misdetections are due to the delay in the DD \emph{a priori} SNR estimator, which prevents the estimated value to drop quick enough for the likelihood ratio to stay above the threshold during the short, low-energy speech offset regions. In order to alleviate this problem, authors proposed a smoothed likelihood ratio (SRT), which delays the sudden drops in the LR at the speech offset regions due to the constant $\alpha \approx 0.9$. The SRT is defined in Equation \ref{eq:SRT} where $n$ relates to the frame number while $k$ is the frequency bin. The final VAD decision is calculated by taking a geometric mean of the SRTs from all frequency bins.
 
 \begin{equation}
-\Phi_{(n,k)} = e^{\alpha \log \Phi_{(n-1,k)} + (1-\alpha) \log \Lambda_{(n,k)}}
+\Phi (n,k) = \exp \left\{ \alpha \log \left( \Phi (n-1,k) \right) + (1-\alpha) \log \left( \Lambda (n,k) \right) \right\}
 \label{eq:SRT}
 \end{equation}
 
-Another improvement for the LRT-based VAD came from Ramirez \emph{et al.} who investigated the use of multiple observations 
+Both \cite{Sohn} and \cite{Cho} VADs consider only a single frame when making a speech/non-speech decision and hence they are likely to misclassify the low-energy frames for which the short-time SNR is much lower than the average SNR of the entire signal. To aid the proper detection of such frames, in \cite{RamirezMulti} Ramirez \emph{et al.} proposed a multiple observation vector which considers $M$ frames before and ahead of the current frame in formulating the likelihood ratio. The main rationale behind this idea is that the weaker speech frames are often surrounded by the stronger parts, and their inclusion in the LRT might boost its value above the threshold. While this approach results in somewhat improved performance, it also introduces the delay of $M$ frames to the algorithm, which might prevent it from being used in some real-time applications.
 
 \subsection{Long-Term Spectral Divergence VAD}
 
@@ -194,16 +198,16 @@ Eventually, the LTSD feature is thresholded to form a preliminary VAD decision a
 
 \subsection{Entropy-based VADs}
 
-In contrast to the energy-based methods, some researchers explored the idea of using entropy for Voice Activity Detection. Entropy, as originally defined by Shannon \cite{Shannon}, is a measure of uncertainty in a random variable, given by the equation:
+In contrast to the standardised energy-based methods, some researchers investigated the idea of using entropy for Voice Activity Detection. Entropy, as originally defined by Shannon \cite{Shannon}, is a measure of uncertainty in a random variable, given by the equation:
 
 \begin{equation}
 E = - \sum_{i=1}^{N} p_i \log_2 p_i
 \label{eq:entropy}
 \end{equation}
 
-where $p_i$ is the probability of an event $i$ taking place in a system where $N$ distinct events might occur. In case of VAD, $p_i$ often relates to either a single bin in a histogram of the amplitudes of a signal or a single frequency in the magnitude or power spectrum.
+where $p_i$ is the probability of the random variable having a value of $i$ among $N$ distinct values which it might take. In case of VAD, $p_i$ often relates to either a single bin in a histogram of the amplitudes of a signal or a single frequency in the magnitude or power spectrum.
 
-The purely time-domain approach to VAD using entropy has been explored by Weaver \emph{et al.} in \cite{Weaver}. Block diagram of the key parts of the algorithm is presented in Figure \ref{fig:Weaver}. Authors propose to first calculate the histogram of the amplitudes of the signal and then assign an entropy measure to each frame, as defined in Equation \ref{eq:entropy}, where $p_i$ is the normalised (such that $\sum_{i=1}^{N} p_i = 1$) mass of the $i$-th bin of the histogram.
+The purely time domain approach to VAD using entropy has been explored by Weaver \emph{et al.} in \cite{Weaver}. Block diagram of the key parts of the algorithm is presented in Figure \ref{fig:Weaver}. Authors propose to first calculate the histogram of the amplitudes of the signal and then assign an entropy measure to each frame, as defined in Equation \ref{eq:entropy}, where $p_i$ is the normalised (such that $\sum_{i=1}^{N} p_i = 1$) mass of the $i$-th bin of the histogram.
 
 \begin{figure}[htbp]
 	\centering
@@ -213,7 +217,7 @@ The purely time-domain approach to VAD using entropy has been explored by Weaver
 	\label{fig:Weaver}
 \end{figure}
 
-While this approach is more noise-robust than the simple energy-based methods, especially for the stationary narrowband noise types, its performance is significantly affected by the various coloured noises. In order to mitigate this weakness, authors propose to use a weighting filter in order to enhance the typical speech frequencies, however it needs to be kept in mind that if we are faced with a noise with spectral characteristics very similar to speech (especially in case of the \emph{babble noise}), the filter would become essentially useless as it would emphasise the noise frequencies as well.
+While this approach is more noise-robust than the simple energy-based methods, especially for the stationary narrowband noise types, its performance is significantly affected by the various coloured noises. In order to mitigate this weakness, authors propose to use a weighting filter in order to enhance the typical speech frequencies, however it needs to be kept in mind that if we are faced with a noise with spectral characteristics very similar to speech (especially in case of the \emph{babble noise}), the filter would become essentially useless as it would emphasise the noise as well.
 
 A frequency domain approach to using entropy for VAD has been considered by Renevey \emph{et al.} in \cite{Renevey}. Instead of first computing the histogram of the amplitudes of the input signal, the frequency-domain algorithm starts with calculating the power spectrum of each frame. Entropy of the spectrum is then calculated by means of the following equation:
 
@@ -231,4 +235,70 @@ where $P( \left |  Y \left ( \omega_i, t \right ) \right |^{2} )$ denotes the fr
 	\label{fig:Renevey}
 \end{figure}
 
-All entropy-based approaches to VAD are most effective for the white noise and alike, since the distribution of entropy for speech is much different from the one for noise. The completely unpredictable nature of white noise yields high entropy values, while the more organised and predictable clean speech signals present a naturally lower entropy. Both the time and frequency domain algorithms' performance drops significantly for a variety of coloured noise types. In order to improve the performance for in such environments, authors of \cite{Renevey} propose using a "whitening" filter which divides the spectrum of the current frame by an average of all frames.
+All entropy-based approaches to VAD are most effective for the white noise and alike, since the distribution of entropy for speech is much different from the one for noise. The completely unpredictable nature of white noise yields high entropy values, while the more organised and predictable clean speech signals present a naturally lower entropy. Both the time and frequency domain algorithms' performance drops significantly for a variety of coloured noise types. In order to improve the performance for in such environments, authors of \cite{Renevey} propose using a \emph{whitening} filter which divides the spectrum of the current frame by an average of all frames.
+
+\subsection{Pitch and fundamental frequency based VADs}
+
+A rather unique feature of voiced speech is its spectral harmonicity. The magnitude spectrum of voiced phonemes contains clearly visible peaks at equal intervals corresponding to the fundamental frequency $F_0$ or pitch, terms which in speech processing context are often used interchangeably. A spectrogram of a sample utterance corrupted by 0 dB car noise is presented in Figure \ref{fig:harmospgramcar}. Although the energy of the noise is high, making the speech detection a challenge for the energy-based algorithms, its PSD occupies mostly the low frequencies (yellow box) causing the harmonic peaks (red boxes) to remain undistorted. Even in the presence of 0 dB white noise (Figure \ref{fig:harmospgramwhite}), which is much richer in frequency components than car noise, the harmonic peaks are preserved, although to a much smaller extent. While it is clearly possible to use the harmonicity features for the detection of the voiced parts of speech utterances, the unvoiced phonemes' spectrum does not contain harmonic peaks. Therefore, detection of the unvoiced phonemes remains difficult and often requires an additional technique or a specialised hang-over scheme.
+
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=0.9\columnwidth]{Figures/harmospgramcar.png}
+		\rule{37em}{0.5pt}
+	\caption[Spectrogram of a sample utterance corrupted by 0 dB car noise]{Spectrogram of a sample utterance corrupted by 0 dB car noise}
+	\label{fig:harmospgramcar}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=0.9\columnwidth]{Figures/harmospgramwhite.png}
+		\rule{37em}{0.5pt}
+	\caption[Spectrogram of a sample utterance corrupted by 0 dB white noise]{Spectrogram of a sample utterance corrupted by 0 dB white noise}
+	\label{fig:harmospgramwhite}
+\end{figure}
+
+In \cite{PARADE} Ishizuka \emph{et al.} proposed a VAD (dubbed PARADE) based on the ratio of the powers of periodic to aperiodic components of the signal. Block diagram of the algorithm is presented in \ref{fig:PARADE}. The VAD decision is based on the likelihood ratio defined in Equation \ref{eq:PARADE} where $\phi (i)$ equals $\frac{\hat{\lambda}_p (i)}{\hat{\lambda}_a (i)}$ - the ratio of the average power per frequency bin of the periodic to aperiodic components of the signal in frame $i$.
+
+\begin{equation}
+\Lambda(i) = \frac{1}{\phi (i)} \exp \left\{ \frac{1}{2} \left( \phi (i)^{2} - \frac{1}{\phi (i)^{2}} \right) \right\}
+\label{eq:PARADE}
+\end{equation}
+
+The authors propose to approximate the average powers from Equations \ref{eq:aperiodicpower} and \ref{eq:periodicpower}.
+
+\begin{equation}
+\hat{\lambda}_a = \frac{\lambda - \eta \sum_{m=1}^{\vartheta} \left| X(m f_0) \right|^{2}}{1-\eta \vartheta}
+\label{eq:aperiodicpower}
+\end{equation}
+
+\begin{equation}
+\hat{\lambda}_p = \lambda - \hat{\lambda}_a
+\label{eq:periodicpower}
+\end{equation}
+
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=0.9\columnwidth]{Figures/PARADE.png}
+		\rule{37em}{0.5pt}
+	\caption[Block diagram of the periodic/aperiodoc component ratio VAD]{Block diagram of the periodic/aperiodoc component ratio VAD \cite{PARADE}}
+	\label{fig:PARADE}
+\end{figure}
+
+While this concept is likely to be robust to various non-stationary noise types, by definition it cannot cope with the unvoiced parts of speech, detection of which is performed by a hang-over scheme.
+
+Another approach to using harmonic frequency components\footnote{This algorithm also builds on the idea of LRT described in Section \ref{ssec:LRT}. The main improvement comes however from utilising the spectral harmonicity therefore it has been included in this section} for VAD has been investigated by Tan \emph{et al.} in \cite{Tan}. The authors claim, that under low SNR the approach from \cite{RamirezMulti} is likely to fail since the LRs from the high-energy frames will not be strong enough to aid the proper classification of the low-energy frames. Therefore, they propose a new way of calculating the LRs for the voiced frames, defined in Equation \ref{eq:harmfreq} where $\vartheta$ is the number of harmonics within the resolution of the DFT and $f_0$ denotes the fundamental frequency. The algorithm calculates the LR only using the frequency bins which are multiples of the fundamental frequency.
+
+\begin{equation}
+\log \Lambda_v = \frac{1}{\vartheta} \sum_{k=1}^{\vartheta} \log \Lambda(k f_0)
+\label{eq:harmfreq}
+\end{equation}
+
+Voiced frames are pre-identified by the pitch determination algorithm, and all others are considered as unvoiced. The LR for the unvoiced frames is calculated in a standard way from \cite{SohnInitial} i.e. by considering all frequency bins.
+
+%\subsection{Summary}
+
+%----------------------------------------------------------------------------------------
+%	SECTION 3 - Conclusion
+%----------------------------------------------------------------------------------------
+
+%\section{Conclusion}

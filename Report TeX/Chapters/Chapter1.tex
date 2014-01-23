@@ -68,6 +68,8 @@ Speech enhancement aims to improve the intelligibility and quality of speech sig
 \end{equation}
 where $|Y(f)|$ is the amplitude spectrum of the corrupted speech, $|S(f)|$ of the clean speech and $|N(f)|$ of the noise. In order for this technique to work, the noise needs to be additive, stationary and uncorrelated with the clean speech signal. Additionally, one needs to estimate the spectrum of the noise, which in real-world applications where a variety of different, often nonstationary, noise types are encountered, is a nontrivial problem. A robust Voice Activity Detector can become very useful in this task by identifying the voice-inactive frames of a signal from which the noise statistics could be estimated. A precise VAD can also become useful in applications dealing with slowly varying piecewise stationary noises, where the noise statistics can be adaptively estimated based on the most recent VAD decisions.
 
+\subsection{Summary}
+
 %----------------------------------------------------------------------------------------
 %	SECTION 3 - Structure of a typical VAD system
 %----------------------------------------------------------------------------------------
@@ -90,7 +92,7 @@ The noisy speech signal is first passed to a pre-processing module which might p
 
 \subsection{Feature Extraction}
 
-The purpose of the feature extraction module is to compute the speech features for each frame which are suitable for the speech/non-speech classification. These can be time-domain \cite{Kida, Weaver}, frequency-domain \cite{Tuske, LTSD}, cepstral-domain \cite{Kotcher} features or other, depending on the specific VAD algorithm. Ideally, in order to achieve the overall VAD system robustness, the selected signal characteristics should not be easily corruptible by the background noise. Additionally, the algorithms for feature extraction should be of low computational complexity for their potential usefulness in real-time applications. The output of this module is therefore a vector $\mathbf{x}$ of features for each of the frames computed in the pre-processing stage.
+The purpose of the feature extraction module is to compute the speech features for each frame which are suitable for the speech/non-speech classification. These can be time domain \cite{Kida, Weaver}, frequency domain \cite{Tuske, LTSD, Tan, PARADE, RamirezMulti, Sohn, SohnInitial, Renevey}, cepstral-domain \cite{Kotcher} features or other, depending on the specific VAD algorithm. Ideally, in order to achieve the overall VAD system robustness, the selected signal characteristics should not be easily corruptible by the background noise. Additionally, the algorithms for feature extraction should be of low computational complexity for their potential usefulness in real-time applications. The output of this module is therefore a vector $\mathbf{x}$ of features for each of the frames computed in the pre-processing stage.
 
 \subsection{Classification}
 

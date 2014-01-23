@@ -44,18 +44,12 @@ LTSD = zeros(noFrames,1);
 
 for i = 1:noFrames
     for j = 1:freqBins
-        lowIndex = i-N;
-        if(lowIndex < 1)
-            lowIndex = 1;
-        end
-        
-        highIndex = i+N;
-        if(highIndex > noFrames)
-            highIndex = noFrames;
-        end
+        lowIndex = max(i-N,1);
+        highIndex = min(i+N,noFrames);
         
         LTSE(i,j) = max(amplitudeSpectrum(lowIndex:highIndex,j));
     end
+    
     currentLTSEsq = LTSE(i,:).^2;
     LTSEnoise = currentLTSEsq./avgNoisePS;
     LTSD(i) = 10*log10(mean(LTSEnoise));
