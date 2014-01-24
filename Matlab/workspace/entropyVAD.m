@@ -1,4 +1,4 @@
-function [ postVAD, preVAD ] = sohn1VAD(s,fs,wsec,enhance)
+function [ postVAD, preVAD ] = entropyVAD(s,fs,wsec,enhance)
 % default - no speech enhancement
 if(nargin < 4)
     enhance = 0;
@@ -18,7 +18,7 @@ end
 winSamples = round(wsec*fs);
 % enframe the signal using hanning window
 frames = enframe(s,hanning(winSamples,'periodic'),winSamples);
-
+noFrames = size(frames,1);
 % -----------------------------------------------------------
 % FEATURE EXTRACTION
 % -----------------------------------------------------------
@@ -26,24 +26,26 @@ frames = enframe(s,hanning(winSamples,'periodic'),winSamples);
 dft = rfft(frames,winSamples,2);
 % calculate the Power Spectrum of the noisy signal
 signalPS = dft.*conj(dft);
-% estimate the Power Spectrum of the noise
-noisePS = estnoiseg(signalPS,wsec);
-% calculate the log-likelihood ratio for each frame
-snr = signalPS./noisePS;
-logRatio = (1/winSamples)*sum( snr-log(snr)-1 , 2);
+sumPS = sum(signalPS,2);
+
+H = zeros(noFrames,1);
+for i = 1:noFrames
+    probs = signalPS(i,:)./sumPS(i);
+    H(i) = entropy(probs);
+end
 
 % -----------------------------------------------------------
 % CLASSIFICATION
 % -----------------------------------------------------------
 % set the threshold (HOW TO CHOOSE AN APPROPRIATE THRESHOLD?)
-thr = 2;
+thr = 5;
 
 % preallocate for speed
-framesVAD = zeros(1,length(logRatio));
+framesVAD = zeros(1,length(H));
 preVAD = zeros(1,length(s));
 % calculate the VAD decisions
-for i = 1:length(logRatio)
-    if(logRatio(i) > thr)
+for i = 1:length(H)
+    if(H(i) < thr)
         framesVAD(i) = 1;
         preVAD(1,(1+(i-1)*winSamples):(i*winSamples)) = 1;
     else

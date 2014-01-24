@@ -44,10 +44,10 @@ LTSD = zeros(noFrames,1);
 
 for i = 1:noFrames
     for j = 1:freqBins
-        lowIndex = max(i-N,1);
-        highIndex = min(i+N,noFrames);
+        startIndex = max(i-N,1);
+        endIndex = min(i+N,noFrames);
         
-        LTSE(i,j) = max(amplitudeSpectrum(lowIndex:highIndex,j));
+        LTSE(i,j) = max(amplitudeSpectrum(startIndex:endIndex,j));
     end
     
     currentLTSEsq = LTSE(i,:).^2;
@@ -66,18 +66,24 @@ framesVAD = zeros(1,noFrames);
 preVAD = zeros(1,length(s));
 % calculate the VAD decisions, assume first frame always noise
 framesVAD(1) = 0;
-preVAD(1,1:winSamples) = 0;
-last = winSamples;
-for i = 2:noFrames
-    if(LTSD(i) > thr)
-        framesVAD(i) = 1;
-        preVAD(1,last:last+shiftSamples) = 1;
-        last = last + shiftSamples;
-    else
-        framesVAD(i) = 0;
-        preVAD(1,last:last+shiftSamples) = 0;
-        last = last + shiftSamples;
+preVAD(1,1:shiftSamples) = 0;
+lastSample = shiftSamples;
+for i = 2:(noFrames+winSamples/shiftSamples-1)
+    % the loop goes through all 10 ms chunks, at the end it will exceed the
+    % number of frames, therefore guard
+    if(i <= noFrames)
+        if(LTSD(i) > thr)
+            framesVAD(i) = 1;
+        else
+            framesVAD(i) = 0;
+        end
     end
+    % transform the decision for frame into samples taking the majority of
+    % all frames' decisions which include current samples
+    startIndex = max(i-4,1);
+    endIndex = min(i,noFrames);
+    preVAD(1,(lastSample+1):lastSample+shiftSamples) = majority(framesVAD(startIndex:endIndex));
+    lastSample = lastSample + shiftSamples;
 end
 
 % -----------------------------------------------------------
@@ -102,17 +108,27 @@ end
 
 % transform the VAD frames to samples with the overlap in mind
 postVAD = zeros(1,length(s));
-postVAD(1,1:winSamples) = 0;
-last = winSamples;
-for i = 2:noFrames
-    if(LTSD(i) > thr)
-        framesVAD(i) = 1;
-        postVAD(1,last:last+shiftSamples) = 1;
-        last = last + shiftSamples;
-    else
-        framesVAD(i) = 0;
-        postVAD(1,last:last+shiftSamples) = 0;
-        last = last + shiftSamples;
-    end
+postVAD(1,1:shiftSamples) = 0;
+lastSample = shiftSamples;
+for i = 2:(noFrames+winSamples/shiftSamples-1)
+    % transform the decision for frame into samples taking the majority of
+    % all frames' decisions which include current samples
+    startIndex = max(i-4,1);
+    endIndex = min(i,noFrames);
+    postVAD(1,(lastSample+1):lastSample+shiftSamples) = majority(framesVAD(startIndex:endIndex));
+    lastSample = lastSample + shiftSamples;
 end
+end
+
+% possibility to change this function so that if ANY frame reports speech,
+% just classify the samples as speech
+function mode = majority(vector)
+    len = length(vector);
+    ones = sum(vector);
+    
+    if(ones >= len/2)
+        mode = 1;
+    else
+        mode = 0;
+    end
 end
