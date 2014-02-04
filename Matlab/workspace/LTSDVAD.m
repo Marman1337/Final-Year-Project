@@ -5,6 +5,16 @@ if(nargin < 4)
 end
 
 % -----------------------------------------------------------
+% PARAMETERS
+% -----------------------------------------------------------
+N = 3; % long term spectral envelope shift
+B = 7; % buffer length
+Sp = 2; % speech possible
+Sl = 3; % speech likely
+Ls = 5; % short hangover time
+Lm = 8; % medium hangover time
+
+% -----------------------------------------------------------
 % PRE-PROCESSING
 % -----------------------------------------------------------
 % perform speech enhancement if necessary
@@ -17,12 +27,8 @@ end
 
 % number of samples per window
 winSamples = round(wsec*fs);
-% fixed 10 ms frame shift
-shiftSamples = round(0.01*fs);
-% long term spectral envelope shift as defined and recommended by Ramirez
-N = 6;
 % enframe the signal using hanning window
-frames = enframe(s,hanning(winSamples,'periodic'),shiftSamples);
+frames = enframe(s,hanning(winSamples,'periodic'),winSamples);
 
 % -----------------------------------------------------------
 % FEATURE EXTRACTION
@@ -64,71 +70,64 @@ thr = 8;
 % preallocate for speed
 framesVAD = zeros(1,noFrames);
 preVAD = zeros(1,length(s));
-% calculate the VAD decisions, assume first frame always noise
-framesVAD(1) = 0;
-preVAD(1,1:shiftSamples) = 0;
-lastSample = shiftSamples;
-for i = 2:(noFrames+winSamples/shiftSamples-1)
-    % the loop goes through all 10 ms chunks, at the end it will exceed the
-    % number of frames, therefore guard
-    if(i <= noFrames)
-        if(LTSD(i) > thr)
-            framesVAD(i) = 1;
-        else
-            framesVAD(i) = 0;
-        end
+% calculate the VAD decisions
+for i = 1:noFrames
+    if(LTSD(i) > thr)
+        framesVAD(i) = 1;
+        preVAD(1,(1+(i-1)*winSamples):(i*winSamples)) = 1;
+    else
+        framesVAD(i) = 0;
+        preVAD(1,(1+(i-1)*winSamples):(i*winSamples)) = 0;
     end
-    % transform the decision for frame into samples taking the majority of
-    % all frames' decisions which include current samples
-    startIndex = max(i-4,1);
-    endIndex = min(i,noFrames);
-    preVAD(1,(lastSample+1):lastSample+shiftSamples) = majority(framesVAD(startIndex:endIndex));
-    lastSample = lastSample + shiftSamples;
 end
 
 % -----------------------------------------------------------
 % POST-PROCESSING
 % -----------------------------------------------------------
-% change VAD decisions whenever there is a single frame which has
-% a different value from the neighbouring frames
-lastFrame = framesVAD(1);
-for i=2:(length(framesVAD)-1)
-    currentFrame = framesVAD(i);
-    if(lastFrame ~= currentFrame)
-        nextFrame = framesVAD(i+1);
-        if(currentFrame ~= nextFrame)
-            framesVAD(i) = nextFrame;
-        else
-            lastFrame = currentFrame;
-        end
-    else
-        lastFrame = currentFrame;
+% apply hang-over scheme from the original paper
+T = 5;
+hangoverVAD = zeros(1,noFrames);
+
+for i = 1:(noFrames-B+1)
+    M = maxConsOnes(framesVAD(i:i+B-1));
+    
+    if(M >= Sl)
+        T = Lm;
+    elseif(M >= Sp && T < Ls)
+        T = Ls;
+    elseif(M < Sp && T > 0)
+        T = T - 1;
+    end
+    
+    if(T > 0)
+        hangoverVAD(i) = 1;
     end
 end
+hangoverVAD(noFrames-B+2:noFrames) = framesVAD(noFrames-B+2:noFrames);
 
-% transform the VAD frames to samples with the overlap in mind
+% transform the VAD frames to samples
 postVAD = zeros(1,length(s));
-postVAD(1,1:shiftSamples) = 0;
-lastSample = shiftSamples;
-for i = 2:(noFrames+winSamples/shiftSamples-1)
-    % transform the decision for frame into samples taking the majority of
-    % all frames' decisions which include current samples
-    startIndex = max(i-4,1);
-    endIndex = min(i,noFrames);
-    postVAD(1,(lastSample+1):lastSample+shiftSamples) = majority(framesVAD(startIndex:endIndex));
-    lastSample = lastSample + shiftSamples;
+for i = 1:noFrames
+    if(hangoverVAD(i) == 1)
+        postVAD(1,(1+(i-1)*winSamples):(i*winSamples)) = 1;
+    else
+        postVAD(1,(1+(i-1)*winSamples):(i*winSamples)) = 0;
+    end
 end
 end
 
-% possibility to change this function so that if ANY frame reports speech,
-% just classify the samples as speech
-function mode = majority(vector)
-    len = length(vector);
-    ones = sum(vector);
+function max = maxConsOnes(seq)
+    M = 0;
+    max = 0;
     
-    if(ones >= len/2)
-        mode = 1;
-    else
-        mode = 0;
+    for i = 1:length(seq)
+        if(seq(i) == 1)
+            M = M+1;
+            if(M > max)
+                max = M;
+            end
+        else
+            M = 0;
+        end
     end
 end

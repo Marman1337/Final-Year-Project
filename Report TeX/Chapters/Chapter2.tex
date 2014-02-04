@@ -250,7 +250,7 @@ All entropy-based approaches to VAD are most effective for the white noise and a
 
 \subsection{Pitch and fundamental frequency based VADs}
 
-A rather unique feature of voiced speech is its spectral harmonicity. The magnitude spectrum of voiced phonemes contains clearly visible peaks at equal intervals corresponding to the fundamental frequency $F_0$ or pitch, terms which in speech processing context are often used interchangeably. A spectrogram of a sample utterance corrupted by 0 dB car noise is presented in Figure \ref{fig:harmospgramcar}. Although the energy of the noise is high, making the speech detection a challenge for the energy-based algorithms, its PSD occupies mostly the low frequencies (yellow box) causing the harmonic peaks (red boxes) to remain undistorted. Even in the presence of 0 dB white noise (Figure \ref{fig:harmospgramwhite}), which is much richer in frequency components than car noise, the harmonic peaks are preserved, although to a much smaller extent. While it is clearly possible to use the harmonicity features for the detection of the voiced parts of speech utterances, the unvoiced phonemes' spectrum does not contain harmonic peaks. Therefore, detection of the unvoiced phonemes remains difficult and often requires an additional technique or a specialised hang-over scheme.
+A rather unique feature of voiced speech is its spectral harmonicity. The magnitude spectrum of voiced phonemes contains clearly visible peaks at equal intervals corresponding to the fundamental frequency $F_0$ or pitch, terms which in speech processing context are often used interchangeably. A spectrogram of a sample utterance corrupted by 0 dB car noise is presented in Figure \ref{fig:harmospgramcar}. Although the energy of the noise is high (making the speech detection a challenge for the energy-based algorithms), its PSD occupies mostly the low frequencies (yellow box) causing the harmonic peaks (red boxes) to remain undistorted. Even in the presence of 0 dB white noise (Figure \ref{fig:harmospgramwhite}), which is much richer in frequency components than car noise, the harmonic peaks are preserved, although to a much smaller extent. While it is clearly possible to use the harmonicity features for the detection of the voiced parts of speech utterances, the unvoiced phonemes' spectrum does not contain harmonic peaks. Therefore, detection of the unvoiced phonemes remains difficult and often requires an additional technique or a specialised hang-over scheme.
 
 \begin{figure}[htbp]
 	\centering
@@ -275,7 +275,7 @@ In \cite{PARADE} Ishizuka \emph{et al.} proposed a VAD (dubbed PARADE) based on 
 \label{eq:PARADE}
 \end{equation}
 
-The authors propose to approximate the average powers from Equations \ref{eq:aperiodicpower} and \ref{eq:periodicpower}.
+The authors propose to approximate the average powers from Equations \ref{eq:aperiodicpower} and \ref{eq:periodicpower} where $\vartheta$ is the number of harmonics in the current frame and $\eta$ is a specific constant for power estimation.
 
 \begin{equation}
 \hat{\lambda}_a = \frac{\lambda - \eta \sum_{m=1}^{\vartheta} \left| X(m f_0) \right|^{2}}{1-\eta \vartheta}
@@ -295,12 +295,12 @@ The authors propose to approximate the average powers from Equations \ref{eq:ape
 	\label{fig:PARADE}
 \end{figure}
 
-While this concept is likely to be robust to various non-stationary noise types, by definition it cannot cope with the unvoiced parts of speech, detection of which is performed by a hang-over scheme.
+While this concept is likely to be robust to various non-stationary noise types, by definition it cannot cope with the unvoiced parts of speech, detection of which has to be performed by a hang-over scheme. In the original paper, authors did not specify how to estimate the number of harmonics $\vartheta$ for each frame, which is crucial to the proper working of the algorithm. A potential improvement might also come from an improved pitch detection method.
 
 Another approach to using harmonic frequency components\footnote{This algorithm also builds on the idea of LRT described in Section \ref{ssec:LRT}. The main improvement comes however from utilising the spectral harmonicity therefore it has been included in this section} for VAD has been investigated by Tan \emph{et al.} in \cite{Tan}. The authors claim, that under low SNR the approach from \cite{RamirezMulti} is likely to fail since the LRs from the high-energy frames will not be strong enough to aid the proper classification of the low-energy frames. Therefore, they propose a new way of calculating the LRs for the voiced frames, defined in Equation \ref{eq:harmfreq} where $\vartheta$ is the number of harmonics within the resolution of the DFT and $f_0$ denotes the fundamental frequency. The algorithm calculates the LR only using the frequency bins which are multiples of the fundamental frequency.
 
 \begin{equation}
-\log \Lambda_v = \frac{1}{\vartheta} \sum_{k=1}^{\vartheta} \log \Lambda(k f_0)
+\log \Lambda_v = \frac{1}{\vartheta} \sum_{m=1}^{\vartheta} \log \Lambda(m f_0)
 \label{eq:harmfreq}
 \end{equation}
 

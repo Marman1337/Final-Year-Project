@@ -1,0 +1,43 @@
+% Chapter Template
+
+\chapter{Project planning} % Main chapter title
+
+\label{Chapter3i} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ChapterX}
+
+\lhead{Chapter 3. \emph{Project planning}} % Change X to a consecutive number; this is for the header on each page - perhaps a shortened title
+
+%----------------------------------------------------------------------------------------
+%	SECTION 1
+%----------------------------------------------------------------------------------------
+
+\section{Evaluation of the VAD algorithms}
+
+In the rest of the project I would like to evaluate the following VAD algorithms from the literature:
+
+\begin{itemize}
+\item A Statistical Model-Based Voice Activity Detector \cite{Sohn}
+\item Efficient Voice Activity Detection Algorithms Using Long-term Speech Information \cite{LTSD}
+\item Entropy Based Voice Activity Detection in Very Noisy Conditions \citep{Renevey}
+\item Noise Robust Voice Activity Detection Based on Periodic to Aperiodic Component Ratio \cite{PARADE}
+\item Voice Activity Detection using Harmonic Frequency Components in Likelihood Ratio Test \cite{Tan}
+\end{itemize}
+
+While these algorithms are the ones initially chosen for evaluation, the list is not exhaustive and might change during the project work.
+
+The initial evaluation plan is to create a few 60-120 seconds long speech sequences, which will be a concatenation of multiple utterances from the TIMIT database (since the original utterances are too short to reliably evaluate the performance of VAD algorithms). The noisy conditions will be simulated by adding artificial noise recordings from the NOISEX-92 database at different SNR levels. The algorithms' performance will be assessed by means of the Receiver Operating Characteristic (ROC) curves and possibly the separation of the distributions of the VAD features for clean speech and noise.
+
+%----------------------------------------------------------------------------------------
+%	SECTION 2
+%----------------------------------------------------------------------------------------
+
+\section{Further work}
+
+Evaluation of algorithms in noisy conditions will enable to identify the VADs which perform best. My expectation is that the last two algorithms from the list in the previous section should be the most noise-robust since they are based on spectral harmonicity, a rather unique feature of voiced speech. While development of a novel and very noise-robust is very difficult, some ideas for improvement of the PARADE \cite{PARADE} algorithm have already been identified. These are based on using a fewer number of harmonics in the periodic-to-aperiodic ratio calculation and potentially considering the energy of the frequency bins surrounding the bin with the fundamental frequency. Also, a more noise resilient pitch detection method might be used for increased robustness at this stage of the algorithm.
+
+\section{Timeline}
+
+\begin{itemize}
+\item 28 January 2014 - finished literature survey
+\item by the end of February 2014 - evaluation of existing VAD algorithms
+\item first two weeks of March and in May/June 2014 - further work
+\end{itemize}

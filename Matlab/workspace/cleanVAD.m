@@ -1,54 +1,42 @@
-function [ postVAD, preVAD ] = sohn1VAD(s,fs,wsec,enhance)
-% default - no speech enhancement
-if(nargin < 4)
-    enhance = 0;
-end
-
+function [ postVAD, preVAD ] = cleanVAD(s,fs,wsec)
 % -----------------------------------------------------------
 % PRE-PROCESSING
 % -----------------------------------------------------------
-% perform speech enhancement if necessary
-if(enhance == 1)
-    s = specsub(s,fs);
-end
-if(enhance == 2)
-    s = ssubmmse(s,fs);
-end
 % number of samples per window
 winSamples = round(wsec*fs);
 % enframe the signal using hanning window
-frames = enframe(s,hanning(winSamples,'periodic'),winSamples);
+frames = enframe(s,winSamples,winSamples);
 
 % -----------------------------------------------------------
 % FEATURE EXTRACTION
 % -----------------------------------------------------------
-% calculate the DFT of each frame
-dft = rfft(frames,winSamples,2);
-% calculate the Power Spectrum of the noisy signal
-signalPS = dft.*conj(dft);
-% estimate the Power Spectrum of the noise
-noisePS = estnoiseg(signalPS,wsec);
-% calculate the log-likelihood ratio for each frame
-snr = signalPS./noisePS;
-logRatio = (1/winSamples)*sum( snr-log(snr)-1 , 2);
+% calculate the energies per frame
+energies = sum(frames.*frames,2);
 
 % -----------------------------------------------------------
 % CLASSIFICATION
 % -----------------------------------------------------------
-% set the threshold (HOW TO CHOOSE AN APPROPRIATE THRESHOLD?)
-thr = 2;
+% assume first 100 ms is silence only to calculate the initial threshold
+cleanWindows = floor(fs*0.1/winSamples);
+%thr = 5*sum(energies(1:cleanWindows))/cleanWindows;
+thr = 0.0003;
 
 % preallocate for speed
-framesVAD = zeros(1,length(logRatio));
+framesVAD = zeros(1,length(energies));
 preVAD = zeros(1,length(s));
-% calculate the VAD decisions
-for i = 1:length(logRatio)
-    if(logRatio(i) > thr)
-        framesVAD(i) = 1;
-        preVAD(1,(1+(i-1)*winSamples):(i*winSamples)) = 1;
-    else
+% calculate the original VAD decisions for each frame and sample
+for i = 1:length(energies)
+    if(i <= cleanWindows)
         framesVAD(i) = 0;
         preVAD(1,(1+(i-1)*winSamples):(i*winSamples)) = 0;
+    else
+        if(energies(i) > thr)
+            framesVAD(i) = 1;
+            preVAD(1,(1+(i-1)*winSamples):(i*winSamples)) = 1;
+        else
+            framesVAD(i) = 0;
+            preVAD(1,(1+(i-1)*winSamples):(i*winSamples)) = 0;
+        end
     end
 end
 
@@ -71,7 +59,6 @@ for i=2:(length(framesVAD)-1)
         lastFrame = currentFrame;
     end
 end
-
 % transform the VAD frames to samples
 postVAD = zeros(1,length(s));
 for i = 1:length(framesVAD)

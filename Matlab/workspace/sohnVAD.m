@@ -1,12 +1,13 @@
-function [ postVAD, preVAD ] = entropyVAD(s,fs,wsec,enhance)
+function [ postVAD, preVAD ] = sohnVAD(s,fs,wsec,enhance)
 % default - no speech enhancement
 if(nargin < 4)
     enhance = 0;
 end
 
 % -----------------------------------------------------------
-% HANG-OVER PARAMETERS
+% PARAMETERS
 % -----------------------------------------------------------
+alpha = 0.95;
 B = 7; % buffer length
 Sp = 2; % speech possible
 Sl = 3; % speech likely
@@ -28,6 +29,7 @@ winSamples = round(wsec*fs);
 % enframe the signal using hanning window
 frames = enframe(s,hanning(winSamples,'periodic'),winSamples);
 noFrames = size(frames,1);
+
 % -----------------------------------------------------------
 % FEATURE EXTRACTION
 % -----------------------------------------------------------
@@ -35,26 +37,39 @@ noFrames = size(frames,1);
 dft = rfft(frames,winSamples,2);
 % calculate the Power Spectrum of the noisy signal
 signalPS = dft.*conj(dft);
-sumPS = sum(signalPS,2);
+% estimate the Power Spectrum of the noise
+noisePS = estnoiseg(signalPS,wsec);
+% calculate the a posteriori SNR
+gamma = signalPS./noisePS;
+% enhance for a priori SNR computation
+s = ssubmmse(s,fs);
+frames = enframe(s,hanning(winSamples,'periodic'),winSamples);
+dft = rfft(frames,winSamples,2);
+signalPS = dft.*conj(dft);
 
-H = zeros(noFrames,1);
+lastSNR = 1;
+logRatio = zeros(noFrames,1);
 for i = 1:noFrames
-    probs = signalPS(i,:)./sumPS(i);
-    H(i) = entropy(probs);
+    xi = alpha.*lastSNR + (1-alpha).*max(gamma(i,:)-1,0);
+    lambdak = (1./(1+xi)).*exp((gamma(i,:).*xi)./(1+xi));
+    lglambdak = log(lambdak);
+    logRatio(i) = mean(lglambdak);
+    
+    lastSNR = signalPS(i,:)./noisePS(i,:);
 end
 
 % -----------------------------------------------------------
 % CLASSIFICATION
 % -----------------------------------------------------------
-% set the threshold (HOW TO CHOOSE AN APPROPRIATE THRESHOLD?)
-thr = 6;
+% set the threshold
+thr = 2;
 
 % preallocate for speed
-framesVAD = zeros(1,length(H));
+framesVAD = zeros(1,length(logRatio));
 preVAD = zeros(1,length(s));
 % calculate the VAD decisions
-for i = 1:length(H)
-    if(H(i) < thr)
+for i = 1:length(logRatio)
+    if(logRatio(i) > thr)
         framesVAD(i) = 1;
         preVAD(1,(1+(i-1)*winSamples):(i*winSamples)) = 1;
     else
@@ -66,7 +81,7 @@ end
 % -----------------------------------------------------------
 % POST-PROCESSING
 % -----------------------------------------------------------
-% apply the ETSI hang-over
+% apply hang-over scheme from the original paper
 T = 5;
 hangoverVAD = zeros(1,noFrames);
 
