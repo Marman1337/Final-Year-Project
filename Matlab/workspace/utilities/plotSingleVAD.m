@@ -1,10 +1,10 @@
-function plotSingleVAD(cleanSpeech,noise,fs)
+function plotSingleVAD(s,n,fs,vadfn)
 
 % truncate the noise signal to the length of the speech
-noise = noise(1:length(cleanSpeech));
+n = n(1:length(s));
 % calculate initial powers per sample
-psig = sum(cleanSpeech.*cleanSpeech)/length(cleanSpeech);
-pnoi = sum(noise.*noise)/length(noise);
+psig = sum(s.*s)/length(s);
+pnoi = sum(n.*n)/length(n);
 % calculate desired powers of noise at different SNR
 pn = cell(4,2);
 pn{1,1} = psig/10^2; pn{1,2} = '20 dB';
@@ -15,55 +15,46 @@ pn{5,1} = psig/10^(-0.5); pn{5,2} = '-5 dB';
 
 for i=3:4
     % scale the noise to the desired power
-    scaledNoise = noise.*sqrt(pn{i,1}/pnoi);
+    scaledNoise = n.*sqrt(pn{i,1}/pnoi);
     % add the scaled noise to the signal to create a noisy speech at the
     % desired SNR
-    noisySpeech = cleanSpeech + scaledNoise;
+    noisySpeech = s + scaledNoise;
     % perform VAD on the noisy speech using
     % (1) no speech enhancement
-    %[ noEnhance, noEnhancepre ] = sohnVAD(noisySpeech,fs,0.05,0);
-    [ noEnhance, noEnhancepre ] = LTSDVAD(noisySpeech,fs,0.05,0);
-    %[ noEnhance, noEnhancepre ] = entropyVAD(noisySpeech,fs,0.05,0);
-    %[ noEnhance, noEnhancepre ] = PARVAD(noisySpeech,fs,0.05,0);
+    [ noEnhance, noEnhancepre ] = vadfn(noisySpeech,fs,0.05,0);
     
     % (2) spectral subtraction speech enhancement
-    %[ enhancesub, enhancesubpre ] = sohnVAD(noisySpeech,fs,0.05,1);
-    [ enhancesub, enhancesubpre ] = LTSDVAD(noisySpeech,fs,0.05,1);
-    %[ enhancesub, enhancesubpre ] = entropyVAD(noisySpeech,fs,0.05,1);
-    %[ enhancesub, enhancesubpre ] = PARVAD(noisySpeech,fs,0.05,1);
+    [ enhancesub, enhancesubpre ] = vadfn(noisySpeech,fs,0.05,1);
     
     % (3) MMSE speech enhancement
-    %[ enhancemmse, enhancemmsepre ] = sohnVAD(noisySpeech,fs,0.05,2);
-    [ enhancemmse, enhancemmsepre ] = LTSDVAD(noisySpeech,fs,0.05,2);
-    %[ enhancemmse, enhancemmsepre ] = entropyVAD(noisySpeech,fs,0.05,2);
-    %[ enhancemmse, enhancemmsepre ] = PARVAD(noisySpeech,fs,0.05,2);
+    [ enhancemmse, enhancemmsepre ] = vadfn(noisySpeech,fs,0.05,2);
     
     figure('units','normalized','outerposition',[0 0.04 1 0.96])
     subplot(3,1,1);
     plot(noisySpeech);
     hold on;
-    plot(cleanSpeech,'g');
+    plot(s,'g');
     plot(1.1*max(noisySpeech).*noEnhance,'r');
     plot(1.1*min(noisySpeech).*noEnhancepre,'m');
-    axis([1 length(cleanSpeech) 1.15*min(noisySpeech) 1.15*max(noisySpeech)]);
+    axis([1 length(s) 1.15*min(noisySpeech) 1.15*max(noisySpeech)]);
     title(strcat(pn{i,2},{' '},'noenhance'));
 
     subplot(3,1,2);
     plot(noisySpeech);
     hold on;
-    plot(cleanSpeech,'g');
+    plot(s,'g');
     plot(1.1*max(noisySpeech).*enhancesub,'r');
     plot(1.1*min(noisySpeech).*enhancesubpre,'m');
-    axis([1 length(cleanSpeech) 1.15*min(noisySpeech) 1.15*max(noisySpeech)]);
+    axis([1 length(s) 1.15*min(noisySpeech) 1.15*max(noisySpeech)]);
     title(strcat(pn{i,2},{' '},'enhance specsub'));
     
     subplot(3,1,3);
     plot(noisySpeech);
     hold on;
-    plot(cleanSpeech,'g');
+    plot(s,'g');
     plot(1.1*max(noisySpeech).*enhancemmse,'r');
     plot(1.1*min(noisySpeech).*enhancemmsepre,'m');
-    axis([1 length(cleanSpeech) 1.15*min(noisySpeech) 1.15*max(noisySpeech)]);
+    axis([1 length(s) 1.15*min(noisySpeech) 1.15*max(noisySpeech)]);
     title(strcat(pn{i,2},{' '},'enhance ssubmmse'));
 end
 end

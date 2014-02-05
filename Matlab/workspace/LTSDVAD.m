@@ -1,4 +1,9 @@
-function [ postVAD, preVAD ] = LTSDVAD(s,fs,wsec,enhance)
+function [ postVAD, preVAD ] = LTSDVAD(s,fs,wsec,enhance,thr)
+% set the default threshold if none supplied
+if(nargin < 5)
+    thr = 8;
+end
+
 % default - no speech enhancement
 if(nargin < 4)
     enhance = 0;
@@ -65,7 +70,7 @@ end
 % CLASSIFICATION
 % -----------------------------------------------------------
 % set the threshold
-thr = 8;
+%thr = 8;
 
 % preallocate for speed
 framesVAD = zeros(1,noFrames);
@@ -85,7 +90,7 @@ end
 % POST-PROCESSING
 % -----------------------------------------------------------
 % apply hang-over scheme from the original paper
-T = 5;
+T = 0;
 hangoverVAD = zeros(1,noFrames);
 
 for i = 1:(noFrames-B+1)

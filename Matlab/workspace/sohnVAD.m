@@ -1,4 +1,9 @@
-function [ postVAD, preVAD ] = sohnVAD(s,fs,wsec,enhance)
+function [ postVAD, preVAD ] = sohnVAD(s,fs,wsec,enhance,thr)
+% set the default threshold if none supplied
+if(nargin < 5)
+    thr = 2;
+end
+
 % default - no speech enhancement
 if(nargin < 4)
     enhance = 0;
@@ -41,28 +46,28 @@ signalPS = dft.*conj(dft);
 noisePS = estnoiseg(signalPS,wsec);
 % calculate the a posteriori SNR
 gamma = signalPS./noisePS;
-% enhance for a priori SNR computation
-s = ssubmmse(s,fs);
-frames = enframe(s,hanning(winSamples,'periodic'),winSamples);
-dft = rfft(frames,winSamples,2);
-signalPS = dft.*conj(dft);
 
-lastSNR = 1;
+A = 1;
+noi = 1;
 logRatio = zeros(noFrames,1);
 for i = 1:noFrames
-    xi = alpha.*lastSNR + (1-alpha).*max(gamma(i,:)-1,0);
-    lambdak = (1./(1+xi)).*exp((gamma(i,:).*xi)./(1+xi));
-    lglambdak = log(lambdak);
-    logRatio(i) = mean(lglambdak);
+    gami = gamma(i,:);
+    xi = alpha*((A.^2)./noi) + (1-alpha).*max(gami-1,0);
+    V = (gami.*xi)./(1+xi);
+    V2 = V/2;
+    A = 0.5*sqrt(pi)*sqrt(V)./gami.*exp(-V2).*((1+V).*besseli(0,V2) + V.*besseli(1,V2));
+    A(isnan(A)|isinf(A)) = 1;
+    A = A.*sqrt(signalPS(i,:));
+    noi = noisePS(i,:);
     
-    lastSNR = signalPS(i,:)./noisePS(i,:);
+    logRatio(i) = mean(V - log(1+xi));
 end
 
 % -----------------------------------------------------------
 % CLASSIFICATION
 % -----------------------------------------------------------
 % set the threshold
-thr = 2;
+%thr = 2;
 
 % preallocate for speed
 framesVAD = zeros(1,length(logRatio));
@@ -82,7 +87,7 @@ end
 % POST-PROCESSING
 % -----------------------------------------------------------
 % apply hang-over scheme from the original paper
-T = 5;
+T = 0;
 hangoverVAD = zeros(1,noFrames);
 
 for i = 1:(noFrames-B+1)

@@ -1,4 +1,9 @@
-function [ postVAD, preVAD ] = PARVAD(s,fs,wsec,enhance)
+function [ postVAD, preVAD ] = PARVAD(s,fs,wsec,enhance,thr)
+% set the default threshold if none supplied
+if(nargin < 5)
+    thr = -50;
+end
+
 % default - no speech enhancement
 if(nargin < 4)
     enhance = 0;
@@ -44,7 +49,7 @@ signalPS = dft.*conj(dft);
 pitch = fxpefac(s,fs,wsec);
 pitchBin = winSamples.*(pitch./fs);
 noPitches = length(pitchBin);
-% for some weird reason PEFAC sometimes returns less pitch values than
+% for some reason PEFAC sometimes returns fewer pitch values than
 % there is frames, in that case artificially assign the last returned pitch
 % to the missing frames
 if(noPitches < noFrames)
@@ -78,7 +83,7 @@ logRatio = 10*log10(lr);
 % CLASSIFICATION
 % -----------------------------------------------------------
 % set the threshold
-thr = -50;
+% thr = -50;
 
 % preallocate for speed
 framesVAD = zeros(1,noFrames);
@@ -98,7 +103,7 @@ end
 % POST-PROCESSING
 % -----------------------------------------------------------
 % apply hang-over scheme from the original paper
-T = 5;
+T = 0;
 hangoverVAD = zeros(1,noFrames);
 
 for i = 1:(noFrames-B+1)
