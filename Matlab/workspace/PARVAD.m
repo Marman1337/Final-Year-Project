@@ -76,7 +76,7 @@ ro_p = ro - ro_a;
 mu = ro_p./ro_a;
 % calculate the likelihood ratio
 lr = (1./mu).*exp(mu.^2 - 1./mu.^2);
-lr = lr + 0.00001.*(lr < 1e-5);
+lr = lr + 1e-10.*(lr < 1e-10);
 logRatio = 10*log10(lr);
 
 % -----------------------------------------------------------
