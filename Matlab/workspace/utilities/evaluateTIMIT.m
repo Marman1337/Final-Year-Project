@@ -37,11 +37,11 @@ for i = 1:vadno
             FP = FP + stats{3,2};
             FN = FN + stats{4,2};
         end
+        
+        % true positive rate
+        vadinfo{i,2}(j,2) = TP/(TP+FN);
+        % false positive rate
+        vadinfo{i,2}(j,3) = FP/(FP+TN);
     end
-    
-    % true positive rate
-    vadinfo{i,2}(j,2) = TP/(TP+FN);
-    % false positive rate
-    vadinfo{i,2}(j,3) = FP/(FP+TN);
 end
 end
