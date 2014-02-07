@@ -13,7 +13,7 @@ pn{3,1} = psig/10^(0.5); pn{3,2} = '5 dB';
 pn{4,1} = psig; pn{4,2} = '0 dB';
 pn{5,1} = psig/10^(-0.5); pn{5,2} = '-5 dB';
 
-for i=3:4
+for i=3:5
     % scale the noise to the desired power
     scaledNoise = n.*sqrt(pn{i,1}/pnoi);
     % add the scaled noise to the signal to create a noisy speech at the

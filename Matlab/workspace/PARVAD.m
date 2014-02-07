@@ -1,7 +1,7 @@
 function [ postVAD, preVAD ] = PARVAD(s,fs,wsec,enhance,thr)
 % set the default threshold if none supplied
 if(nargin < 5)
-    thr = -50;
+    thr = -2000;
 end
 
 % default - no speech enhancement
@@ -76,7 +76,7 @@ ro_p = ro - ro_a;
 mu = ro_p./ro_a;
 % calculate the likelihood ratio
 lr = (1./mu).*exp(mu.^2 - 1./mu.^2);
-lr = lr + 1e-10.*(lr < 1e-10);
+lr = lr + 1e-200.*(lr < 1e-200);
 logRatio = 10*log10(lr);
 
 % -----------------------------------------------------------
