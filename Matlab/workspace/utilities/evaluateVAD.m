@@ -6,7 +6,7 @@ function [ stats, postVAD ] = evaluateVAD(s,n,fs,vadfn,snrr,actualVAD,plt)
     % truncate the noise signal to the length of the speech
     n = n(1:length(s));
     % calculate initial powers per sample
-    psig = sum(s.*s)/length(s);
+    psig = activlev(s,16000);
     pnoi = sum(n.*n)/length(n);
     % calculate the scaling constant for noise
     sc = sqrt(psig/(pnoi*10^(snrr/10)));

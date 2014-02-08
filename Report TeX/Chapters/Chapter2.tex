@@ -11,7 +11,7 @@
 %----------------------------------------------------------------------------------------
 
 \section{Standard VAD algorithms}
-\label{sec:standardVADs}
+\label{sec:StandardVADs}
 
 Being an important tool in many speech processing applications, a number of VAD algorithms have been subject to standardisation by various organisations such as the International Telecommunication Union (ITU-T), European Telecommunications Standards Institute (ETSI), Telecommunications Industry Association (TIA) or Electronic Industries Alliance (EIA). Most standardised algorithms use the energy of the input signal as a Voice Activity Detection feature. It is important to note that the standardised VAD approaches have been developed for use in the telecommunications industry, with particular emphasis on the application for discontinuous transmission (DTX), which may make them less appropriate for other speech processing tasks such as speech recognition. Nevertheless, these algorithms often serve as a benchmark for the newly developed VADs, whose performance is often compared to the standard ones.
 
@@ -122,7 +122,7 @@ Block diagram of TIA/EIA IS-733 VAD is presented in Figure \ref{fig:IS733}. The 
 
 \subsection{Summary}
 
-Some VAD algorithms have been standardised by various telecommunication standards institutes (ITU-T, ETSI, TIA/EIA). Those algorithms are predominantly based on simple features such as the energy of the signal or the zero-crossing rate, sometimes across different frequency ranges. While such measures are often sufficient to meet the requirements of the high SNR transmission found in telecommunications, their performance drops significantly with the increased power of noise. Nevertheless, the standard algorithms serve as a convenient benchmark for the more recently proposed VADs, described in Section \ref{sec:RobustVADs} which are aimed to be more noise-robust and useful in other speech processing tasks.
+Some VAD algorithms have been standardised by various telecommunication standards institutes (ITU-T, ETSI, TIA/EIA). Those algorithms are predominantly based on simple features such as the energy of the signal or the zero-crossing rate, sometimes across different frequency ranges. While such measures are often sufficient to meet the requirements of the high SNR transmission found in telecommunications, their performance drops significantly with the increased power of noise. Nevertheless, the standard algorithms serve as a convenient benchmark for the more recently proposed VADs, described in section \ref{sec:RobustVADs} which are aimed to be more noise-robust and useful in other speech processing tasks.
 
 %----------------------------------------------------------------------------------------
 %	SECTION 2 - Noise-robust VAD algorithms
@@ -131,7 +131,7 @@ Some VAD algorithms have been standardised by various telecommunication standard
 \section{Noise-robust VAD algorithms}
 \label{sec:RobustVADs}
 
-Apart from standard VAD algorithms described in Section \ref{sec:standardVADs}, many independent researchers have made numerous attempts to develop novel noise-robust Voice Activity Detection methods. Most of these research results either in invention of the new features or identification of ways in which the existing ones might be improved. Ideally, the most robust feature should have no common values for the noise and speech frames. Figure \ref{fig:featureDist} shows the distribution of values for some of the features used by algorithms described in this section for the clean speech from the TIMIT \cite{TIMIT} database and a variety of noise types from the NOISEX-92 \cite{NOISEX} database. It is clear, that in both cases the values for the clean speech are mostly distinct from the ones for noise frames, however there is still much overlap between them which indicates a room for improvement.
+Apart from standard VAD algorithms described in section \ref{sec:StandardVADs}, many independent researchers have made numerous attempts to develop novel noise-robust Voice Activity Detection methods. Most of these research results either in invention of the new features or identification of ways in which the existing ones might be improved. Ideally, the most robust feature should have no common values for the noise and speech frames. Figure \ref{fig:featureDist} shows the distribution of values for some of the features used by algorithms described in this section for the clean speech from the TIMIT \cite{TIMIT} database and a variety of noise types from the NOISEX-92 \cite{NOISEX} database. It is clear, that in both cases the values for the clean speech are mostly distinct from the ones for noise frames, however there is still much overlap between them which indicates a room for improvement.
 
 \begin{figure}[htbp]
 	\centering
@@ -140,72 +140,6 @@ Apart from standard VAD algorithms described in Section \ref{sec:standardVADs}, 
 	\caption[Distribution of Sohn's and LTSD features for speech and noise]{Distribution of Sohn's \cite{SohnInitial} and LTSD \cite{LTSD} features for speech and noise}
 	\label{fig:featureDist}
 \end{figure}
-
-\subsection{Likelihood Ratio Test VADs}
-\label{ssec:LRT}
-
-'A Statistical Model-Based Voice Activity Detector' proposed by Sohn \emph{et al.} \cite{Sohn} is one of the most widely cited VAD algorithms due to its ease of implementation, robustness and extensibility. The idea of using a Likelihood Ratio Test (LRT) has been considered by many other researchers who tried to improve on the original approach \cite{ImprovedLikelihood, Cho}. The initial algorithm has been developed in \cite{SohnInitial} and extended to improve noise-robustness in \citep{Sohn}. Block diagram of Sohn's VAD is presented in Figure \ref{fig:Sohn}.
-
-\begin{figure}[htbp]
-	\centering
-		\includegraphics[width=0.9\columnwidth]{Figures/Sohn.png}
-		\rule{37em}{0.5pt}
-	\caption[Block diagram of the Statistical Model-Based VAD]{Block diagram of the Statistical Model-Based VAD \cite{Sohn}}
-	\label{fig:Sohn}
-\end{figure}
-
-The algorithm is based on a LRT to discriminate between two hypotheses:
-\begin{itemize}
-\item[] $H_0$ - speech absent
-\item[] $H_1$ - speech present
-\end{itemize}
-
-The measure which is used for the preliminary VAD decision (i.e. before the hang-over scheme) is a combination of the likelihood ratios from each frequency bin $k$:
-
-\begin{equation}
-\log \Lambda = \frac{1}{L} \sum_{k=0}^{L-1} \log \frac{1}{1+\xi_k} e^{\frac{\gamma_k\xi_k}{1+\xi_k}}
-\end{equation}
-
-where $L$ is the number of samples in each frame, $\xi_k$ is the \emph{a priori} SNR and $\gamma_k$ is the \emph{a posteriori} SNR. In order for the algorithm to work, one needs to obtain the values for $\xi_k = \frac{\left | S_k \right |^{2}}{\left | N_k \right |^{2}}$ and $\gamma_k = \frac{\left | X_k \right |^{2}}{\left | N_k \right |^{2}}$ where $\left | X_k \right |^{2}, \left | S_k \right |^{2}, \left | N_k \right |^{2}$ are the PSDs of the noisy speech, clean speech and noise respectively. $\left | N_k \right |^{2}$ can be obtained by means of any noise estimation procedure (e.g. \cite{MSnoise} or \cite{MMSEnoise}), whose accuracy influences the noise robustness of the algorithm. The VAD feature is thresholded by an empirically determined constant for the preliminary decision. Finally, authors proposed a Hidden Markov model (HMM) hang-over scheme in order to improve accuracy of the algorithm for the low-energy beginnings and endings of the speech utterances.
-
-While the original idea to the derivation of the unknown \emph{a priori} SNR $\xi_k$ involved the Maximum Likelihood estimator $\xi_k^{ML} = \gamma_k - 1$, in \cite{Sohn} a limitation of the procedure has been identified which makes it biased towards $H_1$. In an effort to improve the algorithm, authors proposed a decision-directed (DD) estimation procedure which reduces the fluctuation of the likelihood ratios by using a MMSE short-time spectral amplitude estimator \cite{Ephraim} and a first-order low pass filter.
-
-In an effort to further improve the LRT-based algorithm, Cho \emph{et al.} \cite{Cho} investigated the DD approach with particular interest in the detection errors occurring at the endings of speech utterances. It was determined that the frequent misdetections are due to the delay in the DD \emph{a priori} SNR estimator, which prevents the estimated value to drop quick enough for the likelihood ratio to stay above the threshold during the short, low-energy speech offset regions. In order to alleviate this problem, authors proposed a smoothed likelihood ratio (SRT), which delays the sudden drops in the LR at the speech offset regions due to the constant $\alpha \approx 0.9$. The SRT is defined in Equation \ref{eq:SRT} where $n$ relates to the frame number while $k$ is the frequency bin. The final VAD decision is calculated by taking a geometric mean of the SRTs from all frequency bins.
-
-\begin{equation}
-\Phi (n,k) = \exp \left\{ \alpha \log \left( \Phi (n-1,k) \right) + (1-\alpha) \log \left( \Lambda (n,k) \right) \right\}
-\label{eq:SRT}
-\end{equation}
-
-Both \cite{Sohn} and \cite{Cho} VADs consider only a single frame when making a speech/non-speech decision and hence they are likely to misclassify the low-energy frames for which the short-time SNR is much lower than the average SNR of the entire signal. To aid the proper detection of such frames, in \cite{RamirezMulti} Ramirez \emph{et al.} proposed a multiple observation vector which considers $M$ frames before and ahead of the current frame in formulating the likelihood ratio. The main rationale behind this idea is that the weaker speech frames are often surrounded by the stronger parts, and their inclusion in the LRT might boost its value above the threshold. While this approach results in somewhat improved performance, it also introduces the delay of $M$ frames to the algorithm, which might prevent it from being used in some real-time applications.
-
-\subsection{Long-Term Spectral Divergence VAD}
-
-Another popular and widely cited algorithm is the Ramirez \emph{et al.} \cite{LTSD} VAD based on the long-term speech information. The main assumption of the algorithm is that the most discriminative speech/non-speech information lies on the shape of the magnitude spectrum of the analysed signal. However, instead of considering each frame independently, the algorithm also includes the information contained in the neighbouring frames. This is achieved by computing the so-called long-term spectral envelope (LTSE) which incorporates information contained in the current frame as well as $N$ preceding and succeeding frames i.e. $2N+1$ frames in total for every calculation. Based on the LTSE, the long-term spectral divergence (LTSD) is calculated which serves as the VAD decision rule. In Ramirez's study, it has been established that the best performance is achieved for $N=6$ however this value is likely to be dependent on the particular application as well as the level of noise.
-
-\begin{figure}[htbp]
-	\centering
-		\includegraphics[width=0.9\columnwidth]{Figures/LTSD.png}
-		\rule{37em}{0.5pt}
-	\caption[Block diagram of the Long-Term Spectral Divergence VAD]{Block diagram of the Long-Term Spectral Divergence VAD \cite{LTSD}}
-	\label{fig:LTSD}
-\end{figure}
-
-Block diagram of the LTSD-based VAD is presented in Figure \ref{fig:LTSD}. The algorithm starts with an assumption that the first $N$ frames of each utterance do not contain any speech and that the average magnitude spectrum of the noise can be estimated from them. After that, the LTSE for each frame is computed according to Equation \ref{eq:LTSE} where $X(k,l)$ is the amplitude spectrum at frequency $k$ for frame $l$.
-
-\begin{equation}
-\text{LTSE}(k,l) = \max \left \{ X(k,l-N),\ldots,X(k,l),\ldots,X(k,l+N) \right \}
-\label{eq:LTSE}
-\end{equation}
-
-The LTSD is obtained from Equation \ref{eq:LTSD} where $M$ is the number of frequency bins in the DFT and $N(k)$ is the average noise amplitude spectrum at frequency $k$ as estimated before. Essentially what the equation describes is the average deviation of the LTSE from the noise statistics at each frequency bin. In other words, this measure might be interpreted as a variation of the estimated \emph{a posteriori} signal-to-noise ratio, which is an idea exploited in many VAD algorithms.
-
-\begin{equation}
-\text{LTSD}(l) = 10 \log_{10} \left ( \frac{1}{M} \sum_{k=0}^{M-1} \frac{\text{LTSE}^{2}(k,l)}{N^{2}(k)} \right )
-\label{eq:LTSD}
-\end{equation}
-
-Eventually, the LTSD feature is thresholded to form a preliminary VAD decision after which the hang-over scheme is applied.
 
 \subsection{Entropy-based VADs}
 
@@ -247,6 +181,74 @@ where $P( \left |  Y \left ( \omega_i, t \right ) \right |^{2} )$ denotes the fr
 \end{figure}
 
 All entropy-based approaches to VAD are most effective for the white noise and alike, since the distribution of entropy for speech is much different from the one for noise. The completely unpredictable nature of white noise yields high entropy values, while the more organised and predictable clean speech signals present a naturally lower entropy. Both the time and frequency domain algorithms' performance drops significantly for a variety of coloured noise types. In order to improve the performance for in such environments, authors of \cite{Renevey} propose using a \emph{whitening} filter which divides the spectrum of the current frame by an average of all frames.
+
+\subsection{Likelihood Ratio Test VADs}
+\label{ssec:LRT}
+
+'A Statistical Model-Based Voice Activity Detector' proposed by Sohn \emph{et al.} \cite{Sohn} is one of the most widely cited VAD algorithms due to its ease of implementation, robustness and extensibility. The idea of using a Likelihood Ratio Test (LRT) has been considered by many other researchers who tried to improve on the original approach \cite{ImprovedLikelihood, Cho}. The initial algorithm has been developed in \cite{SohnInitial} and extended to improve noise-robustness in \citep{Sohn}. Block diagram of Sohn's VAD is presented in Figure \ref{fig:Sohn}.
+
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=0.9\columnwidth]{Figures/Sohn.png}
+		\rule{37em}{0.5pt}
+	\caption[Block diagram of the Statistical Model-Based VAD]{Block diagram of the Statistical Model-Based VAD \cite{Sohn}}
+	\label{fig:Sohn}
+\end{figure}
+
+The algorithm is based on a LRT to discriminate between two hypotheses:
+\begin{itemize}
+\item[] $H_0$ - speech absent
+\item[] $H_1$ - speech present
+\end{itemize}
+
+The measure which is used for the preliminary VAD decision (i.e. before the hang-over scheme) is a combination of the likelihood ratios from each frequency bin $k$:
+
+\begin{equation}
+\log \Lambda = \frac{1}{L} \sum_{k=0}^{L-1} \log \frac{1}{1+\xi_k} e^{\frac{\gamma_k\xi_k}{1+\xi_k}}
+\end{equation}
+
+where $L$ is the number of samples in each frame, $\xi_k$ is the \emph{a priori} SNR and $\gamma_k$ is the \emph{a posteriori} SNR. In order for the algorithm to work, one needs to obtain the values for $\xi_k = \frac{\left | S_k \right |^{2}}{\left | N_k \right |^{2}}$ and $\gamma_k = \frac{\left | X_k \right |^{2}}{\left | N_k \right |^{2}}$ where $\left | X_k \right |^{2}, \left | S_k \right |^{2}, \left | N_k \right |^{2}$ are the PSDs of the noisy speech, clean speech and noise respectively. $\left | N_k \right |^{2}$ can be obtained by means of any noise estimation procedure (e.g. \cite{MSnoise} or \cite{MMSEnoise}), whose accuracy influences the noise robustness of the algorithm. The VAD feature is thresholded by an empirically determined constant for the preliminary decision. Finally, authors proposed a Hidden Markov model (HMM) hang-over scheme in order to improve accuracy of the algorithm for the low-energy beginnings and endings of the speech utterances.
+
+While the original idea to the derivation of the unknown \emph{a priori} SNR $\xi_k$ involved the Maximum Likelihood estimator $\xi_k^{ML} = \gamma_k - 1$, in \cite{Sohn} a limitation of the procedure has been identified which makes it biased towards $H_1$. In an effort to improve the algorithm, authors proposed a decision-directed (DD) estimation procedure which reduces the fluctuation of the likelihood ratios by using a MMSE short-time spectral amplitude estimator \cite{Ephraim} and a first-order low pass filter.
+
+In an effort to further improve the LRT-based algorithm, Cho \emph{et al.} \cite{Cho} investigated the DD approach with particular interest in the detection errors occurring at the endings of speech utterances. It was determined that the frequent misdetections are due to the delay in the DD \emph{a priori} SNR estimator, which prevents the estimated value to drop quick enough for the likelihood ratio to stay above the threshold during the short, low-energy speech offset regions. In order to alleviate this problem, authors proposed a smoothed likelihood ratio (SRT), which delays the sudden drops in the LR at the speech offset regions due to the constant $\alpha \approx 0.9$. The SRT is defined in Equation \ref{eq:SRT} where $n$ relates to the frame number while $k$ is the frequency bin. The final VAD decision is calculated by taking a geometric mean of the SRTs from all frequency bins.
+
+\begin{equation}
+\Phi (n,k) = \exp \left\{ \alpha \log \left( \Phi (n-1,k) \right) + (1-\alpha) \log \left( \Lambda (n,k) \right) \right\}
+\label{eq:SRT}
+\end{equation}
+
+Both \cite{Sohn} and \cite{Cho} VADs consider only a single frame when making a speech/non-speech decision and hence they are likely to misclassify the low-energy frames for which the short-time SNR is much lower than the average SNR of the entire signal. To aid the proper detection of such frames, in \cite{RamirezMulti} Ramirez \emph{et al.} proposed a multiple observation vector which considers $M$ frames before and ahead of the current frame in formulating the likelihood ratio. The main rationale behind this idea is that the weaker speech frames are often surrounded by the stronger parts, and their inclusion in the LRT might boost its value above the threshold. While this approach results in somewhat improved performance, it also introduces the delay of $M$ frames to the algorithm, which might prevent it from being used in some real-time applications.
+
+\subsection{Long-Term Spectral Divergence VAD}
+
+Another popular and widely cited algorithm is the Ramirez \emph{et al.} \cite{LTSD} VAD based on the long-term speech information. The main assumption of the algorithm is that the most discriminative speech/non-speech information lies on the shape of the magnitude spectrum of the analysed signal. However, instead of considering each frame independently, the algorithm also includes the information contained in the neighbouring frames. The reason behind that is to boost the detection of the low-energy unvoiced phonemes which are typically surrounded by the high-energy voiced ones. Therefore, it can be said that the LTSD algorithm uses an implicit hang-over scheme incorporated directly in the voicing feature.
+
+The algorithm starts by computing the so-called long-term spectral envelope (LTSE) which uses information contained in the current frame as well as $N$ preceding and succeeding frames i.e. $2N+1$ frames in total for every calculation. Based on the LTSE, the long-term spectral divergence (LTSD) is calculated which serves as the VAD decision rule. In Ramirez's study, it has been established that the best performance is achieved for $N=6$ however this value is likely to be dependent on the particular application as well as the level of noise.
+
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=0.9\columnwidth]{Figures/LTSD.png}
+		\rule{37em}{0.5pt}
+	\caption[Block diagram of the Long-Term Spectral Divergence VAD]{Block diagram of the Long-Term Spectral Divergence VAD \cite{LTSD}}
+	\label{fig:LTSD}
+\end{figure}
+
+Block diagram of the LTSD-based VAD is presented in Figure \ref{fig:LTSD}. The algorithm starts with an assumption that the first $N$ frames of each utterance do not contain any speech and that the average magnitude spectrum of the noise can be estimated from them. After that, the LTSE for each frame is computed according to Equation \ref{eq:LTSE} where $X(k,l)$ is the amplitude spectrum at frequency $k$ for frame $l$.
+
+\begin{equation}
+\text{LTSE}(k,l) = \max \left \{ X(k,l-N),\ldots,X(k,l),\ldots,X(k,l+N) \right \}
+\label{eq:LTSE}
+\end{equation}
+
+The LTSD is obtained from Equation \ref{eq:LTSD} where $M$ is the number of frequency bins in the DFT and $N(k)$ is the average noise amplitude spectrum at frequency $k$ as estimated before. Essentially what the equation describes is the average deviation of the LTSE from the noise statistics at each frequency bin. In other words, this measure might be interpreted as a variation of the estimated \emph{a posteriori} signal-to-noise ratio, which is an idea exploited in many VAD algorithms.
+
+\begin{equation}
+\text{LTSD}(l) = 10 \log_{10} \left ( \frac{1}{M} \sum_{k=0}^{M-1} \frac{\text{LTSE}^{2}(k,l)}{N^{2}(k)} \right )
+\label{eq:LTSD}
+\end{equation}
+
+Eventually, the LTSD feature is thresholded to form a preliminary VAD decision which might be further revised by a separate hang-over scheme.
 
 \subsection{Pitch and fundamental frequency based VADs}
 
@@ -297,7 +299,7 @@ The authors propose to approximate the average powers from Equations \ref{eq:ape
 
 While this concept is likely to be robust to various non-stationary noise types, by definition it cannot cope with the unvoiced parts of speech, detection of which has to be performed by a hang-over scheme. In the original paper, authors did not specify how to estimate the number of harmonics $\vartheta$ for each frame, which is crucial to the proper working of the algorithm. A potential improvement might also come from an improved pitch detection method.
 
-Another approach to using harmonic frequency components\footnote{This algorithm also builds on the idea of LRT described in Section \ref{ssec:LRT}. The main improvement comes however from utilising the spectral harmonicity therefore it has been included in this section} for VAD has been investigated by Tan \emph{et al.} in \cite{Tan}. The authors claim, that under low SNR the approach from \cite{RamirezMulti} is likely to fail since the LRs from the high-energy frames will not be strong enough to aid the proper classification of the low-energy frames. Therefore, they propose a new way of calculating the LRs for the voiced frames, defined in Equation \ref{eq:harmfreq} where $\vartheta$ is the number of harmonics within the resolution of the DFT and $f_0$ denotes the fundamental frequency. The algorithm calculates the LR only using the frequency bins which are multiples of the fundamental frequency.
+Another approach to using harmonic frequency components\footnote{This algorithm also builds on the idea of LRT described in section \ref{ssec:LRT}. The main improvement comes however from utilising the spectral harmonicity therefore it has been included in this section} for VAD has been investigated by Tan \emph{et al.} in \cite{Tan}. The authors claim, that under low SNR the approach from \cite{RamirezMulti} is likely to fail since the LRs from the high-energy frames will not be strong enough to aid the proper classification of the low-energy frames. Therefore, they propose a new way of calculating the LRs for the voiced frames, defined in Equation \ref{eq:harmfreq} where $\vartheta$ is the number of harmonics within the resolution of the DFT and $f_0$ denotes the fundamental frequency. The algorithm calculates the LR only using the frequency bins which are multiples of the fundamental frequency.
 
 \begin{equation}
 \log \Lambda_v = \frac{1}{\vartheta} \sum_{m=1}^{\vartheta} \log \Lambda(m f_0)
@@ -306,10 +308,20 @@ Another approach to using harmonic frequency components\footnote{This algorithm 
 
 Voiced frames are pre-identified by the pitch determination algorithm, and all others are considered as unvoiced. The LR for the unvoiced frames is calculated in a standard way from \cite{SohnInitial} i.e. by considering all frequency bins.
 
-%\subsection{Summary}
+\subsection{Summary}
+
+Voice Activity Detection has been studied by numerous researchers over the recent years. Some of the most simple features proposed in the literature, apart from energy, are based on the entropy of the signal, either in time or frequency domain.
+
+The popular LRT based approach, initially proposed by Sohn \emph{et al.}, has served as a basis for many researchers who tried to improve the original algorithm. While Sohn \emph{et al.} employed the LRT to the SNR, the idea has also been applied to other features, such as the periodic to aperiodic component ratio. Nevertheless, many VAD algorithms still utilise the estimated SNR as a voicing feature. Ramirez \emph{et al.} proposed one such VAD, where the SNR is calculated for a given frame including information from the neighbouring frames, rather than considering each frame independently.
+
+The most noise-robust VAD algorithms are likely to be the ones which are based on the harmonicity of the speech signal. Since voiced speech typically does not present high energy in all frequency bins, it is beneficial to first identify the fundamental frequency of a signal and consider the power around the multiples of it. While this approach inherently cannot detect the aperiodic unvoiced phonemes, a clever hang-over scheme can help in their proper classification, by extending the initial VAD decisions to include such misdetected speech segments.
 
 %----------------------------------------------------------------------------------------
 %	SECTION 3 - Conclusion
 %----------------------------------------------------------------------------------------
 
-%\section{Conclusion}
+\section{Conclusion}
+
+This chapter presented a literature survey of the most commonly encountered approaches to Voice Activity Detection. In section \ref{sec:StandardVADs} some standard algorithms have been described while section \ref{sec:RobustVADs} reviewed the recent research efforts in the VAD area.
+
+In terms of noise-robustness, the standard algorithms are unlikely to achieve satisfactory performance under low SNR conditions since they are primarily based on features such as the energy or the zero-crossing rate which are easily degradable by high background noise levels. In such conditions, performance of the recently proposed VAD algorithms is expected to be much better.

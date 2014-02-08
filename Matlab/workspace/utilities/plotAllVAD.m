@@ -1,4 +1,4 @@
-function [ stats ] = plotAllVAD(cleanSpeech,noise,fs,actualVAD)
+function [ stats ] = plotAllVAD(s,n,fs,actualVAD)
 % evaluate the VADs?
 if(nargin < 5)
     evaluate = 0;
@@ -7,10 +7,10 @@ else
 end
 
 % truncate the noise signal to the length of the speech
-noise = noise(1:length(cleanSpeech));
+n = n(1:length(s));
 % calculate initial powers per sample
-psig = sum(cleanSpeech.*cleanSpeech)/length(cleanSpeech);
-pnoi = sum(noise.*noise)/length(noise);
+psig = activlev(s,16000);
+pnoi = sum(n.*n)/length(n);
 % calculate desired powers of noise at different SNR
 pn = cell(5,2);
 pn{1,1} = psig/10^2; pn{1,2} = '20 dB';
@@ -25,10 +25,10 @@ end
 
 for i=3:4
     % scale the noise to the desired power
-    scaledNoise = noise.*sqrt(pn{i,1}/pnoi);
+    scaledNoise = n.*sqrt(pn{i,1}/pnoi);
     % add the scaled noise to the signal to create a noisy speech at the
     % desired SNR
-    noisySpeech = cleanSpeech + scaledNoise;
+    noisySpeech = s + scaledNoise;
     % perform VAD on the noisy speech using
     [ postSohn, preSohn ] = sohnVAD(noisySpeech,fs,0.05);
     [ postLTSD, preLTSD ] = LTSDVAD(noisySpeech,fs,0.05);
@@ -40,46 +40,46 @@ for i=3:4
     subplot(5,1,1);
     plot(noisySpeech);
     hold on;
-    plot(cleanSpeech,'g');
+    plot(s,'g');
     plot(1.1*max(noisySpeech).*postSohn,'r');
     plot(1.1*min(noisySpeech).*preSohn,'m');
-    axis([1 length(cleanSpeech) 1.15*min(noisySpeech) 1.15*max(noisySpeech)]);
+    axis([1 length(s) 1.15*min(noisySpeech) 1.15*max(noisySpeech)]);
     title(strcat(pn{i,2},{' '},'noenhance, Sohn'));
     
     subplot(5,1,2);
     plot(noisySpeech);
     hold on;
-    plot(cleanSpeech,'g');
+    plot(s,'g');
     plot(1.1*max(noisySpeech).*postLTSD,'r');
     plot(1.1*min(noisySpeech).*preLTSD,'m');
-    axis([1 length(cleanSpeech) 1.15*min(noisySpeech) 1.15*max(noisySpeech)]);
+    axis([1 length(s) 1.15*min(noisySpeech) 1.15*max(noisySpeech)]);
     title(strcat(pn{i,2},{' '},'noenhance, LTSD'));
     
     subplot(5,1,3);
     plot(noisySpeech);
     hold on;
-    plot(cleanSpeech,'g');
+    plot(s,'g');
     plot(1.1*max(noisySpeech).*postEntropy,'r');
     plot(1.1*min(noisySpeech).*preEntropy,'m');
-    axis([1 length(cleanSpeech) 1.15*min(noisySpeech) 1.15*max(noisySpeech)]);
+    axis([1 length(s) 1.15*min(noisySpeech) 1.15*max(noisySpeech)]);
     title(strcat(pn{i,2},{' '},'noenhance, entropy'));
     
     subplot(5,1,4);
     plot(noisySpeech);
     hold on;
-    plot(cleanSpeech,'g');
+    plot(s,'g');
     plot(1.1*max(noisySpeech).*postPAR,'r');
     plot(1.1*min(noisySpeech).*prePAR,'m');
-    axis([1 length(cleanSpeech) 1.15*min(noisySpeech) 1.15*max(noisySpeech)]);
+    axis([1 length(s) 1.15*min(noisySpeech) 1.15*max(noisySpeech)]);
     title(strcat(pn{i,2},{' '},'noenhance, PARADE'));
     
     subplot(5,1,5);
     plot(noisySpeech);
     hold on;
-    plot(cleanSpeech,'g');
+    plot(s,'g');
     plot(1.1*max(noisySpeech).*postHarm,'r');
     plot(1.1*min(noisySpeech).*preHarm,'m');
-    axis([1 length(cleanSpeech) 1.15*min(noisySpeech) 1.15*max(noisySpeech)]);
+    axis([1 length(s) 1.15*min(noisySpeech) 1.15*max(noisySpeech)]);
     title(strcat(pn{i,2},{' '},'noenhance, Harmfreq'));
     
     if(evaluate == 1)
