@@ -18,7 +18,7 @@ There has been an active research in the VAD area from as early as 1975, when Ra
 
 \begin{figure}[htbp]
 	\centering
-		\includegraphics[width=0.9\columnwidth]{Figures/Chapter1/corruptedSpeech.png}
+		\includegraphics[width=0.9\columnwidth]{Figures/Chapter1/corruptedSpeech.eps}
 		\rule{37em}{0.5pt}
 	\caption[A sample utterance corrupted by -5 dB car noise]{A sample utterance from the TIMIT \cite{TIMIT} speech corpus corrupted by -5 dB car noise from the NOISEX-92 \cite{NOISEX} database}
 	\label{fig:corruptedSpeech}
@@ -70,7 +70,7 @@ where $|Y(f)|$ is the amplitude spectrum of the corrupted speech, $|S(f)|$ of th
 
 \subsection{Summary}
 
-Voice Activity Detection algorithms are utilised in a variety of speech processing tasks. Among others, application of the noise-robust VADs allows to decrease the bandwidth requirements of speech coding and transmission systems, improve accuracy and speed of the speech recognition systems and helps in precise noise statistics estimation and speech enhancement. The bandwidth improvement comes from the lower bit-rate coding of the non-speech frames. In the ASR systems, the voice-inactive frames are often dropped from processing in the core system. In speech enhancement, the noise statistics can often be estimated from the noise-only frames, therefore enabling the use of spectral subtraction and other techniques which require prior knowledge of the noise spectrum.
+Voice Activity Detection algorithms are utilised in a variety of speech processing tasks. Among others, application of the noise-robust VAD allows to decrease the bandwidth requirements of speech coding and transmission systems, improve accuracy and speed of the speech recognition systems and helps in precise noise statistics estimation and speech enhancement. The bandwidth improvement comes from the lower bit-rate coding of the non-speech frames. In the ASR systems, the voice-inactive frames are often dropped from processing in the core system. In speech enhancement, the noise statistics can often be estimated from the noise-only frames, therefore enabling the use of spectral subtraction and other techniques which require prior knowledge of the noise spectrum.
 
 %----------------------------------------------------------------------------------------
 %	SECTION 3 - Structure of a typical VAD system

@@ -1,75 +1,118 @@
 % Chapter Template
 
-\chapter{Evaluation of VAD algorithms} % Main chapter title
+\chapter{Experimental set-up} % Main chapter title
 
 \label{Chapter3} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ChapterX}
 
-\lhead{Chapter 3. \emph{Evaluation of VAD algorithms}} % Change X to a consecutive number; this is for the header on each page - perhaps a shortened title
+\lhead{Chapter 3. \emph{Experimental set-up}} % Change X to a consecutive number; this is for the header on each page - perhaps a shortened title
 
-%----------------------------------------------------------------------------------------
-%	SECTION 1 - 
-%----------------------------------------------------------------------------------------
+%--------------------------------------------------------
+%	SECTION 1 - Motivation
+%--------------------------------------------------------
 
-\section{Evaluation methods}
+\section{Motivation}
 
-Voice Activity Detection is a binary classification problem for which a number of standard evaluation methods are typically used.
+A large number of VAD algorithms proposed in the literature and a lack of standard methods for their evaluation combined with an abundance of speech and noise corpora makes it difficult to compare the results reported in research papers. Therefore, identification of an algorithm whose performance is objectively best is not possible without their proper benchmarking. Another problem emerges from a variety of different hang-over schemes used in experiments from the literature. These schemes can greatly affect the final VAD decisions and their use is especially important with the harmonicity based features which rely exclusively on the hang-over scheme for detection of the unvoiced phonemes. In order to unify the effect of hanging-over, the same scheme should be applied to all VAD features. Finally, some algorithms require estimation of the same parameters before the actual decision feature can be computed. For the algorithms chosen in this evaluation, these include noise power spectrum and pitch estimation. In order to reduce the performance bias coming from this estimates, the same procedures should be implemented in all algorithms.
 
-\section{Implementation details}
+The first aim of this chapter is to describe the implementation details of the selected VAD algorithms so that the differences in their workings can be easily identified\footnote{Ideally, they should differ only in the voicing features used for classification.}. Secondly, the speech and noise recordings as well as the corresponding ground truth labels are described so that the experiments can be repeated. For speech, a subset of the TIMIT \cite{TIMIT} database has been used. Noise recordings have been taken from the NOISEX-92 \cite{NOISEX} database and added to the clean speech at various power levels.
 
-\subsection{Selected VAD algorithms and their parameters}
+%--------------------------------------------------------
+%	SECTION 2 - VAD features
+%--------------------------------------------------------
 
-\subsection{Hang-over scheme}
+\section{VAD features}
 
-\subsection{Speech recordings}
+Due to a large number of VAD features proposed in the literature, implementation and evaluation of all of them is impractical. However, a small number of features which appear to be both noise-robust and based on different ideas can be selected for comparison. In this evaluation, the features from the following VAD algorithms have been implemented:
 
-\subsection{Noise types and SNR}
+\begin{itemize}
+\item A Statistical Model-Based Voice Activity Detector \cite{Sohn} (hereinafter referred to as 'Sohn')
+\item Efficient Voice Activity Detection Algorithms Using Long-term Speech Information \cite{LTSD} (hereinafter referred to as 'LTSD')
+\item Entropy Based Voice Activity Detection in Very Noisy Conditions \citep{Renevey} (hereinafter referred to as 'Entropy')
+\item Noise Robust Voice Activity Detection Based on Periodic to Aperiodic Component Ratio \cite{PARADE} (hereinafter referred to as 'PARADE')
+\item Voice Activity Detection using Harmonic Frequency Components in Likelihood Ratio Test \cite{Tan} (hereinafter referred to as 'Harmfreq')
+\end{itemize}
 
-\section{Evaluation results}
+In particular, the LTSD feature has been chosen because it is calculated based on multiple frames surrounding the one for which the decision is being made. Harmfreq is similar the Sohn feature, but calculates the likelihood ratio for the voiced phonemes only at the multiples of the fundamental frequency. PARADE, on the other hand, is supposed to be robust to a variety of non-stationary noise types.
 
-\begin{figure}[htbp]
-	\centering
-		\includegraphics[width=1.0\columnwidth]{Figures/Chapter3/0dB.png}
-		\rule{37em}{0.5pt}
-	\caption[ROC curves of the evaluated VAD algorithms under 0 dB SNR]{ROC curves of the evaluated VAD algorithms under 0 dB SNR}
-	\label{fig:0dB}
-\end{figure}
+\subsection{Shared implementation parts}
 
-\begin{figure}[htbp]
-	\centering
-		\includegraphics[width=1.0\columnwidth]{Figures/Chapter3/-5dB.png}
-		\rule{37em}{0.5pt}
-	\caption[ROC curves of the evaluated VAD algorithms under -5 dB SNR]{ROC curves of the evaluated VAD algorithms under -5 dB SNR}
-	\label{fig:-5dB}
-\end{figure}
+Calculation of a number of VAD features requires prior estimation of some signal characteristics. In particular, Sohn, LTSD and Harmfreq need a noise power spectrum for the SNR estimate. Similarly, PARADE and Harmfreq require a pitch estimate in order to calculate the power of the signal at its multiples. In the original research papers either no procedure has been recommended (i.e. in Sohn \cite{Sohn} for noise PSD estimation) or different procedures have been suggested for estimation of the same property (i.e. pitch estimation in PARADE \cite{PARADE} and Harmfreq \cite{Tan}). In order to reduce the bias from errors in the estimates, the same noise and pitch estimation procedures have been applied to all algorithms. For the noise PSD, an implementation of the MMSE noise power estimator \cite{MMSEnoise} provided by VOICEBOX \cite{VOICEBOX} has been used. Similarly, the fundamental frequency in PARADE and Harmfreq has been estimated using PEFAC \cite{PEFAC}. Finally, before any processing, the incoming speech signal has been divided into 50 ms-long non-overlapping frames and windowed with a periodic Hanning window.
 
-\begin{table}[htbp]
-\center
-\begin{tabular}{c|c|c|c|c|c|}
-\cline{2-6}
- & Sohn & LTSD & Entropy & PARADE & Harmfreq \\ \hline
-\multicolumn{1}{ |c| }{white} & 0.8176 & 0.8083 & 0.6921 & \textbf{0.9484} & 0.9415 \\ \hline
-\multicolumn{1}{ |c| }{car} & 0.8948 & 0.8939 & 0.4942 & 0.9075 & \textbf{0.9471} \\ \hline
-\multicolumn{1}{ |c| }{spchspect} & 0.8617 & 0.8829 & 0.6018 & 0.5100 & \textbf{0.9367} \\ \hline
-\multicolumn{1}{ |c| }{opsroom} & 0.7906 & 0.6131 & 0.5103 & 0.5243 & \textbf{0.8447} \\ \hline
-\multicolumn{1}{ |c| }{factory} & 0.5889 & 0.5503 & 0.5909 & 0.5351 & \textbf{0.7197} \\ \hline
-\end{tabular}
-\caption[AUC values of the evaluated VAD algorithms under 0 dB SNR]{AUC values of the evaluated VAD algorithms under 0 dB SNR}
-\label{tab:AUC0dB}
-\end{table}
+\subsection{Algorithm-specific implementation parts}
 
-\begin{table}[htbp]
-\center
-\begin{tabular}{c|c|c|c|c|c|}
-\cline{2-6}
- & Sohn & LTSD & Entropy & PARADE & Harmfreq \\ \hline
-\multicolumn{1}{ |c| }{white} & 0.7088 & 0.7851 & 0.5919 & \textbf{0.9104} & 0.8999 \\ \hline
-\multicolumn{1}{ |c| }{car} & 0.8971 & 0.8960 & 0.4999 & 0.8692 & \textbf{0.9520} \\ \hline
-\multicolumn{1}{ |c| }{spchspect} & 0.7811 & 0.8660 & 0.5274 & 0.5060 & \textbf{0.8643} \\ \hline
-\multicolumn{1}{ |c| }{opsroom} & 0.7040 & 0.5705 & 0.4741 & 0.5144 & \textbf{0.7716} \\ \hline
-\multicolumn{1}{ |c| }{factory} & 0.5378 & 0.5265 & 0.5150 & 0.5212 & \textbf{0.6084} \\ \hline
-\end{tabular}
-\caption[AUC values of the evaluated VAD algorithms under -5 dB SNR]{AUC values of the evaluated VAD algorithms under -5 dB SNR}
-\label{tab:AUC-5dB}
-\end{table}
+Apart from the same implementation parts used by different algorithms, there are parameters which are specific to some VAD features. Summary of the algorithm-specific implementation details is presented below:
 
-\section{Conclusion}
+\begin{itemize}
+\item Sohn - the constant for decision-directed a priori SNR estimation is $\alpha = 0.95$
+\item LTSD - the LTSE lookup into neighbouring frames is $N = 3$. Note that it is a smaller value than $N=6$ recommended in \cite{LTSD} due to a longer frame length and a lack of the overlap factor
+\item PARADE - the number of harmonics is $\vartheta = 10$ or the maximum that fit in the resolution of the DFT
+\item Harmfreq - $\alpha = 0.95$ (same as in Sohn). $\vartheta = 10$ or the maximum that fit in the resolution of the DFT (same as in PARADE). A frame is treated as voiced if the probability returned by PEFAC is greater than $0.5$
+\end{itemize}
+
+%--------------------------------------------------------
+%	SECTION 3 - Hang-over scheme
+%--------------------------------------------------------
+
+\section{Hang-over scheme}
+
+In order to reduce the differences in VAD decisions coming from different hang-over schemes, the same method has been applied to all evaluated VAD features, pseudo code of which is presented in Algorithm \ref{algo:hangover}. This is a modified version of the scheme originally published by ETSI in \cite{ETSIHangover}. The main idea behind the scheme is to initialise the so-called \emph{hang-over timer} whenever the maximum number of consecutive speech decisions in a buffer of $B$ frames is greater than $S_p$ (speech possible) or $S_l$ (speech likely). The proposed value for $B$ by ETSI is $7$ and the same has been used in this implementation. However, the values for parameters $S_p$, $S_l$, $L_s$ and $L_m$ were made smaller than the ones outlined in the standard, since the length of the processed signal frames is longer (i.e. 50 ms) and there is no overlap between them.
+
+\begin{algorithm}
+\textbf{INPUT:} $F$ - number of frames \\
+\textbf{INPUT:} $V$ - VAD decisions prior to the hang-over scheme \\
+\textbf{OUTPUT:} $hV$ - VAD decisions after the hang-over scheme
+\begin{algorithmic}[1]
+\STATE $B \leftarrow 7$ \COMMENT{buffer length}
+\STATE $S_p \leftarrow 2$ \COMMENT{speech possible} 
+\STATE $S_l \leftarrow 3$ \COMMENT{speech likely}
+\STATE $L_s \leftarrow 5$ \COMMENT{short hang-over time}
+\STATE $L_m \leftarrow 8$ \COMMENT{medium hang-over time}
+\STATE
+\STATE $T \leftarrow 0$ \COMMENT{hang-over timer}
+
+\FOR{$i=1$ to $F-B+1$}
+\STATE $CB \leftarrow V(i:i+B-1)$ \COMMENT{current buffer of VAD decisions}
+\STATE $M \leftarrow$ maximum consecutive speech-present decisions in $CB$
+\IF{$M \geqslant S_l$}
+\STATE $T \leftarrow L_m$
+\ELSIF{$M \geqslant S_p$ \AND $T < L_s$}
+\STATE $T = L_s$
+\ELSIF{$M < S_p$ \AND $T > 0$}
+\STATE $T \leftarrow T-1$
+\ENDIF
+\IF{$T > 0$}
+\STATE $hV(i) \leftarrow 1$
+\ELSE
+\STATE $hV(i) \leftarrow 0$
+\ENDIF
+\ENDFOR
+\STATE $hV(F-B+2:F) \leftarrow V(F-B+2:F)$ \COMMENT{assign the pre hang-over decisions to the last B-1 frames}
+\RETURN $hV$
+\end{algorithmic}
+\caption{Hang-over scheme used in all VAD algorithms}
+\label{algo:hangover}
+\end{algorithm}
+
+%--------------------------------------------------------
+%	SECTION 4 - Speech corpus
+%--------------------------------------------------------
+
+\section{Speech corpus}
+
+There exists a number of speech corpora for evaluation of VAD and ASR. For the English language the TIMIT speech corpus \cite{TIMIT} seems to be the most widely used and hence has been selected as a source of utterances for this evaluation. There are a number of issues with the original recordings which need to be resolved with so that the evaluation can be more precise. There are:
+
+\begin{enumerate}
+\item Single utterances are on average no longer than 4 seconds and hence too short for proper VAD evaluation
+\item The recordings contain a very small number of non-speech segments
+\item There are differences in average power between the utterances
+\end{enumerate}
+
+In order to deal with the first two issues, a number of randomly chosen utterances from every dialect (i.e. DR1 to DR8) has been concatenated into a single speech recording, adding 2.5 seconds of silence at the beginning, ending and between the utterances. In an attempt to equalise the energy, the amplitude of each utterance has been normalised such that the average power per sample of all of them is equal. This is important because if the concatenated utterances differed in the average power level, after adding the noise, the one with initially higher power could be easily detected by almost any VAD procedure, while the detection of the other one would be very difficult due to the much lower short-time SNR.
+
+After concatenation, the ground truth speech/non-speech labels were obtained by a combination of a the output from a simple energy based VAD with hand labelling the small number of misclassified segments. Figure ... shows an example of the energy VAD and the final VAD labels modified by hand.
+
+%--------------------------------------------------------
+%	SECTION 5 - Noise corpus and SNR
+%--------------------------------------------------------
+
+\section{Noise corpus and SNR}

@@ -32,6 +32,8 @@
 \usepackage[square, numbers, comma, sort&compress]{natbib} % Use the natbib reference package - read up on this to edit the reference style; if you want text (e.g. Smith et al., 2012) for the in-text references (instead of numbers), remove 'numbers' 
 \usepackage{multirow}
 \usepackage{tabu}
+\usepackage{algorithm}
+\usepackage{algorithmic}
 \hypersetup{urlcolor=black, colorlinks=true} % Colors hyperlinks in blue - change to black if annoying
 \title{\ttitle} % Defines the thesis title - don't touch this
 
@@ -69,7 +71,7 @@
 \textsc{\Large Final Year Project}\\[0.5cm] % Thesis type
 
 \HRule \\[0.4cm] % Horizontal line
-{\huge \bfseries \ttitle}\\[0.4cm] % Thesis title
+{\huge \bfseries \ttitle}\\[0.1cm] % Thesis title
 \HRule \\[1.5cm] % Horizontal line
  
 \begin{minipage}{0.4\textwidth}
@@ -81,7 +83,9 @@
 \begin{minipage}{0.4\textwidth}
 \begin{flushright} \large
 \emph{Supervisor:} \\
-\href{mailto:mike.brookes@imperial.ac.uk}{\supname} % Supervisor name - remove the \href bracket to remove the link  
+\href{mailto:mike.brookes@imperial.ac.uk}{\supname} % Supervisor name - remove the \href bracket to remove the link
+%\emph{Second marker:} \\
+%\href{mailto:patrick.naylor@imperial.ac.uk}{\secmark}
 \end{flushright}
 \end{minipage}\\[2cm]
  
@@ -91,7 +95,6 @@ in the\\
 
 {\large \today}\\[0.1cm] % Date
 
- 
 \vfill
 \end{center}
 
@@ -177,12 +180,12 @@ I would like to thank \ldots\medskip
 % Uncomment the lines as you write the chapters
 
 \input{Chapters/Chapter1}
-\input{Chapters/Chapter2} 
+\input{Chapters/Chapter2}
 \input{Chapters/Chapter3}
-%\input{Chapters/Chapter4} 
-%\input{Chapters/Chapter5} 
-%\input{Chapters/Chapter6} 
-%\input{Chapters/Chapter7} 
+\input{Chapters/Chapter4}
+%\input{Chapters/Chapter5}
+%\input{Chapters/Chapter6}
+%\input{Chapters/Chapter7}
 
 %----------------------------------------------------------------------------------------
 %	THESIS CONTENT - APPENDICES
@@ -195,7 +198,7 @@ I would like to thank \ldots\medskip
 % Include the appendices of the thesis as separate files from the Appendices folder
 % Uncomment the lines as you write the Appendices
 
-%\input{Appendices/AppendixA}
+\input{Appendices/AppendixA}
 %\input{Appendices/AppendixB}
 %\input{Appendices/AppendixC}
 

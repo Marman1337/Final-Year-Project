@@ -13,7 +13,7 @@
 \section{Standard VAD algorithms}
 \label{sec:StandardVADs}
 
-Being an important tool in many speech processing applications, a number of VAD algorithms have been subject to standardisation by various organisations such as the International Telecommunication Union (ITU-T), European Telecommunications Standards Institute (ETSI), Telecommunications Industry Association (TIA) or Electronic Industries Alliance (EIA). Most standardised algorithms use the energy of the input signal as a Voice Activity Detection feature. It is important to note that the standardised VAD approaches have been developed for use in the telecommunications industry, with particular emphasis on the application for discontinuous transmission (DTX), which may make them less appropriate for other speech processing tasks such as speech recognition. Nevertheless, these algorithms often serve as a benchmark for the newly developed VADs, whose performance is often compared to the standard ones.
+Being an important tool in many speech processing applications, a number of VAD algorithms have been subject to standardisation by various organisations such as the International Telecommunication Union (ITU-T), European Telecommunications Standards Institute (ETSI), Telecommunications Industry Association (TIA) or Electronic Industries Alliance (EIA). Most standardised algorithms use the energy of the input signal as a Voice Activity Detection feature. It is important to note that the standardised VAD approaches have been developed for use in the telecommunications industry, with particular emphasis on the application for discontinuous transmission (DTX), which may make them less appropriate for other speech processing tasks such as speech recognition. Nevertheless, these algorithms often serve as a benchmark for the newly developed VAD features, whose performance is often compared to the standard ones.
 
 In the rest of this section, three standard VAD algorithms are going to be described:
 \begin{itemize}
@@ -122,7 +122,7 @@ Block diagram of TIA/EIA IS-733 VAD is presented in Figure \ref{fig:IS733}. The 
 
 \subsection{Summary}
 
-Some VAD algorithms have been standardised by various telecommunication standards institutes (ITU-T, ETSI, TIA/EIA). Those algorithms are predominantly based on simple features such as the energy of the signal or the zero-crossing rate, sometimes across different frequency ranges. While such measures are often sufficient to meet the requirements of the high SNR transmission found in telecommunications, their performance drops significantly with the increased power of noise. Nevertheless, the standard algorithms serve as a convenient benchmark for the more recently proposed VADs, described in section \ref{sec:RobustVADs} which are aimed to be more noise-robust and useful in other speech processing tasks.
+Some VAD algorithms have been standardised by various telecommunication standards institutes (ITU-T, ETSI, TIA/EIA). Those algorithms are predominantly based on simple features such as the energy of the signal or the zero-crossing rate, sometimes across different frequency ranges. While such measures are often sufficient to meet the requirements of the high SNR transmission found in telecommunications, their performance drops significantly with the increased power of noise. Nevertheless, the standard algorithms serve as a convenient benchmark for the more recently proposed VAD features, described in section \ref{sec:RobustVADs} which are aimed to be more noise-robust and useful in other speech processing tasks.
 
 %----------------------------------------------------------------------------------------
 %	SECTION 2 - Noise-robust VAD algorithms
@@ -141,7 +141,7 @@ Apart from standard VAD algorithms described in section \ref{sec:StandardVADs}, 
 	\label{fig:featureDist}
 \end{figure}
 
-\subsection{Entropy-based VADs}
+\subsection{Entropy-based VAD}
 
 In contrast to the standardised energy-based methods, some researchers investigated the idea of using entropy for Voice Activity Detection. Entropy, as originally defined by Shannon \cite{Shannon}, is a measure of uncertainty in a random variable, given by the equation:
 
@@ -182,7 +182,7 @@ where $P( \left |  Y \left ( \omega_i, t \right ) \right |^{2} )$ denotes the fr
 
 All entropy-based approaches to VAD are most effective for the white noise and alike, since the distribution of entropy for speech is much different from the one for noise. The completely unpredictable nature of white noise yields high entropy values, while the more organised and predictable clean speech signals present a naturally lower entropy. Both the time and frequency domain algorithms' performance drops significantly for a variety of coloured noise types. In order to improve the performance for in such environments, authors of \cite{Renevey} propose using a \emph{whitening} filter which divides the spectrum of the current frame by an average of all frames.
 
-\subsection{Likelihood Ratio Test VADs}
+\subsection{Likelihood Ratio Test VAD}
 \label{ssec:LRT}
 
 'A Statistical Model-Based Voice Activity Detector' proposed by Sohn \emph{et al.} \cite{Sohn} is one of the most widely cited VAD algorithms due to its ease of implementation, robustness and extensibility. The idea of using a Likelihood Ratio Test (LRT) has been considered by many other researchers who tried to improve on the original approach \cite{ImprovedLikelihood, Cho}. The initial algorithm has been developed in \cite{SohnInitial} and extended to improve noise-robustness in \citep{Sohn}. Block diagram of Sohn's VAD is presented in Figure \ref{fig:Sohn}.
@@ -218,7 +218,7 @@ In an effort to further improve the LRT-based algorithm, Cho \emph{et al.} \cite
 \label{eq:SRT}
 \end{equation}
 
-Both \cite{Sohn} and \cite{Cho} VADs consider only a single frame when making a speech/non-speech decision and hence they are likely to misclassify the low-energy frames for which the short-time SNR is much lower than the average SNR of the entire signal. To aid the proper detection of such frames, in \cite{RamirezMulti} Ramirez \emph{et al.} proposed a multiple observation vector which considers $M$ frames before and ahead of the current frame in formulating the likelihood ratio. The main rationale behind this idea is that the weaker speech frames are often surrounded by the stronger parts, and their inclusion in the LRT might boost its value above the threshold. While this approach results in somewhat improved performance, it also introduces the delay of $M$ frames to the algorithm, which might prevent it from being used in some real-time applications.
+Both \cite{Sohn} and \cite{Cho} VAD methods consider only a single frame when making a speech/non-speech decision and hence they are likely to misclassify the low-energy frames for which the short-time SNR is much lower than the average SNR of the entire signal. To aid the proper detection of such frames, in \cite{RamirezMulti} Ramirez \emph{et al.} proposed a multiple observation vector which considers $M$ frames before and ahead of the current frame in formulating the likelihood ratio. The main rationale behind this idea is that the weaker speech frames are often surrounded by the stronger parts, and their inclusion in the LRT might boost its value above the threshold. While this approach results in somewhat improved performance, it also introduces the delay of $M$ frames to the algorithm, which might prevent it from being used in some real-time applications.
 
 \subsection{Long-Term Spectral Divergence VAD}
 
@@ -250,13 +250,13 @@ The LTSD is obtained from Equation \ref{eq:LTSD} where $M$ is the number of freq
 
 Eventually, the LTSD feature is thresholded to form a preliminary VAD decision which might be further revised by a separate hang-over scheme.
 
-\subsection{Pitch and fundamental frequency based VADs}
+\subsection{Pitch and fundamental frequency based VAD}
 
 A rather unique feature of voiced speech is its spectral harmonicity. The magnitude spectrum of voiced phonemes contains clearly visible peaks at equal intervals corresponding to the fundamental frequency $F_0$ or pitch, terms which in speech processing context are often used interchangeably. A spectrogram of a sample utterance corrupted by 0 dB car noise is presented in Figure \ref{fig:harmospgramcar}. Although the energy of the noise is high (making the speech detection a challenge for the energy-based algorithms), its PSD occupies mostly the low frequencies (yellow box) causing the harmonic peaks (red boxes) to remain undistorted. Even in the presence of 0 dB white noise (Figure \ref{fig:harmospgramwhite}), which is much richer in frequency components than car noise, the harmonic peaks are preserved, although to a much smaller extent. While it is clearly possible to use the harmonicity features for the detection of the voiced parts of speech utterances, the unvoiced phonemes' spectrum does not contain harmonic peaks. Therefore, detection of the unvoiced phonemes remains difficult and often requires an additional technique or a specialised hang-over scheme.
 
 \begin{figure}[htbp]
 	\centering
-		\includegraphics[width=0.9\columnwidth]{Figures/Chapter2/harmospgramcar.png}
+		\includegraphics[width=0.9\columnwidth]{Figures/Chapter2/harmospgramcar.pdf}
 		\rule{37em}{0.5pt}
 	\caption[Spectrogram of a sample utterance corrupted by 0 dB car noise]{Spectrogram of a sample utterance corrupted by 0 dB car noise}
 	\label{fig:harmospgramcar}
@@ -264,7 +264,7 @@ A rather unique feature of voiced speech is its spectral harmonicity. The magnit
 
 \begin{figure}[htbp]
 	\centering
-		\includegraphics[width=0.9\columnwidth]{Figures/Chapter2/harmospgramwhite.png}
+		\includegraphics[width=0.9\columnwidth]{Figures/Chapter2/harmospgramwhite.pdf}
 		\rule{37em}{0.5pt}
 	\caption[Spectrogram of a sample utterance corrupted by 0 dB white noise]{Spectrogram of a sample utterance corrupted by 0 dB white noise}
 	\label{fig:harmospgramwhite}

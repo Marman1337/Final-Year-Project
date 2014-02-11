@@ -159,7 +159,7 @@
 }
 \newcommand*{\supervisor}[1]{\def\supname{#1}}
 \newcommand*{\thesistitle}[1]{\def\ttitle{#1}}
-\newcommand*{\examiner}[1]{\def\examname{#1}}
+\newcommand*{\secondmarker}[1]{\def\secmark{#1}}
 \newcommand*{\degree}[1]{\def\degreename{#1}}
 \newcommand*{\authors}[1]{\def\authornames{#1}}
 \newcommand*{\addresses}[1]{\def\addressnames{#1}}
@@ -186,7 +186,7 @@
 %-------------------------------------------------  
 \supervisor{Mike Brookes} % You supervisor's name - this is used in the title page
 %-------------------------------------------------   
-\examiner{} % Your examiner's name - this is not currently used anywhere in the template, cite it with \examname if you want it
+\secondmarker{Patrick Naylor} % Your examiner's name - this is not currently used anywhere in the template, cite it with \secondmarker if you want it
 %-------------------------------------------------   
 \degree{MEng Information Systems Engineering} % Your degree name - this is currently used in the title page and abstract
 %-------------------------------------------------   
