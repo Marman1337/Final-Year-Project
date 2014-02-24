@@ -99,17 +99,17 @@ In order to reduce the differences in VAD decisions coming from different hang-o
 
 \section{Speech corpus}
 
-There exists a number of speech corpora for evaluation of VAD and ASR. For the English language the TIMIT speech corpus \cite{TIMIT} seems to be the most widely used and hence has been selected as a source of utterances for this evaluation. There are a number of issues with the original recordings which need to be resolved with so that the evaluation can be more precise. There are:
+There exists a number of speech corpora for evaluation of VAD and ASR. For the English language the TIMIT speech corpus \cite{TIMIT} seems to be the most widely used and hence has been selected as a source of utterances for this evaluation. There are a number of issues with the original recordings which need to be resolved with so that the evaluation can be more accurate. There are:
 
-\begin{enumerate}
+\begin{itemize}
 \item Single utterances are on average no longer than 4 seconds and hence too short for proper VAD evaluation
 \item The recordings contain a very small number of non-speech segments
 \item There are differences in average power between the utterances
-\end{enumerate}
+\end{itemize}
 
-In order to deal with the first two issues, a number of randomly chosen utterances from every dialect (i.e. DR1 to DR8) has been concatenated into a single speech recording, adding 2.5 seconds of silence at the beginning, ending and between the utterances. In an attempt to equalise the energy, the amplitude of each utterance has been normalised such that the average power per sample of all of them is equal. This is important because if the concatenated utterances differed in the average power level, after adding the noise, the one with initially higher power could be easily detected by almost any VAD procedure, while the detection of the other one would be very difficult due to the much lower short-time SNR.
+In order to deal with the first two issues, a number of randomly chosen utterances from every dialect (i.e. DR1 to DR8) has been concatenated into a single speech recording, adding 2.5 seconds of silence at the beginning, ending and between the utterances. In an attempt to equalise the power, the amplitude of each utterance has been normalised such that the average power per sample of all of them is equal. This is important because if the concatenated utterances differed in the average power level, after adding the noise, the one with initially higher power could be easily detected by almost any VAD procedure, while the detection of the other one would be very difficult due to the much lower segmental SNR.
 
-After concatenation, the ground truth speech/non-speech labels were obtained by a combination of a the output from a simple energy based VAD with hand labelling the small number of misclassified segments. Figure ... shows an example of the energy VAD and the final VAD labels modified by hand.
+For proper VAD evaluation, the ground truth speech/non-speech labels need to be obtained. While this might seem like a simple task, it actually includes a degree of subjectivity. Consider Figure [] where the speaker makes a short pause between words. Whether this segment should be classified as speech, since it clearly forms a part of a longer utterance, or silence, since if considered in isolation, it does not exhibit any obvious speech characteristics, is a matter of choice. In this work, all such segments and alike have been treated as integral parts of the utterances and hence classified as speech in the ground truth labels. The initial labels have been obtained by a simple energy VAD and examined visually, making necessary manual changes to any obviously misclassified segments, taking into account the decision described before.
 
 %--------------------------------------------------------
 %	SECTION 5 - Noise corpus and SNR
