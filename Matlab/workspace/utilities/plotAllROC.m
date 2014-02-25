@@ -1,19 +1,23 @@
-function plotAllROC(white,car,spchspect,opsroom,factory,snr)
+function plotAllROC(white,car,spchspect,babble,opsroom,factory,snr)
 
-subplot(3,2,2); plotLine(white); grid;
+subplot(3,2,1); plotLine(white); grid;
 title(strcat('white',{' '},snr,{' '},'dB')); ylabel('True Positive Rate'); xlabel('False Positive Rate');
-subplot(3,2,3); plotLine(car); grid;
+subplot(3,2,2); plotLine(car); grid;
 title(strcat('car',{' '},snr,{' '},'dB')); ylabel('True Positive Rate'); xlabel('False Positive Rate');
-subplot(3,2,4); plotLine(spchspect); grid;
+subplot(3,2,3); plotLine(spchspect); grid;
 title(strcat('spchspect',{' '},snr,{' '},'dB')); ylabel('True Positive Rate'); xlabel('False Positive Rate');
+subplot(3,2,4); plotLine(babble); grid;
+title(strcat('babble',{' '},snr,{' '},'dB')); ylabel('True Positive Rate'); xlabel('False Positive Rate');
 subplot(3,2,5); plotLine(opsroom); grid;
 title(strcat('opsroom',{' '},snr,{' '},'dB')); ylabel('True Positive Rate'); xlabel('False Positive Rate');
 subplot(3,2,6); plotLine(factory); grid;
 title(strcat('factory',{' '},snr,{' '},'dB')); ylabel('True Positive Rate'); xlabel('False Positive Rate');
+
 legend('Sohn','LTSD','Entropy','PARADE','Harmfreq');
-subplot(3,2,2); plotScatter(white);
-subplot(3,2,3); plotScatter(car);
-subplot(3,2,4); plotScatter(spchspect);
+subplot(3,2,1); plotScatter(white);
+subplot(3,2,2); plotScatter(car);
+subplot(3,2,3); plotScatter(spchspect);
+subplot(3,2,4); plotScatter(babble);
 subplot(3,2,5); plotScatter(opsroom);
 subplot(3,2,6); plotScatter(factory);
 
