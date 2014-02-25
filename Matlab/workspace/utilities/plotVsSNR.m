@@ -53,9 +53,9 @@ for i = 1:snrno
         end
         
         % speech hit rate
-        snrres{j,i+1}(1) = TP/(TP+FN);
+        snrres{j,2}(1,i) = TP/(TP+FN);
         % non speech hit rate
-        snrres{j,i+1}(2) = TN/(TN+FP);
+        snrres{j,2}(2,i) = TN/(TN+FP);
     end
 end
 end
