@@ -1,61 +1,43 @@
-function [ snrres ] = plotVsSNR(DRx,Nx,fs,vadinfo)
-snrr = [20 15 10 5 0 -5];
-% for each snr level
-snrno = length(snrr);
-snrres = cell(5,2);
-% initialise the output cell
-for i = 1:5
-    snrres{i,1} = vadinfo{i,1};
-    snrres{i,2}(1,:) = zeros(1,snrno);
-    snrres{i,2}(2,:) = zeros(1,snrno);
-end
+function plotVsSNR(results,hangover)
 
-noises = length(Nx);
-vadno = size(vadinfo,1);
-
-% for each snr
-for i = 1:snrno
-    % for each vad
-    for j = 1:vadno
-        display(strcat('VAD',{' '},num2str(j),{' '},'SNR',{' '},num2str(snrr(i))));
-        vadfn = vadinfo{j,1};
-        thr = vadinfo{j,2};
-        TP = 0;
-        TN = 0;
-        FP = 0;
-        FN = 0;
-        
-        for m = 1:noises
-            % add noise to clean speech
-            for k = 1:length(DRx)
-                % calculate the power per sample of speech when it is active
-                speechPresent = logical(DRx{k}(:,2));
-                psig = sum(DRx{k}(speechPresent,1).^2)/length(DRx{k}(speechPresent,1));
-                % truncate the noise and calculate its power per sample
-                noi = Nx{m}(1:size(DRx{k},1));
-                pnoi = sum(noi.^2)/length(noi);
-                % calculate the scaling constant for noise
-                sc = sqrt(psig/(pnoi*10^(snrr(i)/10)));
-                % scale the noise to the desired SNR
-                noi = noi.*sc;
-                % add noise to clean speech
-                ns = DRx{k}(:,1) + noi;
-                
-                % run VAD
-                vad = vadfn(ns,fs,0.05,0,thr);
-                % evaluate VAD
-                stats = recallPrecision(vad,DRx{k}(:,2));
-                TP = TP + stats{1,2};
-                TN = TN + stats{2,2};
-                FP = FP + stats{3,2};
-                FN = FN + stats{4,2};
-            end
-        end
-        
-        % speech hit rate
-        snrres{j,2}(1,i) = TP/(TP+FN);
-        % non speech hit rate
-        snrres{j,2}(2,i) = TN/(TN+FP);
-    end
+subplot(2,1,1); hold on; grid; set(gca,'XDir','Reverse')
+axis([-5 20 0 1.01])
+if(hangover == 1)
+    title(strcat('Speech hit rate for the evaluated algorithms with hang-over under various SNRs'));
+else
+    title(strcat('Speech hit rate for the evaluated algorithms without hang-over under various SNRs'));
 end
+xlabel('SNR (dB)'); ylabel('Speech hit rate');
+plot([20 15 10 5 0 -5],results{1,2}(1,:),'b');
+plot([20 15 10 5 0 -5],results{2,2}(1,:),'r');
+plot([20 15 10 5 0 -5],results{3,2}(1,:),'g');
+plot([20 15 10 5 0 -5],results{4,2}(1,:),'m');
+plot([20 15 10 5 0 -5],results{5,2}(1,:),'k');
+legend('Sohn','LTSD','Entropy','PARADE','Harmfreq','Orientation','horizontal');
+scatter([20 15 10 5 0 -5],results{1,2}(1,:),'.b');
+scatter([20 15 10 5 0 -5],results{2,2}(1,:),'.r');
+scatter([20 15 10 5 0 -5],results{3,2}(1,:),'.g');
+scatter([20 15 10 5 0 -5],results{4,2}(1,:),'.m');
+scatter([20 15 10 5 0 -5],results{5,2}(1,:),'.k');
+
+subplot(2,1,2); hold on; grid; set(gca,'XDir','Reverse')
+axis([-5 20 0 1.01])
+if(hangover == 1)
+    title(strcat('Non-speech hit rate for the evaluated algorithms with hang-over under various SNRs'));
+else
+    title(strcat('Non-speech hit rate for the evaluated algorithms without hang-over under various SNRs'));
+end
+xlabel('SNR (dB)'); ylabel('Non-speech hit rate');
+plot([20 15 10 5 0 -5],results{1,2}(2,:),'b');
+plot([20 15 10 5 0 -5],results{2,2}(2,:),'r');
+plot([20 15 10 5 0 -5],results{3,2}(2,:),'g');
+plot([20 15 10 5 0 -5],results{4,2}(2,:),'m');
+plot([20 15 10 5 0 -5],results{5,2}(2,:),'k');
+scatter([20 15 10 5 0 -5],results{1,2}(2,:),'.b');
+scatter([20 15 10 5 0 -5],results{2,2}(2,:),'.r');
+scatter([20 15 10 5 0 -5],results{3,2}(2,:),'.g');
+scatter([20 15 10 5 0 -5],results{4,2}(2,:),'.m');
+scatter([20 15 10 5 0 -5],results{5,2}(2,:),'.k');
+
+
 end

@@ -54,6 +54,7 @@ Apart from the same implementation parts used by different algorithms, there are
 %--------------------------------------------------------
 
 \section{Hang-over scheme}
+\label{sec:hang}
 
 In order to reduce the differences in VAD decisions coming from different hang-over schemes, the same method has been applied to all evaluated VAD features, pseudo code of which is presented in Algorithm \ref{algo:hangover}. This is a modified version of the scheme originally published by ETSI in \cite{ETSIHangover}. The main idea behind the scheme is to initialise the so-called \emph{hang-over timer} whenever the maximum number of consecutive speech decisions in a buffer of $B$ frames is greater than $S_p$ (speech possible) or $S_l$ (speech likely). The proposed value for $B$ by ETSI is $7$ and the same has been used in this implementation. However, the values for parameters $S_p$, $S_l$, $L_s$ and $L_m$ were made smaller than the ones outlined in the standard, since the length of the processed signal frames is longer (i.e. 50 ms) and there is no overlap between them.
 
@@ -109,10 +110,30 @@ There exists a number of speech corpora for evaluation of VAD and ASR. For the E
 
 In order to deal with the first two issues, a number of randomly chosen utterances from every dialect (i.e. DR1 to DR8) has been concatenated into a single speech recording, adding 2.5 seconds of silence at the beginning, ending and between the utterances. In an attempt to equalise the power, the amplitude of each utterance has been normalised such that the average power per sample of all of them is equal. This is important because if the concatenated utterances differed in the average power level, after adding the noise, the one with initially higher power could be easily detected by almost any VAD procedure, while the detection of the other one would be very difficult due to the much lower segmental SNR.
 
-For proper VAD evaluation, the ground truth speech/non-speech labels need to be obtained. While this might seem like a simple task, it actually includes a degree of subjectivity. Consider Figure [] where the speaker makes a short pause between words. Whether this segment should be classified as speech, since it clearly forms a part of a longer utterance, or silence, since if considered in isolation, it does not exhibit any obvious speech characteristics, is a matter of choice. In this work, all such segments and alike have been treated as integral parts of the utterances and hence classified as speech in the ground truth labels. The initial labels have been obtained by a simple energy VAD and examined visually, making necessary manual changes to any obviously misclassified segments, taking into account the decision described before.
+For proper VAD evaluation, the ground truth speech/non-speech labels need to be obtained. While this might seem like a simple task, it actually includes a degree of subjectivity. Consider Figure \ref{fig:groundtruth} where the speaker first makes a short pause between words and then, after the utterance, takes a breath while still being close to the microphone. Whether the first segment should be classified as speech, since it clearly forms a part of a longer utterance, or silence, since if considered in isolation, it does not exhibit any obvious speech characteristics, is a matter of choice. In this work, all such segments and alike have been treated as integral parts of the utterances and hence classified as speech in the ground truth labels. Obviously, the breath part, is non-speech and should be treated as such. The initial labels have been obtained by a simple energy VAD and examined visually, making necessary manual changes to any obviously misclassified segments, taking into account the decision described before.
+
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=0.9\columnwidth]{Figures/Chapter3/groundtruth.pdf}
+		\rule{37em}{0.5pt}
+	\caption[Raw and modified outputs from the energy based VAD used as ground truth labels]{Raw and modified outputs from the energy based VAD used as ground truth labels}
+	\label{fig:groundtruth}
+\end{figure}
 
 %--------------------------------------------------------
 %	SECTION 5 - Noise corpus and SNR
 %--------------------------------------------------------
 
 \section{Noise corpus and SNR}
+
+Similarly to the speech corpora, there exists a large number of noise databases which are commonly used for evaluation of speech processing algorithms. In this evaluation, most noise types are taken from the NOISEX-92 \cite{NOISEX} corpus with exception of the babble noise which has been adapted from the Nato Noise \cite{Nato} package and the white noise, generated\footnote{The white noise has been generated only once. The exact same samples have been used for evaluation of all algorithms.} by MATLAB's \texttt{randn} function which returns samples of the naturally distributed Gaussian random variable with 0 mean\footnote{In this case, the variance, which by default is 1, is irrelevant since the noise is scaled before addition to the clean speech signal anyway.}. The complete list of noise types used in this evaluation is: white, car, spchspect, babble, opsroom and factory.
+
+In order to evaluate algorithms' performance under different conditions, the clean speech and noise signals need to be scaled to the desired SNR. This is achieved by the following procedure which ensures the correct power of noise relative to the speech:
+
+\begin{enumerate}
+\item Calculate the active level of the clean speech signal\footnote{The active level of a speech signal is defined to be its average power during intervals when speech is present.} $P_s$
+\item Calculate the average power of noise $P_n$
+\item Calculate the scaling constant for noise as $\sqrt{\frac{P_s}{10^{\text{SNR}/10} \times P_n}}$
+\item Multiply each noise sample by the scaling constant
+\item Add the clean speech signal and the scaled noise together
+\end{enumerate}

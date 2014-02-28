@@ -1,11 +1,12 @@
-function [ AUC ] = calculateAUC(white,car,spchspect,opsroom,factory)
-AUC = cell(7,6);
+function [ AUC ] = calculateAUC(white,car,spchspect,babble,opsroom,factory)
+AUC = cell(8,6);
 AUC{2,1} = 'white';
 AUC{3,1} = 'car';
 AUC{4,1} = 'spchspect';
-AUC{5,1} = 'opsroom';
-AUC{6,1} = 'factory';
-AUC{7,1} = 'average';
+AUC{5,1} = 'babble';
+AUC{6,1} = 'opsroom';
+AUC{7,1} = 'factory';
+AUC{8,1} = 'average';
 AUC{1,2} = 'Sohn';
 AUC{1,3} = 'LTSD';
 AUC{1,4} = 'Entropy';
@@ -15,10 +16,11 @@ AUC{1,6} = 'Harmfreq';
 auc(1,:) = singleAUC(white);
 auc(2,:) = singleAUC(car);
 auc(3,:) = singleAUC(spchspect);
-auc(4,:) = singleAUC(opsroom);
-auc(5,:) = singleAUC(factory);
+auc(4,:) = singleAUC(babble);
+auc(5,:) = singleAUC(opsroom);
+auc(6,:) = singleAUC(factory);
 
-for i = 1:5
+for i = 1:6
     for j = 1:5
         AUC{i+1,j+1} = auc(i,j);
     end
@@ -27,7 +29,7 @@ end
 AUC = AUC';
 
 for i = 2:6
-    AUC{i,7} = 0.2*(AUC{i,2}+AUC{i,3}+AUC{i,4}+AUC{i,5}+AUC{i,6});
+    AUC{i,8} = (1/6)*(AUC{i,2}+AUC{i,3}+AUC{i,4}+AUC{i,5}+AUC{i,6}+AUC{i,7});
 end
 
 end
