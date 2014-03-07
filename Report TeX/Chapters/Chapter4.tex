@@ -49,7 +49,7 @@ In order to capture the trade-off between the true and false positive rates, the
 While the ROC curves capture the performance of a VAD algorithm across different number of thresholds, in practise, a single, fixed value is often chosen. This fact can have quite severe implications on algorithms whose best performance, captured by the ROC curve under many noise types and SNRs, exists at different thresholds. An algorithm cannot be called truly robust if it requires tweaking in its parameters to perform satisfactorily in various conditions. Therefore it is also important to evaluate the algorithms' performance with a single threshold value. Such evaluation can be carried out by plotting the so called \emph{speech hit-rate} (i.e. recall) and \emph{non-speech hit rate} (i.e. specificity) when the algorithms are implemented with a fixed threshold value, selected by examination of the ROC curves in different conditions. In this evaluation, the best threshold has been identified by selecting the points on the ROC curves for the same algorithm under -5 and 0 dB SNR and calculating the mean of the corresponding threshold values while discarding the 2 most extreme ones.
 
 %----------------------------------------------------------------------
-%	SECTION 2 - Evaluation results of VAD algorithms with hang-over
+%	SECTION 2 - Evaluation results
 %----------------------------------------------------------------------
 
 \section{Evaluation results}
@@ -60,9 +60,9 @@ In this chapter, only the results under two lowest SNRs (-5 dB and 0 dB) are goi
 
 \subsection{VAD algorithms with hang-over}
 
-Figures \ref{fig:-5dBh} and \ref{fig:0dBh} show the ROC curves for all evaluated algorithms with hang-over for six types of noise under -5 dB and 0 dB SNR respectively. In almost all cases, the LTSD algorithm (red line) seems to outperform all other VAD methods under both SNRs. Under car noise, its performance is a bit worse than both the Sohn and Harmfreq's algorithms. Under factory noise, all algorithms seem to exhibit performance close to a random guess since all ROC curves are close to the 45$^\circ$ line.
+Figures \ref{fig:-5dBh} and \ref{fig:0dBh} show the ROC curves for all evaluated algorithms with hang-over for six types of noise under -5 dB and 0 dB SNR respectively. In almost all cases, the LTSD algorithm (red line) seems to outperform all other VAD methods under both SNRs. In car noise, its performance is a bit worse than both the Sohn and Harmfreq's algorithms however it should be noticed that most algorithms perform exceptionally well in this type of noise. This can be explained by the fact that car noise occupies predominantly the low frequencies and the estimation procedure is able to track the noise well enough even at negative SNR. In factory noise, all algorithms seem to exhibit performance close to a random guess since all ROC curves are close to the 45$^\circ$ line.
 
-The best average performance of the LTSD algorithm is confirmed by examination of the AUC values under -5 dB SNR presented in Table \ref{tab:AUC-5dBh} where the best value under the given noise type is highlighted in green while the worst one in red. The LTSD VAD outperforms all other algorithms in 4 out of 6 cases which results in the best average performance. On the other hand, the Entropy VAD is the worst performing algorithm in 5 out of 6 cases.
+The best average performance of the LTSD algorithm is confirmed by examination of the AUC values under -5 dB SNR presented in Table \ref{tab:AUC-5dBh} where the best value for the given noise type is highlighted in green while the worst one in red. The LTSD VAD outperforms all other algorithms in 4 out of 6 cases which results in the best average performance. On the other hand, the Entropy VAD is the worst performing algorithm in 5 out of 6 cases.
 
 \begin{table}[htbp]
 \center
@@ -79,13 +79,7 @@ The best average performance of the LTSD algorithm is confirmed by examination o
 \label{tab:AUC-5dBh}
 \end{table}
 
-\begin{figure}[htbp]
-	\centering
-		\includegraphics[width=0.9\columnwidth]{Figures/Chapter4/snrh.pdf}
-		\rule{37em}{0.5pt}
-	\caption[Speech/non-speech hit rates for the evaluated algorithms \emph{with} hang-over under different SNRs]{Speech/non-speech hit rates for the evaluated algorithms \emph{with} hang-over under different SNRs}
-	\label{fig:snrh}
-\end{figure}
+Finally, the speech/non-speech hit rates for the algorithms with hang-over and a fixed threshold are presented in Figure \ref{fig:snrh}. Again, the LTSD VAD exhibits the best speech detection characteristics, however remains slightly behind Harmfreq for the non-speech detection. It is worth reiterating that there is a trade-off between these two evaluation metrics and, especially for Harmfreq, lowering the threshold by a small value could probably increase the speech hit-rate while decreasing the non-speech's, bringing its performance close to the LTSD's.
 
 \begin{figure}[htbp]
 	\centering
@@ -103,9 +97,13 @@ The best average performance of the LTSD algorithm is confirmed by examination o
 	\label{fig:0dBh}
 \end{figure}
 
+\clearpage
+
 \subsection{VAD algorithms without hang-over}
 
-The same algorithms have also been implemented without the hang-over scheme. It can be argued that this is a more \emph{pure} evaluation of the VAD features since the algorithms stop immediately after the thresholding stage. Similarly to the previous section, Figures \ref{fig:-5dBnoh} and \ref{fig:10dBnoh} show the ROC curves under -5 dB and 0 dB SNR. Again, the LTSD VAD performs best, while the Entropy VAD exhibits the worst performance. Interestingly, LTSD's results indicate that the version without hang-over operates better than the one with. Particularly for the case of car noise, LTSD without hang-over already achieves such a good performance that when combined with a smoothing scheme, it stretches the correct speech decisions around the actual utterances which results in an additional number of false positives.
+The same algorithms have also been implemented without the hang-over scheme. It can be argued that this is a more \emph{pure} evaluation of the VAD features since the algorithms stop immediately after the thresholding stage. Similarly to the previous section, Figures \ref{fig:-5dBnoh} and \ref{fig:0dBnoh} show the ROC curves under -5 dB and 0 dB SNR. Again, the LTSD VAD performs best, while the Entropy VAD exhibits the worst performance. Interestingly, LTSD's results indicate that the version without hang-over operates better in car noise than the one with. Particularly for the case of car noise, LTSD without hang-over already achieves such a good performance that when combined with a smoothing scheme, it stretches the correct speech decisions around the actual utterances which results in an additional number of false positives.
+
+The best performance of LTSD VAD is confirmed by the AUC values presented in Table \ref{tab:AUC-5dBnoh}. By comparing the two AUC tables (i.e. with and without hang-over) it can be noticed that the LTSD algorithm benefits least from the hang-over scheme. On the other hand, Harmfreq's performance is boosted to the greatest extent.
 
 \begin{figure}[htbp]
 	\centering
@@ -140,8 +138,22 @@ The same algorithms have also been implemented without the hang-over scheme. It 
 
 \begin{figure}[htbp]
 	\centering
+		\includegraphics[width=0.9\columnwidth]{Figures/Chapter4/snrh.pdf}
+		\rule{37em}{0.5pt}
+	\caption[Speech/non-speech hit rates for the evaluated algorithms \emph{with} hang-over under different SNRs]{Speech/non-speech hit rates for the evaluated algorithms \emph{with} hang-over under different SNRs}
+	\label{fig:snrh}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
 		\includegraphics[width=0.9\columnwidth]{Figures/Chapter4/snrnoh.pdf}
 		\rule{37em}{0.5pt}
 	\caption[Speech/non-speech hit rates for the evaluated algorithms \emph{without} hang-over under different SNRs]{Speech/non-speech hit rates for the evaluated algorithms \emph{without} hang-over under different SNRs}
 	\label{fig:snrnoh}
 \end{figure}
+
+%----------------------------------------------------------------------
+%	SECTION 2 - Conclusion
+%----------------------------------------------------------------------
+
+\section{Conclusion}
