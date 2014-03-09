@@ -1,5 +1,5 @@
 function [ snrres ] = evaluateVsSNR(DRx,Nx,fs,vadinfo)
-snrr = [20 15 10 5 0 -5];
+snrr = [20 15 10 5 0 -5 -10 -15];
 % for each snr level
 snrno = length(snrr);
 snrres = cell(5,2);
