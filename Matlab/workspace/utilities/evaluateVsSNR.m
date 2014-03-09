@@ -3,15 +3,16 @@ snrr = [20 15 10 5 0 -5];
 % for each snr level
 snrno = length(snrr);
 snrres = cell(5,2);
+
+noises = length(Nx);
+vadno = size(vadinfo,1);
+
 % initialise the output cell
-for i = 1:5
+for i = 1:vadno
     snrres{i,1} = vadinfo{i,1};
     snrres{i,2}(1,:) = zeros(1,snrno);
     snrres{i,2}(2,:) = zeros(1,snrno);
 end
-
-noises = length(Nx);
-vadno = size(vadinfo,1);
 
 % for each snr
 for i = 1:snrno
