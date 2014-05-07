@@ -13,7 +13,8 @@ title(strcat('opsroom',{' '},snr,{' '},'dB')); ylabel('True Positive Rate'); xla
 subplot(3,2,6); plotLine(factory); grid;
 title(strcat('factory',{' '},snr,{' '},'dB')); ylabel('True Positive Rate'); xlabel('False Positive Rate');
 
-legend('Sohn','LTSD','Entropy','PARADE','Harmfreq');
+%legend('Sohn','LTSD','Entropy','PARADE','Harmfreq');
+legend('PEFAC','LTSD');
 subplot(3,2,1); plotScatter(white);
 subplot(3,2,2); plotScatter(car);
 subplot(3,2,3); plotScatter(spchspect);
@@ -28,9 +29,9 @@ function plotLine(results)
 hold on;
 plot([1;results{1,2}(:,3);0],[1;results{1,2}(:,2);0],'b');
 plot([1;results{2,2}(:,3);0],[1;results{2,2}(:,2);0],'r');
-plot([0;results{3,2}(:,3);1],[0;results{3,2}(:,2);1],'g');
-plot([1;results{4,2}(:,3);0],[1;results{4,2}(:,2);0],'m');
-plot([1;results{5,2}(:,3);0],[1;results{5,2}(:,2);0],'k');
+%plot([0;results{3,2}(:,3);1],[0;results{3,2}(:,2);1],'g');
+%plot([1;results{4,2}(:,3);0],[1;results{4,2}(:,2);0],'m');
+%plot([1;results{5,2}(:,3);0],[1;results{5,2}(:,2);0],'k');
 
 end
 
@@ -39,8 +40,8 @@ function plotScatter(results)
 hold on;
 scatter(results{1,2}(:,3),results{1,2}(:,2),'.b');
 scatter(results{2,2}(:,3),results{2,2}(:,2),'.r');
-scatter(results{3,2}(:,3),results{3,2}(:,2),'.g');
-scatter(results{4,2}(:,3),results{4,2}(:,2),'.m');
-scatter(results{5,2}(:,3),results{5,2}(:,2),'.k');
+%scatter(results{3,2}(:,3),results{3,2}(:,2),'.g');
+%scatter(results{4,2}(:,3),results{4,2}(:,2),'.m');
+%scatter(results{5,2}(:,3),results{5,2}(:,2),'.k');
 
 end

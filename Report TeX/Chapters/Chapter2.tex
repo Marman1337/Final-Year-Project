@@ -108,9 +108,9 @@ A block diagram of ETSI AMR Option 2 VAD is presented in Figure \ref{fig:AMR2}. 
 
 \subsection{TIA/EIA IS-733}
 
-TIA/EIA IS-733 is a speech coder in which the signal might be encoded at four different rates (1, 1/2, 1/4, 1/8 of the base rate) depending on the characteristics of the currently transmitted frame. Rate 1 is used for low quality signals where additional reduction might compromise the already low intelligibility. Rate 1/2 is used for good quality stationary and periodic frames. Rate 1/4 is used for unvoiced speech and rate 1/8 for speech inactive frames. A VAD algorithm is used to determine the rate at which the current frame should be encoded and transmitted.
+TIA/EIA IS-733 is a speech coder in which the signal might be encoded at four different rates ($1$, $\frac{1}{2}$, $\frac{1}{4}$, $\frac{1}{8}$ of the base rate) depending on the characteristics of the currently transmitted frame. Rate $1$ is used for low quality signals where additional reduction might compromise the already low intelligibility. Rate $\frac{1}{2}$ is used for good quality stationary and periodic frames. Rate $\frac{1}{4}$ is used for unvoiced speech and rate $\frac{1}{8}$ for speech inactive frames. A VAD algorithm is used to determine the rate at which the current frame should be encoded and transmitted.
 
-A block diagram of TIA/EIA IS-733 VAD is presented in Figure \ref{fig:IS733}. The algorithm starts with computing the energy of the input signal across two different frequency bands (0.3 - 2.0 kHz and 2.0 - 4.0 kHz) and subsequently the SNR based on the estimated noise energy. The VAD decision is based on two adaptive thresholds, which depend on the level of the estimated background noise, one for each frequency band. If both low and high band SNRs are higher than the threshold, rate 1 is selected. Only one SNR being above its threshold causes the signal to be encoded at rate 1/2. Both SNRs below the threshold indicate noise-only frame, encoded at rate 1/8.
+A block diagram of TIA/EIA IS-733 VAD is presented in Figure \ref{fig:IS733}. The algorithm starts with computing the energy of the input signal across two different frequency bands (0.3 - 2.0 kHz and 2.0 - 4.0 kHz) and subsequently the SNR based on the estimated noise energy. The VAD decision is based on two adaptive thresholds, which depend on the level of the estimated background noise, one for each frequency band. If both low and high band SNRs are higher than the threshold, rate 1 is selected. Only one SNR being above its threshold causes the signal to be encoded at rate $\frac{1}{2}$. Both SNRs below the threshold indicate noise-only frame, encoded at rate $\frac{1}{8}$.
 
 \begin{figure}[htbp]
 	\centering
@@ -150,7 +150,7 @@ E = - \sum_{i=1}^{N} p_i \log_2 p_i
 \label{eq:entropy}
 \end{equation}
 
-where $p_i$ is the probability of the random variable having a value of $i$ among $N$ distinct values which it might take. In case of VAD, $p_i$ often relates to either a single bin in a histogram of the amplitudes of a signal or a single frequency in the magnitude or power spectrum.
+where $p_i$ is the probability of the random variable having a value of $i$ among $N$ distinct values which it might take. In case of VAD, $p_i$ often relates to either a single bin in a histogram of the amplitudes of a signal or a single frequency in the magnitude power spectrum.
 
 The purely time domain approach to VAD using entropy has been explored by Weaver \emph{et al.} in \cite{Weaver}. A block diagram of the key parts of the algorithm is presented in Figure \ref{fig:Weaver}. The authors propose to first calculate the histogram of the amplitudes of the signal and then assign an entropy measure to each frame, as defined in Equation \ref{eq:entropy}, where $p_i$ is the normalised (such that $\sum_{i=1}^{N} p_i = 1$) mass of the $i$-th bin of the histogram.
 

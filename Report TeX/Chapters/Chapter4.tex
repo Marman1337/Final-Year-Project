@@ -12,7 +12,7 @@
 
 \section{Evaluation methods}
 
-Voice Activity Detection is a binary classification problem where each frame of the incoming signal can only be classified as speech or non-speech. For such types of problems, a number of standard evaluation methods exist. Most of them revolve around different ratios of the four fundamental quantities which are calculated by comparing the outcome of an experiment and the so-called \emph{gold standard} which is the best guess of the true classification. In terms of VAD, these are:
+Voice Activity Detection is a binary classification problem where each frame of the incoming signal can only be classified as speech or non-speech. For such types of problems, a number of standard evaluation methods exist. Most of them revolve around different ratios of the four fundamental quantities which are calculated by comparing the outcome of an experiment and the so-called \emph{gold standard/ground truth} which is the best guess of the true classification. In terms of VAD, these are:
 
 \begin{itemize}
 \item True Positive (TP) - speech classified correctly
@@ -32,7 +32,7 @@ Some of the most popular ratios are:
 
 \subsection{Receiver Operating Characteristic curves}
 
-At the beginning of the classification stage most VAD algorithms use a form of threshold. If the feature value calculated for the current frame is above it (below in some algorithms), then this signal segment is classified as speech and non-speech otherwise. Therefore, the number of frames classified as speech/non-speech varies greatly with the value of the threshold. Setting a very low value can result in all processed frames being classified as speech, yielding 100\% recall but also 0\% specificity. Conversely, setting too high threshold might result in very good specificity but bad recall. Needless to say that the extreme values of threshold result in an useless algorithm.
+At the beginning of the classification stage most VAD algorithms use a form of threshold. If the feature value calculated for the current frame is above it (below in some algorithms), then this signal segment is classified as speech and non-speech otherwise. Therefore, the number of frames classified as speech/non-speech varies greatly with the value of the threshold. Setting a very low value can result in all processed frames being classified as speech, yielding 100\% recall but also 0\% specificity. Conversely, setting too high threshold might result in very good specificity but bad recall. Needless to say that the extreme values of the threshold result in an useless algorithm.
 
 In order to capture the trade-off between the true and false positive rates, the so-called Receiver Operating Characteristic (ROC) curves have been created, an example of which is presented in Figure \ref{fig:roc}. The blue line can be interpreted as a performance of a completely random classifier. The green curve represents a much better performance while the red one much worse. Perfect classification is obtained in the (0,1) point i.e. 100\% recall (no false negatives) and 100\% specificity (no false positives). An average performance of the VAD algorithm across all values of the threshold can be compactly described by calculating the Area Under Curve (AUC) which, as the name implies, is the area under the ROC curve with the best possible value of 1.
 
@@ -46,7 +46,7 @@ In order to capture the trade-off between the true and false positive rates, the
 
 \subsection{Speech/non-speech hit rates}
 
-While the ROC curves capture the performance of a VAD algorithm across different number of thresholds, in practise, a single, fixed value is often chosen. This fact can have quite severe implications on algorithms whose best performance, captured by the ROC curve under many noise types and SNRs, exists at different thresholds. An algorithm cannot be called truly robust if it requires tweaking in its parameters to perform satisfactorily in various conditions. Therefore it is also important to evaluate the algorithms' performance with a single threshold value. Such evaluation can be carried out by plotting the so called \emph{speech hit-rate} (i.e. recall) and \emph{non-speech hit rate} (i.e. specificity) when the algorithms are implemented with a fixed threshold value, selected by examination of the ROC curves in different conditions. In this evaluation, the best threshold has been identified by selecting the points on the ROC curves for the same algorithm under -5 and 0 dB SNR and calculating the mean of the corresponding threshold values while discarding the 2 most extreme ones.
+While the ROC curves capture the performance of a VAD algorithm across different thresholds, in practise, a single, fixed value is often chosen. This fact can have quite severe implications on algorithms whose best performance, captured by the ROC curve under many noise types and SNRs, exists at different thresholds. An algorithm cannot be called truly robust if it requires tweaking in its parameters to perform satisfactorily in various conditions. Therefore it is also important to evaluate the algorithms' performance with a single threshold value. Such evaluation can be carried out by plotting the so called \emph{speech hit-rate} (i.e. recall) and \emph{non-speech hit rate} (i.e. specificity) when the algorithms are implemented with a fixed threshold value, selected by examination of the ROC curves in different conditions. In this evaluation, the \emph{optimal} threshold has been identified by selecting the points on the ROC curves where the TPR and FPR are closest to being equal (from -5 and 0 dB SNRs) and calculating the mean of the corresponding threshold values while discarding the 2 most extreme ones.
 
 %----------------------------------------------------------------------
 %	SECTION 2 - Evaluation results
@@ -54,7 +54,7 @@ While the ROC curves capture the performance of a VAD algorithm across different
 
 \section{Evaluation results}
 
-In the two experiments, the selected VAD algorithms have implemented and evaluated with and without the hang-over scheme described in Section \ref{sec:hang}. The ROC curves have been plotted for all six noise types at two low SNRs i.e. -5 dB and 0 dB. In order to capture the average performance, AUC values have also been calculated. Finally, the most promising threshold for each algorithm across the two low SNRs and six noise types has been identified and the speech/non-speech hit rates at six different SNRs have been calculated.
+In the two experiments, the selected VAD algorithms have been implemented and evaluated with and without the hang-over scheme described in Section \ref{sec:hang}. The ROC curves have been plotted for all six noise types at two low SNRs i.e. -5 dB and 0 dB. In order to capture the average performance, AUC values have also been calculated. Finally, the most promising threshold for each algorithm across the two low SNRs and six noise types has been identified and the speech/non-speech hit rates at six different SNRs have been calculated.
 
 In this chapter, only the results under two lowest SNRs (-5 dB and 0 dB) are going to be presented. Additional evaluation results for other SNRs have been placed in Appendix \ref{AppendixA}.
 
@@ -97,13 +97,19 @@ Finally, the speech/non-speech hit rates for the algorithms with hang-over and a
 	\label{fig:0dBh}
 \end{figure}
 
-\clearpage
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=0.9\columnwidth]{Figures/Chapter4/snrh.pdf}
+		\rule{37em}{0.5pt}
+	\caption[Speech/non-speech hit rates for the evaluated algorithms \emph{with} hang-over under different SNRs]{Speech/non-speech hit rates for the evaluated algorithms \emph{with} hang-over under different SNRs}
+	\label{fig:snrh}
+\end{figure}
 
 \subsection{VAD algorithms without hang-over}
 
-The same algorithms have also been implemented without the hang-over scheme. It can be argued that this is a more \emph{pure} evaluation of the VAD features since the algorithms stop immediately after the thresholding stage. Similarly to the previous section, Figures \ref{fig:-5dBnoh} and \ref{fig:0dBnoh} show the ROC curves under -5 dB and 0 dB SNR. Again, the LTSD VAD performs best, while the Entropy VAD exhibits the worst performance. Interestingly, LTSD's results indicate that the version without hang-over operates better in car noise than the one with. Particularly for the case of car noise, LTSD without hang-over already achieves such a good performance that when combined with a smoothing scheme, it stretches the correct speech decisions around the actual utterances which results in an additional number of false positives.
+The same algorithms have also been implemented without the hang-over scheme. It can be argued that this is a more \emph{objective} evaluation of the VAD features since the algorithms stop immediately after the thresholding stage. Similarly to the previous section, Figures \ref{fig:-5dBnoh} and \ref{fig:0dBnoh} show the ROC curves under -5 dB and 0 dB SNR. Again, the LTSD VAD performs best, while the Entropy VAD exhibits the worst performance. Interestingly, LTSD's results indicate that the version without hang-over operates better in car noise than the one with. This can be explained by an observation that LTSD without hang-over already achieves such a good performance that when combined with a smoothing scheme, it stretches the speech labels beyond the actual utterances which results in an additional number of false positives.
 
-The best performance of LTSD VAD is confirmed by the AUC values presented in Table \ref{tab:AUC-5dBnoh}. By comparing the two AUC tables (i.e. with and without hang-over) it can be noticed that the LTSD algorithm benefits least from the hang-over scheme. On the other hand, Harmfreq's performance is boosted to the greatest extent.
+The best average performance of the LTSD VAD is again confirmed by the AUC values presented in Table \ref{tab:AUC-5dBnoh}. By comparing the two AUC tables (i.e. with and without hang-over) it can be noticed that the LTSD algorithm benefits least from the hang-over scheme. On the other hand, Harmfreq's performance is boosted to the greatest extent. Examination of the speech/non-speech hit rates with a fixed threshold in Figure \ref{fig:snrnoh} again confirms that the LTSD algorithm exhibits the best performance, this time both in the speech as well as in non-speech hit rates.
 
 \begin{figure}[htbp]
 	\centering
@@ -138,14 +144,6 @@ The best performance of LTSD VAD is confirmed by the AUC values presented in Tab
 
 \begin{figure}[htbp]
 	\centering
-		\includegraphics[width=0.9\columnwidth]{Figures/Chapter4/snrh.pdf}
-		\rule{37em}{0.5pt}
-	\caption[Speech/non-speech hit rates for the evaluated algorithms \emph{with} hang-over under different SNRs]{Speech/non-speech hit rates for the evaluated algorithms \emph{with} hang-over under different SNRs}
-	\label{fig:snrh}
-\end{figure}
-
-\begin{figure}[htbp]
-	\centering
 		\includegraphics[width=0.9\columnwidth]{Figures/Chapter4/snrnoh.pdf}
 		\rule{37em}{0.5pt}
 	\caption[Speech/non-speech hit rates for the evaluated algorithms \emph{without} hang-over under different SNRs]{Speech/non-speech hit rates for the evaluated algorithms \emph{without} hang-over under different SNRs}
@@ -157,3 +155,5 @@ The best performance of LTSD VAD is confirmed by the AUC values presented in Tab
 %----------------------------------------------------------------------
 
 \section{Conclusion}
+
+The evaluation results confirm the hypothesis that the best algorithm cannot be identified for all conditions, which in the real world there is infinitely many of. However, for the evaluated noise types, the LTSD algorithm exhibits the best average performance in 4 out of 6 cases, as concluded from the analysis of Tables \ref{tab:AUC-5dBh} and \ref{tab:AUC-5dBnoh}. Therefore, for practical use, it is beneficial to narrow down the conditions in which the algorithm will have to operate as much as possible. Then, all algorithms can be properly benchmarked and the best one for the specific application could be chosen. Should this be impossible, the best bet is probably to utilise the LTSD VAD, at least from all the algorithms evaluated in this work.
