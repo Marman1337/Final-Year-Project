@@ -60,7 +60,50 @@
 \hypersetup{pdfkeywords=\keywordnames}
 
 %----------------------------------------------------------------------------------------
-%	TITLE PAGE
+%	DEPARTMENTAL TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\begin{titlepage}
+% \newgeometry{top=25mm,bottom=25mm,left=38mm,right=32mm}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+% \fontfamily{phv}\selectfont
+
+{
+\Large
+\raggedright
+\href{http://www.imperial.ac.uk}{Imperial College London}\\[17pt]
+\href{http://www.imperial.ac.uk/electricalengineering}{Department of Electrical and Electronic Engineering}\\[17pt]
+Final Year Project Report 2014\\[17pt]
+
+}
+\rule{\columnwidth}{3pt}
+
+\vfill
+
+\centering
+\includegraphics[width=0.9\columnwidth,keepaspectratio]{Figures/titlepage/titlepage.pdf}
+
+\vfill
+
+\setlength{\tabcolsep}{0pt}
+\begin{tabular}{p{40mm}p{\dimexpr\columnwidth-40mm}}
+Project Title: & \textbf{Robust Speech Detection in High Levels
+of Background Noise} \\[12pt]
+Student: & \href{mailto:marcin.baginski91@gmail.com}{\textbf{Marcin Baginski}} \\[12pt]
+CID: & \textbf{00656667} \\[12pt]
+Course: & \textbf{EIE4} \\[12pt]
+Project Supervisor: & \href{mailto:mike.brookes@imperial.ac.uk}{\textbf{Mr Mike Brookes}} \\[12pt]
+Second Marker: & \href{mailto:patrick.naylor@imperial.ac.uk}{\textbf{Dr Patrick Naylor}} \\
+\end{tabular}
+\end{titlepage}
+
+\newpage
+\thispagestyle{empty}
+\mbox{}
+
+%----------------------------------------------------------------------------------------
+%	ACTUAL TITLE PAGE
 %----------------------------------------------------------------------------------------
 
 \begin{titlepage}
@@ -106,27 +149,27 @@ in the\\
 %	Your institution may give you a different text to place here
 %----------------------------------------------------------------------------------------
 
-\Declaration{
-
-\addtocontents{toc}{} % Add a gap in the Contents, for aesthetics
-
-I, \authornames, declare that this thesis titled, '\ttitle' and the work presented in it are my own. I confirm that:
-
-\begin{itemize} 
-\item[\tiny{$\blacksquare$}] Where any part of this thesis has previously been submitted for a degree or any other qualification at this University or any other institution, this has been clearly stated
-\item[\tiny{$\blacksquare$}] Where I have consulted the published work of others, this is always clearly attributed
-\item[\tiny{$\blacksquare$}] Where I have quoted from the work of others, the source is always given. With the exception of such quotations, this thesis is entirely my own work
-\item[\tiny{$\blacksquare$}] Where the thesis is based on work done by myself jointly with others, I have made clear exactly what was done by others and what I have contributed myself \medskip
-\end{itemize}
- 
-Signed:\\
-\rule[1em]{25em}{0.5pt} % This prints a line for the signature
- 
-Date:\\
-\rule[1em]{25em}{0.5pt} % This prints a line to write the date
-}
-
-\clearpage % Start a new page
+%\Declaration{
+%
+%\addtocontents{toc}{} % Add a gap in the Contents, for aesthetics
+%
+%I, \authornames, declare that this thesis titled, '\ttitle' and the work presented in it are my own. I confirm that:
+%
+%\begin{itemize} 
+%\item[\tiny{$\blacksquare$}] Where any part of this thesis has previously been submitted for a degree or any other qualification at this University or any other institution, this has been clearly stated
+%\item[\tiny{$\blacksquare$}] Where I have consulted the published work of others, this is always clearly attributed
+%\item[\tiny{$\blacksquare$}] Where I have quoted from the work of others, the source is always given. With the exception of such quotations, this thesis is entirely my own work
+%\item[\tiny{$\blacksquare$}] Where the thesis is based on work done by myself jointly with others, I have made clear exactly what was done by others and what I have contributed myself \medskip
+%\end{itemize}
+% 
+%Signed:\\
+%\rule[1em]{25em}{0.5pt} % This prints a line for the signature
+% 
+%Date:\\
+%\rule[1em]{25em}{0.5pt} % This prints a line to write the date
+%}
+%
+%\clearpage % Start a new page
 
 %----------------------------------------------------------------------------------------
 %	ABSTRACT PAGE
@@ -136,7 +179,7 @@ Date:\\
 
 \abstract{\addtocontents{toc}{} % Add a gap in the Contents, for aesthetics
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas pretium sem nec nisi facilisis, vel consectetur libero rutrum. Curabitur rhoncus commodo leo, nec lobortis ante venenatis vehicula. Duis vel posuere risus. Nulla blandit risus elit, quis eleifend leo lacinia ut. Mauris rutrum vitae orci eu commodo. Suspendisse egestas, ipsum quis interdum rutrum, tortor lectus facilisis lorem, eget mollis ligula arcu at mi. Quisque accumsan orci magna, sit amet interdum lacus commodo non. Mauris elit magna, venenatis in auctor sit amet, laoreet in tortor. Suspendisse et dolor mattis, tempus libero sit amet, tempus lectus. Nunc in dolor et lorem dignissim elementum. Curabitur suscipit lectus lorem. Pellentesque ultrices venenatis neque, vitae consectetur arcu mattis sed. Quisque porta nisl elementum lacus mollis commodo. Sed vestibulum dolor sed lectus interdum eleifend. Quisque in libero ut augue blandit malesuada.
+Voice Activity Detection (VAD) is a procedure of identifying speech segments in a noisy recording. VAD is utilised in a variety of modern signal processing applications such as speech recognition, enhancement, transmission and coding. Over the recent years, researchers have proposed a number of approaches to VAD. However, the lack of standard method for their evaluation makes it difficult to objectively compare these algorithms using only the results reported in the original research papers. This work contains a comprehensive literature survey of the existing VAD methods, their implementation as well as objective evaluation by using the same test data and unifying the parts of the algorithms which could otherwise bias the results. Finally, an attempt to use one of the recently published pitch tracking algorithms as a Voice Activity Detector is described and its performance is examined. This approach has been shown to considerably outperform (on average) the best performing VAD method from the previous evaluation at the very high background noise levels in the range -5 to -15 dB.
 }
 
 \clearpage % Start a new page
@@ -187,7 +230,7 @@ However, I would also like to thank my parents, family and my great friends for 
 \input{Chapters/Chapter3}
 \input{Chapters/Chapter4}
 \input{Chapters/Chapter5}
-%\input{Chapters/Chapter6}
+\input{Chapters/Chapter6}
 %\input{Chapters/Chapter7}
 
 %----------------------------------------------------------------------------------------
