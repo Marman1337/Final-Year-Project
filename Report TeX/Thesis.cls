@@ -304,9 +304,9 @@
     %\bigskip
     %{\normalsize \degreename\par} % Degree name
     %\bigskip
-    {\normalsize\bf \@title \par} % Thesis title
-    \medskip
-    {\normalsize by \authornames \par} % Author name
+    %{\normalsize\bf \@title \par} % Thesis title
+    %\medskip
+    %{\normalsize by \authornames \par} % Author name
     \bigskip
   \end{center}
 }
@@ -411,9 +411,14 @@
 \newcommand\acknowledgements[1]{
 \btypeout{Acknowledgements}
 \addtotoc{Acknowledgements}
-\thispagestyle{plain}
-\null\vfil
-\begin{center}{\huge{\textit{Acknowledgements}} \par}\end{center}
+\thispagestyle{empty}
+\null%\vfil
+\begin{center}
+  \setlength{\parskip}{0pt}
+  {\huge{\textit{Acknowledgements}} \par}
+  \bigskip
+  \bigskip
+\end{center}
 {\normalsize #1}
 \vfil\vfil\null
 

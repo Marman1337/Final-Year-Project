@@ -25,11 +25,11 @@ Therefore, the first aim of this chapter is to describe the implementation detai
 Due to a large number of VAD features proposed in the literature, implementation and evaluation of all of them is impractical. However, a small number of features which appear to be noise-robust, based on different ideas and, ideally, recently published can be selected for comparison. In this evaluation, the features from the following VAD algorithms have been implemented:
 
 \begin{itemize}
-\item A Statistical Model-Based Voice Activity Detector \cite{Sohn} (hereinafter referred to as 'Sohn')
-\item Efficient Voice Activity Detection Algorithms Using Long-term Speech Information \cite{LTSD} (hereinafter referred to as 'LTSD')
-\item Entropy Based Voice Activity Detection in Very Noisy Conditions \citep{Renevey} (hereinafter referred to as 'Entropy')
-\item Noise Robust Voice Activity Detection Based on Periodic to Aperiodic Component Ratio \cite{PARADE} (hereinafter referred to as 'PARADE')
-\item Voice Activity Detection using Harmonic Frequency Components in Likelihood Ratio Test \cite{Tan} (hereinafter referred to as 'Harmfreq')
+\item A Statistical Model-Based Voice Activity Detector \cite{Sohn} (hereinafter referred to as `Sohn')
+\item Efficient Voice Activity Detection Algorithms Using Long-term Speech Information \cite{LTSD} (hereinafter referred to as `LTSD')
+\item Entropy Based Voice Activity Detection in Very Noisy Conditions \citep{Renevey} (hereinafter referred to as `Entropy')
+\item Noise Robust Voice Activity Detection Based on Periodic to Aperiodic Component Ratio \cite{PARADE} (hereinafter referred to as `PARADE')
+\item Voice Activity Detection using Harmonic Frequency Components in Likelihood Ratio Test \cite{Tan} (hereinafter referred to as `Harmfreq')
 \end{itemize}
 
 In particular, the LTSD feature has been chosen because it is calculated taking into account multiple frames surrounding the one for which the decision is being made. Harmfreq is similar the Sohn feature, but calculates the likelihood ratio for the voiced phonemes only at the multiples of the fundamental frequency, hence it is a mixture of a LRT algorithm and a harmonicity based one. PARADE, on the other hand, is supposed to be robust to a variety of non-stationary noise types.
@@ -102,7 +102,7 @@ The main idea behind the scheme is to initialise the so-called \emph{hang-over t
 
 \section{Speech corpus}
 
-There exists a number of speech corpora for evaluation of VAD and ASR. The choice of a specific corpus is a subjective matter and a large number of them have been used in the literature, making the results reported by the researchers not directly comparable. For the English language the TIMIT speech corpus \cite{TIMIT} seems to be the most widely used and hence has been selected as a source of utterances for this evaluation. There are a number of issues with the original recordings which need to be resolved so that the evaluation can be more accurate. There are:
+There exists a number of speech corpora for evaluation of VAD and ASR. The choice of a specific corpus is a subjective matter and a large number of them have been used in the literature, making the results reported by the researchers not directly comparable. For the English language the TIMIT speech corpus \cite{TIMIT} seems to be the most widely used and hence has been selected as a source of utterances for this evaluation. There are a number of issues with the original recordings which need to be resolved so that the evaluation can be more accurate. These are:
 
 \begin{itemize}
 \item Single utterances are on average no longer than 4 seconds and hence too short for a proper VAD evaluation
