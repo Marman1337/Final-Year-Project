@@ -96,11 +96,11 @@ The main idea behind the scheme is to initialise the so-called \emph{hang-over t
 \label{algo:hangover}
 \end{algorithm}
 
-%--------------------------------------------------------
-%	SECTION 4 - Speech corpus
-%--------------------------------------------------------
+%---------------------------------------------------------------------------
+%	SECTION 4 - Speech corpus and the speech/non-speech labels
+%---------------------------------------------------------------------------
 
-\section{Speech corpus}
+\section{Speech corpus and the speech/non-speech labels}
 
 There exists a number of speech corpora for evaluation of VAD and ASR. The choice of a specific corpus is a subjective matter and a large number of them have been used in the literature, making the results reported by the researchers not directly comparable. For the English language the TIMIT speech corpus \cite{TIMIT} seems to be the most widely used and hence has been selected as a source of utterances for this evaluation. There are a number of issues with the original recordings which need to be resolved so that the evaluation can be more accurate. These are:
 
@@ -112,7 +112,9 @@ There exists a number of speech corpora for evaluation of VAD and ASR. The choic
 
 In order to deal with the first two issues, a number of randomly chosen utterances from every dialect (i.e. DR1 to DR8) has been concatenated into a single speech recording, adding 2.5 seconds of silence at the beginning, ending and between the utterances. In an attempt to equalise the power, the amplitude of each utterance has been normalised such that the average power per sample of all of them is equal. This is important because if the concatenated utterances differed in the average power level, after adding the noise, the one with initially higher power could be easily detected by almost any VAD procedure while the detection of the other one would be very difficult due to the much lower segmental/short-time SNR.
 
-For a proper VAD evaluation, the ground truth speech/non-speech labels need to be obtained. While this might seem like a simple task, it actually includes a degree of subjectivity. Consider Figure \ref{fig:groundtruth} where the speaker first makes a short pause between words and then, after the utterance, takes a breath while still standing near the microphone. Whether the first segment should be classified as speech, since it clearly forms a part of a longer utterance, or silence, since if considered in isolation, it does not exhibit any obvious speech characteristics, is a matter of choice. In this work, all such segments and alike have been treated as integral parts of the utterances and hence classified as speech in the ground truth labels. Obviously, the breath part is not speech and should be treated as such. The initial labels have been obtained by a simple energy VAD and examined visually, making necessary manual changes to any obviously misclassified segments, taking into account the decisions described before.
+For a proper VAD evaluation, the ground truth speech/non-speech labels need to be obtained. While this might seem like a simple task, it actually includes a degree of subjectivity. Consider Figure \ref{fig:groundtruth} where the speaker first makes a short pause between words and then, after the utterance, takes a breath while still standing near the microphone. Whether the first segment should be classified as speech, since it clearly forms a part of a longer utterance, or silence, since if considered in isolation, it does not exhibit any obvious speech characteristics, is a matter of choice. In fact, it could be argued that some parts of the recordings could be labelled in a third way, as a \emph{don't care} regions. This however introduces a significant degree of subjectivity into the evaluation. In particular, the decision which samples should be labelled as \emph{don't care} is not entirely clear. In this work however, an attempt to create a well-defined labels has been made and hence all samples are treated as speech/non-speech only.
+
+The initial labels have been obtained by a simple energy VAD and examined visually, making necessary manual changes to any obviously misclassified segments (such as in Figure \ref{fig:groundtruth}). All segments in the middle of utterances and alike have been treated as integral parts of them and hence classified as speech in the reference truth labels. Conversely, the breath part is not speech and therefore is being treated as such, even if the initial output of the energy VAD is different.
 
 \begin{figure}[htbp]
 	\centering
@@ -123,10 +125,10 @@ For a proper VAD evaluation, the ground truth speech/non-speech labels need to b
 \end{figure}
 
 %--------------------------------------------------------
-%	SECTION 5 - Noise corpus and SNR
+%	SECTION 5 - Noise corpus and the SNR
 %--------------------------------------------------------
 
-\section{Noise corpus and SNR}
+\section{Noise corpus and the SNR}
 
 Similarly to the speech corpora, there exists a large number of noise databases which are commonly used for evaluation of speech processing algorithms. In this evaluation, most noise types have been taken from the NOISEX-92 \cite{NOISEX} corpus with the exception of the babble noise which has been adapted from the Nato Noise \cite{Nato} package. Also, the white noise has been generated\footnote{The white noise has been generated only once. The exact same samples have been used for evaluation of all algorithms.} by MATLAB's \texttt{randn} function which returns samples of the naturally distributed Gaussian random variable with zero mean\footnote{In this case, the variance, which by default is 1, is irrelevant since the noise is scaled before addition to the clean speech signal anyway.}. The complete list of the noise types used in this evaluation is: white, car, spchspect, babble, opsroom and factory.
 
