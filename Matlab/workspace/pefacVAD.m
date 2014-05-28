@@ -1,7 +1,7 @@
 function [ postVAD, preVAD ] = pefacVAD(s,fs,wsec,enhance,thr)
 % set the default threshold if none supplied
 if(nargin < 5)
-    thr = 0.5;
+    thr = 0.55;
 end
 
 % default - no speech enhancement
@@ -12,11 +12,11 @@ end
 % -----------------------------------------------------------
 % HANG-OVER PARAMETERS
 % -----------------------------------------------------------
-B = 8; % buffer length
+B = 7; % buffer length
 Sp = 2; % speech possible
 Sl = 3; % speech likely
-Ls = 5; % short hangover time
-Lm = 8; % medium hangover time
+Ls = 6; % short hangover time
+Lm = 9; % medium hangover time
 
 % -----------------------------------------------------------
 % PRE-PROCESSING

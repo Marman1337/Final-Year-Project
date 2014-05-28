@@ -43,7 +43,7 @@ for i = 1:snrno
                 ns = DRx{k}(:,1) + noi;
                 
                 % run VAD
-                vad = vadfn(ns,fs,0.05,0,thr);
+                vad = vadfn(ns,fs,0.025,0,thr);
                 % evaluate VAD
                 stats = recallPrecision(vad,DRx{k}(:,2));
                 TP = TP + stats{1,2};
