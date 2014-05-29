@@ -1,6 +1,6 @@
 function plotSNRPEFAC(results,hangover)
 
-subplot(2,1,1); hold on; grid; set(gca,'XDir','Reverse')
+figure; subplot(2,1,1); hold on; grid; set(gca,'XDir','Reverse')
 axis([-15 20 0 1.01])
 if(hangover == 1)
     title(strcat('Speech hit rate for the evaluated algorithms with hang-over under various SNRs'));
