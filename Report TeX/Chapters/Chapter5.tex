@@ -55,6 +55,8 @@ The proposed approach is relatively simple. PEFAC returns the probability of the
 
 The proposed approach has been implemented, evaluated and compared with the LTSD VAD. In all experiments, the hang-over scheme (section \ref{sec:hang}) has been applied to both algorithms. The evaluation of PEFAC without it does not make much sense, since by design it does not detect unvoiced phonemes and do they need to be identified by a secondary method. Other than that, the evaluation metrics are the same as in Chapter \ref{Chapter4}, namely the ROC curves and speech/non-speech hit rates with a fixed threshold.
 
+\subsection{ROC curves}
+
 The ROC curves for PEFAC and LTSD for all six noise types and two SNR levels (-5 dB and -10 dB) are presented in Figures \ref{fig:pefacm5} and \ref{fig:pefacm10}. For the white, car and opsroom noises, the performance of both algorithms seems to be comparable. PEFAC clearly underperforms LTSD in the babble and spchspect noises, which is expected to some extent, since being primarily a pitch tracker, the babble noise is probably the most difficult noise in which such algorithm might operate. Interestingly, PEFAC is far superior to LTSD in thr factory noise and its performance is much better in both SNR levels.
 
 \begin{figure}[htbp]
@@ -73,28 +75,19 @@ The ROC curves for PEFAC and LTSD for all six noise types and two SNR levels (-5
 	\label{fig:pefacm10}
 \end{figure}
 
-The speech/non-speech hit rates with two fixed thresholds are presented in Figures \ref{fig:pefacSNR60} and \ref{fig:pefacSNR55}\footnote{The threshold in Figure \ref{fig:pefacSNR55} is lower than in \ref{fig:pefacSNR60} therefore a higher speech hit-rate but lower non-speech hit rate.}. Interestingly, for both threshold values PEFAC overperforms LTSD at low and very low SNRs i.e. in the range 0 to -15 dB. For the higher value of the fixed threshold (Figure \ref{fig:pefacSNR60}) PEFAC's performance is clearly better even in both speech and non-speech metrics while for the lower threshold, the non-speech hit rate at the low SNRs is very similar for both algorithms.
+\subsection{Speech/non-speech hit rates}
 
-The slight disadvantage in the performance of PEFAC in the speech-hit rate at high SNRs comes from the parameters of the hang-over scheme. Specifically, sometimes the hang-over timer does is not long enough to capture all unvoiced beginnings or endings of speech utterances. This effect should be avoidable by making the frame length smaller and calibrating the hang-over parameters carefully.
+The speech/non-speech hit rates with two fixed thresholds (0.60 and 0.55 respectively) are presented in Figures \ref{fig:pefacSNR60} and \ref{fig:pefacSNR55}\footnote{The threshold for PEFAC in Figure \ref{fig:pefacSNR60} is higher than in \ref{fig:pefacSNR55} therefore a lower speech hit rate but a higher non-speech hit rate. The thresholds are 0.60 and 0.55 respectively.}. Interestingly, for both threshold values PEFAC overperforms LTSD at low and very low SNRs i.e. in the range 0 to -15 dB. For the higher value of the fixed threshold (Figure \ref{fig:pefacSNR60}) PEFAC's performance is clearly better even in both speech and non-speech metrics while for the lower threshold, the non-speech hit rate at the low SNRs is very similar for both algorithms.
 
-
-\begin{figure}[htbp]
-	\centering
-		\includegraphics[width=0.81\columnwidth]{Figures/Chapter5/pefacSNR60bold.pdf}
-		\rule{37em}{0.5pt}
-	\caption[Speech/non-speech hit rates for PEFAC (higher threshold) and LTSD under different SNRs]{Speech/non-speech hit rates for PEFAC (higher threshold) and LTSD under different SNRs}
-	\label{fig:pefacSNR60}
-\end{figure}
+There is a slight disadvantage in the performance of PEFAC in the speech hit rate at the high SNR levels (20 dB to 5 dB). The exact position of the errors has been investigated visually by examining plots of the test set overlayed with the reference labels and VAD decisions. It has been determined that the vast majority of PEFAC's speech as noise misclassifications appear at the very endings of the utterances. This is visualised in Figure \ref{fig:clipping} where such errors are labelled as BEC - back end clipping. The errors which do appear are very short, with the length of 1-2 frames and hence can be described as minor. There are virtually no MSC (midspeech clipping) errors, which are more severe, for both LTSD and PEFAC at high SNRs and only a small number of FEC (front end clipping) errors.
 
 \begin{figure}[htbp]
 	\centering
-		\includegraphics[width=0.81\columnwidth]{Figures/Chapter5/pefacSNR55bold.pdf}
+		\includegraphics[width=0.7\columnwidth]{Figures/Chapter5/clipping.png}
 		\rule{37em}{0.5pt}
-	\caption[Speech/non-speech hit rates for PEFAC (lower threshold) and LTSD under different SNRs]{Speech/non-speech hit rates for PEFAC (lower threshold) and LTSD under different SNRs}
-	\label{fig:pefacSNR55}
+	\caption[Types of misclassifications in VAD]{Types of misclassifications in VAD. FEC - front end clipping, MSC - midspeech clipping, BEC - back end clipping, NDS - noise detected as speech}
+	\label{fig:clipping}
 \end{figure}
-
-\clearpage
 
 %----------------------------------------------------------------------------------------
 %	SECTION 4 - Summary
@@ -103,3 +96,19 @@ The slight disadvantage in the performance of PEFAC in the speech-hit rate at hi
 \section{Summary}
 
 The average performance of PEFAC is better than LTSD's at the very high SNR levels (-5 to -15 dB). This performance gain comes mostly from the much better operation in the factory noise and the fact that the best performance of PEFAC in all six noise types is achieved at similar threshold values (around 0.6) while for the LTSD algorithm the threshold values vary significantly between different noise types. Therefore, it can be concluded that PEFAC should be considered for applications which have to deal with varying conditions and high noise levels.
+
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=0.9\columnwidth]{Figures/Chapter5/pefacSNR60bold.pdf}
+		\rule{37em}{0.5pt}
+	\caption[Speech/non-speech hit rates for PEFAC (threshold 0.6) and LTSD under different SNRs]{Speech/non-speech hit rates for PEFAC (threshold 0.6) and LTSD under different SNRs}
+	\label{fig:pefacSNR60}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=0.9\columnwidth]{Figures/Chapter5/pefacSNR55bold.pdf}
+		\rule{37em}{0.5pt}
+	\caption[Speech/non-speech hit rates for PEFAC (threshold 0.55) and LTSD under different SNRs]{Speech/non-speech hit rates for PEFAC (threshold 0.55) and LTSD under different SNRs}
+	\label{fig:pefacSNR55}
+\end{figure}

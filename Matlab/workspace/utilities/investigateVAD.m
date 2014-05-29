@@ -1,7 +1,7 @@
 function investigateVAD(s,n,ref,snrr,fs,vadfn)
 
     ns = addNoise(s,n,fs,snrr);
-    vad = vadfn(ns,fs,0.05,0);
+    vad = vadfn(ns,fs,0.025,0);
     figure;
     plot(ns,'y'); hold on;
     plot(s,'b');

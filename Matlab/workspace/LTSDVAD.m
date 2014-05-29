@@ -13,11 +13,11 @@ end
 % PARAMETERS
 % -----------------------------------------------------------
 N = 3; % long term spectral envelope shift
-B = 7; % buffer length
-Sp = 2; % speech possible
-Sl = 3; % speech likely
-Ls = 6; % short hangover time
-Lm = 9; % medium hangover time
+B = 14; % buffer length
+Sp = 3; % speech possible
+Sl = 5; % speech likely
+Ls = 20; % short hangover time
+Lm = 28; % medium hangover time
 
 % -----------------------------------------------------------
 % PRE-PROCESSING
