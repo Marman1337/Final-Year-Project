@@ -121,7 +121,7 @@ There is a slight disadvantage in the performance of PEFAC in the speech hit rat
 %	SECTION 4 - The effect of hang-over parameters
 %----------------------------------------------------------------------------------------
 
-\section{The effect of hang-over parameters}
+\section{Impact of hang-over parameters}
 
 The fact that most speech misclassifications are BEC errors indicates a hypothesis that the differences in the performance of both algorithms at the high SNR levels could be reduced by careful calibration of the hang-over parameters and the frame length. In particular, the parameters $L_s$ and $L_m$, as in Algorithm \ref{algo:hangover}, with which the previous evaluation has been performed are not large enough to extend the initial VAD decisions to capture all beginnings and endings of the speech utterances. In order to confirm the hypothesis, an experimentation with various different parameter values has been performed and the speech/non-speech hit rates have been examined. It transpired that by reducing the frame length\footnote{The frame length has been reduced from 50 ms to 25 ms.} and adjusting the other parameters appropriately\footnote{The new parameter values are $B=14$, $S_p=3$, $S_l=5$, $L_s=18$ and $L_m=25$}, the performance of both algorithms can be rendered almost equal at the high SNR levels with PEFAC still outperforming LTSD at the low SNRs. Figure \ref{fig:diffhangpars} presents the result of the new evaluation.
 

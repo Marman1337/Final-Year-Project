@@ -12,7 +12,7 @@
 
 \section{Motivation}
 
-A large number of VAD algorithms proposed in the literature, the lack of standard methods for their evaluation and an abundance of speech and noise corpora makes it difficult to compare the results reported in the research papers. Therefore, the identification of an algorithm whose performance is objectively best is not possible without their proper benchmarking. In fact, it can be hypothesised that such objectively best algorithm does not exist since the performance of the algorithms will, at least to some extent, depend on the specific application and the encountered noise type. Another problem emerges from a variety of different hang-over schemes used in the experiments from the literature. These schemes can greatly affect the final VAD decisions and their use is especially important with the harmonicity based features which rely exclusively on the hang-over scheme for the detection of unvoiced phonemes. In order to unify the effect of hanging-over, the same scheme should be applied to all VAD features. Finally, some algorithms require estimation of the same values before the actual decision feature can be computed. For the algorithms chosen in this evaluation, these include noise power spectrum and pitch estimation. In order to reduce the performance bias coming from these estimates, the same procedures should be applied to all algorithms.
+A large number of VAD algorithms proposed in the literature, the lack of standard methods for their evaluation and an abundance of speech and noise corpora makes it difficult to compare the results reported in the research papers. Therefore, the identification of an algorithm whose performance is objectively best is not possible without their proper benchmarking. In fact, it can be hypothesised that such objectively best algorithm does not exist since the performance of the algorithms will, at least to some extent, depend on the specific application and the encountered noise type. Another problem emerges from a variety of different hang-over schemes used in the experiments from the literature. These schemes can greatly affect the final VAD decisions and their use is especially important with the harmonicity-based features which rely exclusively on the hang-over scheme for the detection of unvoiced phonemes. In order to unify the effect of hanging-over, the same scheme should be applied to all VAD features. Finally, some algorithms require estimation of the same values before the actual decision feature can be computed. For the algorithms chosen in this evaluation, these include noise power spectrum and pitch estimation. In order to reduce the performance bias coming from these estimates, the same procedures should be applied to all algorithms.
 
 Therefore, the first aim of this chapter is to describe the implementation details of the selected VAD algorithms so that the differences in their operation can be easily identified\footnote{Ideally, they should differ only in the voicing features used for classification.}. Secondly, the speech and noise recordings as well as the corresponding procedure for obtaining the ground truth labels (for speech/non-speech) are presented so that the experiments can be repeated. For speech, a subset of the TIMIT \cite{TIMIT} database has been used. Recordings of various noise types have been taken from the NOISEX-92 \cite{NOISEX} database and added to the clean speech at various power levels.
 
@@ -32,7 +32,7 @@ Due to a large number of VAD features proposed in the literature, implementation
 \item Voice Activity Detection using Harmonic Frequency Components in Likelihood Ratio Test \cite{Tan} (hereinafter referred to as `Harmfreq')
 \end{itemize}
 
-In particular, the LTSD feature has been chosen because it is calculated taking into account multiple frames surrounding the one for which the decision is being made. Harmfreq is similar the Sohn feature, but calculates the likelihood ratio for the voiced phonemes only at the multiples of the fundamental frequency, hence it is a mixture of a LRT algorithm and a harmonicity based one. PARADE, on the other hand, is supposed to be robust to a variety of non-stationary noise types.
+In particular, the LTSD feature has been chosen because it is calculated taking into account multiple frames surrounding the one for which the decision is being made. Harmfreq is similar the Sohn feature, but calculates the likelihood ratio for the voiced phonemes only at the multiples of the fundamental frequency, hence it is a mixture of a LRT algorithm and a harmonicity-based one. PARADE, on the other hand, is supposed to be robust to a variety of non-stationary noise types.
 
 \subsection{Shared implementation parts}
 
@@ -120,7 +120,7 @@ The initial labels have been obtained by a simple energy VAD and examined visual
 	\centering
 		\includegraphics[width=1.0\columnwidth]{Figures/Chapter3/groundtruthbold.pdf}
 		\rule{37em}{0.5pt}
-	\caption[Raw and modified outputs from the energy based VAD used as ground truth labels]{Raw and modified outputs from the energy based VAD used as ground truth labels}
+	\caption[Raw and modified outputs from the energy-based VAD used as ground truth labels]{Raw and modified outputs from the energy-based VAD used as ground truth labels}
 	\label{fig:groundtruth}
 \end{figure}
 
