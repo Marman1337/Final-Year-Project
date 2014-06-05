@@ -1,6 +1,6 @@
 function [ vadinfo ] = evaluateTIMIT(DRx,n,fs,snrr,vadinfo)
     % add noise to clean speech
-    ns = cell(length(DRx));
+    ns = cell(length(DRx),1);
     for k = 1:length(DRx)
         % calculate the power per sample of speech when it is active
         speechPresent = logical(DRx{k}(:,2));
