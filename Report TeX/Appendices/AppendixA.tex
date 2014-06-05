@@ -9,10 +9,13 @@
 This appendix contains the evaluation results for higher SNR levels than in the main body of the report, namely  5 dB and 10 dB SNR. In particular, the following figures are included below:
 
 \begin{itemize}
-\item Figure \ref{fig:5dBh} - ROC curves for 5 dB SNR, algorithms with hang-over
-\item Figure \ref{fig:10dBh} - ROC curves for 10 dB SNR, algorithms with hang-over
-\item Figure \ref{fig:5dBnoh} - ROC curves for 5 dB SNR, algorithms without hang-over
-\item Figure \ref{fig:10dBnoh} - ROC curves for 10 dB SNR, algorithms without hang-over
+\item Figure \ref{fig:5dBh} - ROC curves for 5 dB SNR, base algorithms with hang-over
+\item Figure \ref{fig:10dBh} - ROC curves for 10 dB SNR, base algorithms with hang-over
+\item Figure \ref{fig:5dBnoh} - ROC curves for 5 dB SNR, base algorithms without hang-over
+\item Figure \ref{fig:10dBnoh} - ROC curves for 10 dB SNR, base algorithms without hang-over
+\item Figure \ref{fig:pefac0} - ROC curves for 0 dB SNR, PEFAC and LTSD only
+\item Figure \ref{fig:pefac5} - ROC curves for 5 dB SNR, PEFAC and LTSD only
+\item Figure \ref{fig:pefac10} - ROC curves for 10 dB SNR, PEFAC and LTSD only
 \end{itemize}
 
 \begin{figure}[htbp]
@@ -45,4 +48,28 @@ This appendix contains the evaluation results for higher SNR levels than in the 
 		\rule{37em}{0.5pt}
 	\caption[ROC curves of the evaluated algorithms \emph{without} hang-over under 10 dB SNR]{ROC curves of the evaluated VAD algorithms \emph{without} hang-over under 10 dB SNR}
 	\label{fig:10dBnoh}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=1.0\columnwidth]{Figures/Chapter5/pefac0.pdf}
+		\rule{37em}{0.5pt}
+	\caption[ROC curves of PEFAC and LTSD \emph{with} hang-over under 0 dB SNR]{ROC curves of PEFAC and LTSD \emph{with} hang-over under 0 dB SNR}
+	\label{fig:pefac0}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=1.0\columnwidth]{Figures/Chapter5/pefac5.pdf}
+		\rule{37em}{0.5pt}
+	\caption[ROC curves of PEFAC and LTSD \emph{with} hang-over under 5 dB SNR]{ROC curves of PEFAC and LTSD \emph{with} hang-over under 5 dB SNR}
+	\label{fig:pefac5}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=1.0\columnwidth]{Figures/Chapter5/pefac10.pdf}
+		\rule{37em}{0.5pt}
+	\caption[ROC curves of PEFAC and LTSD \emph{with} hang-over under 10 dB SNR]{ROC curves of PEFAC and LTSD \emph{with} hang-over under 10 dB SNR}
+	\label{fig:pefac10}
 \end{figure}
