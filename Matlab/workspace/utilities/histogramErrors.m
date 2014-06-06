@@ -4,8 +4,9 @@ function [ nextSpeechAll ] = histogramErrors(DRx,Nx,fs,snrr,vadfn)
     signals = length(DRx);
     vadDecConcat = cell(noises,1);
     vadRefConcat = cell(noises,1);
-    for i = 1:6
-        display(i)
+    
+    for i = 1:noises
+        display(i);
         for j = 1:signals
             % calculate the power per sample of speech when it is active
             speechPresent = logical(DRx{j}(:,2));
@@ -23,6 +24,7 @@ function [ nextSpeechAll ] = histogramErrors(DRx,Nx,fs,snrr,vadfn)
             vadDecConcat{i} = vertcat(vadDecConcat{i},transpose(vadfn(ns,fs,0.025)));
             vadRefConcat{i} = vertcat(vadRefConcat{i},DRx{j}(:,2));
         end
+        
         if(i == 1)
             nextSpeechAll = classifyError(vadDecConcat{i},vadRefConcat{i});
         else
@@ -42,6 +44,7 @@ function [ nextSpeech ] = classifyError(dec,ref)
     end
     nextSpeech = zeros(noError,1);
     
+    display(noError);
     noError = 0;
     for i = 1:len
         if(ref(i) == 0 && dec(i) == 1)
@@ -49,7 +52,7 @@ function [ nextSpeech ] = classifyError(dec,ref)
             
             % check the right side
             counterRight = 1;
-            index = i+1;
+            index = i + 1;
             if(index <= len)
                 while(ref(index) == 0)
                     counterRight = counterRight + 1;
@@ -63,7 +66,7 @@ function [ nextSpeech ] = classifyError(dec,ref)
             
             % check the left side
             counterLeft = 1;
-            index = i-1;
+            index = i - 1;
             if(index > 0)
                 while(ref(index) == 0)
                     counterLeft = counterLeft + 1;
@@ -74,7 +77,9 @@ function [ nextSpeech ] = classifyError(dec,ref)
                     end
                 end
             end
-            
+            if(mod(noError,10000) == 0)
+                display(noError);
+            end
             nextSpeech(noError) = min(counterLeft,counterRight);
         end
     end

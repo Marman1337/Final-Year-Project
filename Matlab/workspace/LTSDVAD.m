@@ -16,8 +16,8 @@ N = 3; % long term spectral envelope shift
 B = 14; % buffer length
 Sp = 3; % speech possible
 Sl = 5; % speech likely
-Ls = 20; % short hangover time
-Lm = 28; % medium hangover time
+Ls = 18; % short hangover time
+Lm = 25; % medium hangover time
 
 % -----------------------------------------------------------
 % PRE-PROCESSING
