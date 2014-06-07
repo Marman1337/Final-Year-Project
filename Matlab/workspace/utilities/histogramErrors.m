@@ -1,4 +1,4 @@
-function [ nextSpeechAll ] = histogramErrors(DRx,Nx,fs,snrr,vadfn)
+function [ nextCorrectAll ] = histogramErrors(DRx,Nx,fs,snrr,vadfn,dir)
 
     noises = length(Nx);
     signals = length(DRx);
@@ -26,19 +26,29 @@ function [ nextSpeechAll ] = histogramErrors(DRx,Nx,fs,snrr,vadfn)
         end
         
         if(i == 1)
-            nextSpeechAll = classifyError(vadDecConcat{i},vadRefConcat{i});
+            nextCorrectAll = classifyError(vadDecConcat{i},vadRefConcat{i},dir);
         else
-            nextSpeechAll = vertcat(nextSpeechAll,classifyError(vadDecConcat{i},vadRefConcat{i}));
+            nextCorrectAll = vertcat(nextCorrectAll,classifyError(vadDecConcat{i},vadRefConcat{i},dir));
         end
     end
 
 end
 
-function [ nextSpeech ] = classifyError(dec,ref)
+function [ nextSpeech ] = classifyError(dec,ref,dir)
+    if(strcmp(dir,'speech'))
+        REF = 0;
+        DEC = 1;
+    elseif(strcmp(dir,'noise'))
+        REF = 1;
+        DEC = 0;
+    else
+        error('Wrong argument dir');
+    end
+    
     len = length(ref);
     noError = 0;
     for i = 1:len
-        if(ref(i) == 0 && dec(i) == 1)
+        if(ref(i) == REF && dec(i) == DEC)
             noError = noError + 1;
         end
     end
@@ -47,14 +57,14 @@ function [ nextSpeech ] = classifyError(dec,ref)
     display(noError);
     noError = 0;
     for i = 1:len
-        if(ref(i) == 0 && dec(i) == 1)
+        if(ref(i) == REF && dec(i) == DEC)
             noError = noError + 1;
             
             % check the right side
             counterRight = 1;
             index = i + 1;
             if(index <= len)
-                while(ref(index) == 0)
+                while(ref(index) == REF)
                     counterRight = counterRight + 1;
                     index = index + 1;
                     if(index > len)
@@ -68,7 +78,7 @@ function [ nextSpeech ] = classifyError(dec,ref)
             counterLeft = 1;
             index = i - 1;
             if(index > 0)
-                while(ref(index) == 0)
+                while(ref(index) == REF)
                     counterLeft = counterLeft + 1;
                     index = index - 1;
                     if (index < 1)
