@@ -87,7 +87,13 @@ The ROC curves for PEFAC and LTSD for all six noise types and two SNR levels (-5
 
 The speech/non-speech hit rates with two fixed thresholds (0.60 and 0.55 respectively) are presented in Figures \ref{fig:pefacSNR60} and \ref{fig:pefacSNR55}\footnote{The threshold for PEFAC in Figure \ref{fig:pefacSNR60} is higher than in \ref{fig:pefacSNR55} therefore a lower speech hit rate but a higher non-speech hit rate. The thresholds are 0.60 and 0.55 respectively.}. Interestingly, for both threshold values PEFAC overperforms LTSD at low and very low SNRs i.e. in the range 0 to -15 dB. For the higher value of the fixed threshold (Figure \ref{fig:pefacSNR60}) PEFAC's performance is clearly better even in both speech and non-speech metrics while for the lower threshold, the non-speech hit rate at the low SNRs is very similar for both algorithms.
 
-There is a slight disadvantage in the performance of PEFAC in the speech hit rate at the high SNR levels (20 dB to 5 dB). The exact position of the errors has been investigated visually by examining plots of the test set overlayed with the reference labels and VAD decisions. It has been determined that the vast majority of PEFAC's speech as noise misclassifications appear at the very endings of the utterances. This is visualised in Figure \ref{fig:clipping} where such errors are labelled as BEC - back end clipping. The errors which do appear are very short, with the length of 1-2 frames and hence can be described as minor. There are virtually no MSC (midspeech clipping) errors, which are more severe, for both LTSD and PEFAC at high SNRs and only a small number of FEC (front end clipping) errors.
+%----------------------------------------------------------------------------------------
+%	SECTION 4 - Impact of hang-over parameters
+%----------------------------------------------------------------------------------------
+
+\section{Impact of hang-over parameters}
+
+There is a slight disadvantage in the performance of PEFAC in the speech hit rate at the high SNR levels (20 dB to 5 dB). The position of the speech classified as noise errors has initially been investigated visually by examining plots of the test set overlaid with the reference labels and VAD decisions. It has been determined that the vast majority of PEFAC's speech classified as noise errors appear at the very endings of the utterances. This is visualised in Figure \ref{fig:clipping} where such errors are labelled as BEC - back end clipping. The errors which do appear are very short, with the length of 1-2 frames and hence can be described as minor. There are virtually no MSC (midspeech clipping) errors, which are more severe, for both LTSD and PEFAC at high SNRs and only a small number of FEC (front end clipping) errors.
 
 \begin{figure}[htbp]
 	\centering
@@ -117,12 +123,6 @@ There is a slight disadvantage in the performance of PEFAC in the speech hit rat
 	\label{fig:pefacSNR55}
 \end{figure}
 
-%----------------------------------------------------------------------------------------
-%	SECTION 4 - The effect of hang-over parameters
-%----------------------------------------------------------------------------------------
-
-\section{Impact of hang-over parameters}
-
 The fact that most speech misclassifications are BEC errors indicates a hypothesis that the differences in the performance of both algorithms at the high SNR levels could be reduced by careful calibration of the hang-over parameters and the frame length. In particular, the parameters $L_s$ and $L_m$, as in Algorithm \ref{algo:hangover}, with which the previous evaluation has been performed are not large enough to extend the initial VAD decisions to capture all beginnings and endings of the speech utterances. In order to confirm the hypothesis, an experimentation with various different parameter values has been performed and the speech/non-speech hit rates have been examined. It transpired that by reducing the frame length\footnote{The frame length has been reduced from 50 ms to 25 ms.} and adjusting the other parameters appropriately\footnote{The new parameter values are $B=14$, $S_p=3$, $S_l=5$, $L_s=18$ and $L_m=25$}, the performance of both algorithms can be rendered almost equal at the high SNR levels with PEFAC still outperforming LTSD at the low SNRs. Figure \ref{fig:diffhangpars} presents the result of the new evaluation.
 
 \begin{figure}[htbp]
@@ -134,7 +134,23 @@ The fact that most speech misclassifications are BEC errors indicates a hypothes
 \end{figure}
 
 %----------------------------------------------------------------------------------------
-%	SECTION 5 - Summary
+%	SECTION 5 - Position of noise as speech errors
+%----------------------------------------------------------------------------------------
+
+\section{Position of noise as speech errors}
+
+
+
+%----------------------------------------------------------------------------------------
+%	SECTION 6 - Position of noise as speech errors
+%----------------------------------------------------------------------------------------
+
+\section{Position of speech as noise errors}
+
+
+
+%----------------------------------------------------------------------------------------
+%	SECTION 6 - Summary
 %----------------------------------------------------------------------------------------
 
 \section{Summary}
