@@ -100,7 +100,8 @@ The main idea behind the scheme is to initialise the so-called \emph{hang-over t
 %	SECTION 4 - Speech corpus and the speech/non-speech labels
 %---------------------------------------------------------------------------
 
-\section{Speech corpus and the speech/non-speech labels}
+\section{Speech corpus and speech/non-speech labels}
+\label{sec:speechlabels}
 
 There exists a number of speech corpora for evaluation of VAD and ASR. The choice of a specific corpus is a subjective matter and a large number of them have been used in the literature, making the results reported by the researchers not directly comparable. For the English language the TIMIT speech corpus \cite{TIMIT} seems to be the most widely used and hence has been selected as a source of utterances for this evaluation. There are a number of issues with the original recordings which need to be resolved so that the evaluation can be more accurate. These are:
 
@@ -128,7 +129,7 @@ The initial labels have been obtained by a simple energy VAD and examined visual
 %	SECTION 5 - Noise corpus and the SNR
 %--------------------------------------------------------
 
-\section{Noise corpus and the SNR}
+\section{Noise corpus and SNR}
 
 Similarly to the speech corpora, there exists a large number of noise databases which are commonly used for evaluation of speech processing algorithms. In this evaluation, most noise types have been taken from the NOISEX-92 \cite{NOISEX} corpus with the exception of the babble noise which has been adapted from the Nato Noise \cite{Nato} package. Also, the white noise has been generated\footnote{The white noise has been generated only once. The exact same samples have been used for evaluation of all algorithms.} by MATLAB's \texttt{randn} function which returns samples of the naturally distributed Gaussian random variable with zero mean\footnote{In this case, the variance, which by default is 1, is irrelevant since the noise is scaled before addition to the clean speech signal anyway.}. The complete list of the noise types used in this evaluation is: white, car, spchspect, babble, opsroom and factory.
 
