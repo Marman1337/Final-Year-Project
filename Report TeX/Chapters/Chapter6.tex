@@ -6,22 +6,22 @@
 
 \lhead{Chapter 6. \emph{Conclusions}} % Change X to a consecutive number; this is for the header on each page - perhaps a shortened title
 
-%----------------------------------------------------------------------------------------
+%---------------------------------------------------------------------
 %	SECTION 1 - Project outcomes
-%----------------------------------------------------------------------------------------
+%---------------------------------------------------------------------
 
 \section{Project outcomes}
 
-The project started with understanding the applications and a general structure of a VAD system (Chapter \ref{Chapter1}). During further literature survey (Chapter \ref{Chapter2}) it became clear that VAD is a very dispersed area of research and a that variety of state-of-the-art algorithms exist. However, identification of the most noise-robust algorithm is difficult as the original performance results are not directly comparable. This motivated the creation of an artificial, yet identical for all algorithms, testing environment (Chapter \ref{Chapter3}) under which a few selected VAD methods could be objectively evaluated (Chapter \ref{Chapter4}). Finally, an approach to adapt one of the recently proposed pitch tracking algorithms to the area of VAD has been undertaken (Chapter \ref{Chapter5}).
+The project started with understanding the applications and a general structure of a VAD system (Chapter \ref{Chapter1}). During further literature survey (Chapter \ref{Chapter2}) it became clear that VAD is a very dispersed area of research and that a number of state-of-the-art algorithms exist. However, identification of the most noise-robust algorithm is difficult as the original performance results are not directly comparable. This motivated the creation of an artificial, yet identical for all algorithms, testing environment (Chapter \ref{Chapter3}) under which a few selected VAD methods could be objectively evaluated (Chapter \ref{Chapter4}). Finally, an approach to adapt one of the recently proposed pitch tracking algorithms to the area of VAD has been undertaken (Chapter \ref{Chapter5}).
 
-While during the evaluation it became clear that the absolutely best VAD algorithm does not exist, as their performance often depends on the noise type and its power, the LTSD VAD achieved the best average results. For the very low SNRs and unknown or changing noise conditions the adaptation of PEFAC as VAD achieved promising evaluation results.
+The evaluation confirmed the initial hypothesis that the absolutely best VAD algorithm does not exist, as their performance often depends on the noise type and its power. Apart from that, the LTSD VAD achieved the best average results. For the very low SNRs and unknown or varying noise conditions the adaptation of PEFAC as VAD achieved promising evaluation results. Irrespective of the robustness of VAD features, all algorithms benefited significantly from a hang-over scheme applied to the initial VAD decisions.
 
-%----------------------------------------------------------------------------------------
+%---------------------------------------------------------------------
 %	SECTION 2 - Future work
-%----------------------------------------------------------------------------------------
+%---------------------------------------------------------------------
 
 \section{Future work}
 
 Future work could be carried out in different areas. For starters, the speed of operation of the evaluated algorithms has not been taken into consideration. For some applications, such as real-time signal processing, this might be an important issue. Secondly, an evaluation on different, including some non-English, speech corpora and additional noise types could be performed.
 
-A potentially interesting approach would be to examine using various VAD methods simultaneously in order to create a more noise-robust algorithm. The could be achieved either by forming a fusion of the decisions of various VAD methods or directing the operation of the composite algorithm by the identified noise type or the current SNR (i.e. using PEFAC when the estimated SNR is below 0 dB and LTSD otherwise). The decision fusion, on the other hand, could be created by assigning weights (which would need to be determined) to the outputs of various VAD methods.
+A potentially interesting approach would be to examine using various VAD methods simultaneously in order to create a more noise-robust algorithm. The could be achieved either by forming a fusion of the decisions of various VAD methods or directing the operation of the composite algorithm by the identified noise type or the current SNR (i.e. using PEFAC when the estimated SNR is below 0 dB and LTSD otherwise). An obvious disadvantage of such noise-directed algorithm is the limited scope of operation. The decision fusion, on the other hand, could be created by assigning weights (which would need to be determined) to the outputs of various VAD methods.

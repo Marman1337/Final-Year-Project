@@ -14,7 +14,7 @@
 
 A large number of VAD algorithms proposed in the literature, the lack of standard methods for their evaluation and an abundance of speech and noise corpora makes it difficult to compare the results reported in the research papers. Therefore, the identification of an algorithm whose performance is objectively best is not possible without their proper benchmarking. In fact, it can be hypothesised that such objectively best algorithm does not exist since the performance of the algorithms will, at least to some extent, depend on the specific application and the encountered noise type. Another problem emerges from a variety of different hang-over schemes used in the experiments from the literature. These schemes can greatly affect the final VAD decisions and their use is especially important with the harmonicity-based features which rely exclusively on the hang-over scheme for the detection of unvoiced phonemes. In order to unify the effect of hanging-over, the same scheme should be applied to all VAD features. Finally, some algorithms require estimation of the same values before the actual decision feature can be computed. For the algorithms chosen in this evaluation, these include noise power spectrum and pitch estimation. In order to reduce the performance bias coming from these estimates, the same procedures should be applied to all algorithms.
 
-Therefore, the first aim of this chapter is to describe the implementation details of the selected VAD algorithms so that the differences in their operation can be easily identified\footnote{Ideally, they should differ only in the voicing features used for classification.}. Secondly, the speech and noise recordings as well as the corresponding procedure for obtaining the ground truth labels (for speech/non-speech) are presented so that the experiments can be repeated. For speech, a subset of the TIMIT \cite{TIMIT} database has been used. Recordings of various noise types have been taken from the NOISEX-92 \cite{NOISEX} database and added to the clean speech at various power levels.
+The first aim of this chapter is to describe the implementation details of the selected VAD algorithms so that the differences in their operation can be easily identified\footnote{Ideally, they should differ only in the voicing features used for classification.}. Secondly, the speech and noise recordings as well as the corresponding procedure for obtaining the ground truth labels (for speech/non-speech) are presented so that the experiments can be repeated. For speech, a subset of the TIMIT \cite{TIMIT} database has been used. Recordings of various noise types have been taken from the NOISEX-92 \cite{NOISEX} database and added to the clean speech at various power levels.
 
 %--------------------------------------------------------
 %	SECTION 2 - VAD features
@@ -22,7 +22,7 @@ Therefore, the first aim of this chapter is to describe the implementation detai
 
 \section{VAD features}
 
-Due to a large number of VAD features proposed in the literature, implementation and evaluation of all of them is impractical. However, a small number of features which appear to be noise-robust, based on different ideas and, ideally, recently published can be selected for comparison. In this evaluation, the features from the following VAD algorithms have been implemented:
+Due to a large number of VAD features proposed in the literature, implementation and evaluation of all of them is impractical. However, a small number of features which appear to be noise robust, based on different ideas and, ideally, recently published can be selected for comparison. In this evaluation, the features from the following VAD algorithms have been implemented:
 
 \begin{itemize}
 \item A Statistical Model-Based Voice Activity Detector \cite{Sohn} (hereinafter referred to as `Sohn')
@@ -75,7 +75,7 @@ The main idea behind the scheme is to initialise the so-called \emph{hang-over t
 
 \FOR{$i=1$ to $F-B+1$}
 \STATE $CB \leftarrow V(i:i+B-1)$ \COMMENT{current buffer of VAD decisions}
-\STATE $M \leftarrow$ maximum consecutive speech-present decisions in $CB$
+\STATE $M \leftarrow$ maximum consecutive `speech present' decisions in $CB$
 \IF{$M \geqslant S_l$}
 \STATE $T \leftarrow L_m$
 \ELSIF{$M \geqslant S_p$ \AND $T < L_s$}
@@ -131,12 +131,12 @@ The initial labels have been obtained by a simple energy VAD and examined visual
 
 \section{Noise corpus and SNR}
 
-Similarly to the speech corpora, there exists a large number of noise databases which are commonly used for evaluation of speech processing algorithms. In this evaluation, most noise types have been taken from the NOISEX-92 \cite{NOISEX} corpus with the exception of the babble noise which has been adapted from the Nato Noise \cite{Nato} package. Also, the white noise has been generated\footnote{The white noise has been generated only once. The exact same samples have been used for evaluation of all algorithms.} by MATLAB's \texttt{randn} function which returns samples of the naturally distributed Gaussian random variable with zero mean\footnote{In this case, the variance, which by default is 1, is irrelevant since the noise is scaled before addition to the clean speech signal anyway.}. The complete list of the noise types used in this evaluation is: white, car, spchspect, babble, opsroom and factory.
+Similarly to the speech corpora, there exists a large number of noise databases which are commonly used for evaluation of speech processing algorithms. In this evaluation, most noise types have been taken from the NOISEX-92 \cite{NOISEX} corpus with the exception of the babble noise which has been adapted from the Nato Noise \cite{Nato} package. Furthermore, the white noise has been generated\footnote{The white noise has been generated only once. The exact same samples have been used for evaluation of all algorithms.} by MATLAB's \texttt{randn} function which returns samples of the naturally distributed Gaussian random variable with zero mean\footnote{In this case, the variance, which by default is 1, is irrelevant since the noise is scaled before addition to the clean speech signal anyway.}. The complete list of the noise types used in this evaluation is: white, car, spchspect, babble, opsroom and factory.
 
 In order to evaluate the algorithms' performance under different conditions, the clean speech and noise signals need to be scaled to the desired SNR. This is achieved by the following procedure which ensures the correct power of noise relative to the speech:
 
 \begin{enumerate}
-\item Calculate the active level of the clean speech signal\footnote{The active level of a speech signal is defined to be its average power during intervals when speech is present.} $P_s$
+\item Calculate the active level of the clean speech signal\footnote{The active level of a speech signal is defined to be its average power during the intervals when speech is present.} $P_s$
 \item Calculate the average power of noise $P_n$
 \item Calculate the scaling constant for noise as $\sqrt{\frac{P_s}{10^{\text{SNR}/10} \times P_n}}$
 \item Multiply each noise sample by the scaling constant
@@ -149,4 +149,4 @@ In order to evaluate the algorithms' performance under different conditions, the
 
 \section{Summary}
 
-This chapter described the important considerations and choices which have been made with respect to the experimental set-up. An effort has been made to unify as many of the algorithm's parts as possible so that the actual voice detection features can be compared objectively. All algorithms will be evaluated on the same speech and noise recordings under various SNRs. Finally, the same hang-over scheme will be applied to all features in order to remove the variance in the results coming from the performance of different schemes as opposed to the quality of the voice detection features.
+This chapter described the important considerations and choices which have been made with respect to the experimental set-up. An effort has been made to unify as many of the algorithms' parts as possible so that the actual voice detection features can be compared objectively. All algorithms will be evaluated on the same speech and noise recordings under various SNRs. Finally, the same hang-over scheme will be applied to all features in order to remove the variance in the results coming from the performance of different schemes as opposed to the quality of the voice detection features.

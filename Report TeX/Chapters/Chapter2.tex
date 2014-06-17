@@ -13,9 +13,9 @@
 \section{Standard VAD algorithms}
 \label{sec:StandardVADs}
 
-Being an important tool in many speech processing applications, a number of VAD algorithms have been subject to standardisation by various organisations such as the International Telecommunication Union (ITU-T), European Telecommunications Standards Institute (ETSI), Telecommunications Industry Association (TIA) or Electronic Industries Alliance (EIA). Most standardised algorithms use the energy of the input signal as a VAD feature. It is important to note that the standardised VAD approaches have been developed for use in the telecommunications industry, with particular emphasis on the application for discontinuous transmission (DTX), which may make them less appropriate for other speech processing tasks such as speech recognition. Nevertheless, these algorithms often serve as a benchmark for the newly developed VAD features whose performance is often compared to the standard ones.
+Being an important tool in many speech processing applications, a number of VAD algorithms have been subject to standardisation by various organisations such as the International Telecommunication Union (ITU-T), European Telecommunications Standards Institute (ETSI), Telecommunications Industry Association (TIA) or Electronic Industries Alliance (EIA). Most standardised algorithms use the energy of the input signal as a VAD feature. It is important to note that the standardised VAD approaches have been developed for use in the telecommunications industry, with particular emphasis on the application for discontinuous transmission (DTX) which may make them less appropriate for other speech processing tasks such as speech recognition. Nevertheless, these algorithms often serve as a benchmark for the newly developed VAD features whose performance is often compared to the standard ones.
 
-In the rest of this section three standard VAD algorithms are going to be described:
+In the rest of this section, three standard VAD algorithms are described:
 \begin{itemize}
 \item ITU-T G.729 Annex B \citep{G729} which is an extension to the G.729 speech coder with an aim to achieve an improved bit rate during the noise-only periods
 \item ETSI AMR1 and AMR2 \cite{AMR} for application to the Global System for Mobile Communications (GSM)
@@ -42,7 +42,7 @@ A block diagram of the VAD algorithm is presented in Figure \ref{fig:G729AnnexB}
 	\label{fig:G729AnnexB}
 \end{figure}
 
-The \emph{instantaneous parameters} are then differenced with their most recent average noise-only counterparts in order to derive an additional set of so called \emph{difference parameters} which are used for speech/non-speech classification. The set of all possible \emph{difference parameters} describes a four dimensional Euclidean space in which a specific region contains the speech frames while another region describes the noise-only frames. The current vector of parameters is compared against the pre-computed regions in order to classify the current frame. The two regions are initially identified by visual inspection of the points' distribution over a large set of clean and noisy recordings. An energy threshold of $E_f < 15$ dB is applied before the multi-boundary classification in order to minimise short glitches on low-energy frames.
+The \emph{instantaneous parameters} are then differenced with their most recent average noise-only counterparts in order to derive an additional set of so called \emph{difference parameters} which are used for speech/non-speech classification. The set of all possible \emph{difference parameters} describes a four dimensional Euclidean space in which a specific region contains the speech frames while a different region describes the noise-only frames. The current vector of parameters is compared against the pre-computed regions in order to classify the current frame. The two regions are initially identified by visual inspection of the points' distribution over a large set of clean and noisy recordings. An energy threshold of $E_f < 15$ dB is applied before the multi-boundary classification in order to minimise short glitches on low-energy frames.
 
 ITU-T G.729 Annex B uses an additional four-step heuristic-based smoothing scheme after the initial multi-boundary classification:
 \begin{enumerate}
@@ -52,7 +52,7 @@ ITU-T G.729 Annex B uses an additional four-step heuristic-based smoothing schem
 \item The active voice frame is labelled as inactive if the current frame energy is below a noise floor by a certain threshold
 \end{enumerate}
 
-The main VAD algorithm also performs updating of the noise parameters ($\overline{LSF}$, $\overline{E_f}$, $\overline{E_l}$ , $\overline{ZCR}$) by a secondary VAD decision which does not need to be as robust as the primary one since it is used only for estimation of the noise parameters.
+The main VAD algorithm also performs updating of the noise parameters ($\overline{LSF}$, $\overline{E_f}$, $\overline{E_l}$ , $\overline{ZCR}$) by a secondary VAD which does not need to be as robust as the primary one since it is used only for estimation of the noise parameters.
 
 \subsection{ETSI AMR1 and AMR2}
 
@@ -96,7 +96,7 @@ where $bckr\_est[n]$ is the estimated level of noise at the frequency band $n$. 
 \label{tab:AMR1filterbank}
 \end{table}
 
-A block diagram of ETSI AMR Option 2 VAD is presented in Figure \ref{fig:AMR2}. The concept is similar to Option 1 VAD, however the incoming signal is split into different frequencies not by time-domain band-pass filtering, but by first computing the Discrete Fourier Transform (DFT) of the signal and performing further analysis in the frequency domain. The frequencies are clustered into bands (channels) and the energy of each channel is calculated \citep{Cornu}. In the following processing steps, the SNR of each channel is calculated and transformed to a \emph{voice metric} by a specific function which results in the final VAD feature to be classified by a threshold. An additional part of the system performs updates of the noise statistics based on the spectral deviation estimate.
+A block diagram of ETSI AMR Option 2 VAD is presented in Figure \ref{fig:AMR2}. The concept is similar to Option 1 VAD, however the incoming signal is split into different frequencies not by time domain band-pass filtering, but by first computing the Discrete Fourier Transform (DFT) of the signal and performing further analysis in the frequency domain. The frequencies are clustered into bands (channels) and the energy of each channel is calculated \citep{Cornu}. In the following processing steps, the SNR of each channel is calculated and transformed to a \emph{voice metric} by a specific function which results in the final VAD feature to be classified by a threshold. An additional part of the system performs updates of the noise statistics based on the spectral deviation estimate.
 
 \begin{figure}[htbp]
 	\centering
@@ -108,7 +108,7 @@ A block diagram of ETSI AMR Option 2 VAD is presented in Figure \ref{fig:AMR2}. 
 
 \subsection{TIA/EIA IS-733}
 
-TIA/EIA IS-733 is a speech coder in which the signal might be encoded at four different rates ($1$, $\frac{1}{2}$, $\frac{1}{4}$, $\frac{1}{8}$ of the base rate) depending on the characteristics of the currently transmitted frame. Rate $1$ is used for low quality signals where additional reduction might compromise the already low intelligibility. Rate $\frac{1}{2}$ is used for good quality stationary and periodic frames. Rate $\frac{1}{4}$ is used for unvoiced speech and rate $\frac{1}{8}$ for speech inactive frames. A VAD algorithm is used to determine the rate at which the current frame should be encoded and transmitted.
+TIA/EIA IS-733 is a speech coder in which the signal might be encoded at four different rates ($1$, $\frac{1}{2}$, $\frac{1}{4}$, $\frac{1}{8}$ of the base rate) depending on the characteristics of the currently transmitted frame. Rate $1$ is used for low quality signals where additional reduction might compromise the already low intelligibility. Rate $\frac{1}{2}$ is used for good quality stationary and periodic frames. Rate $\frac{1}{4}$ is used for unvoiced speech and rate $\frac{1}{8}$ for voice-inactive frames. A VAD algorithm is used to determine the rate at which the current frame should be encoded and transmitted.
 
 A block diagram of the TIA/EIA IS-733 VAD is presented in Figure \ref{fig:IS733}. The algorithm starts with computing the energy of the input signal across two different frequency bands (0.3 - 2.0 kHz and 2.0 - 4.0 kHz) and subsequently the SNR based on the estimated noise energy. The VAD decision is based on two adaptive thresholds, which depend on the level of the estimated background noise, one for each frequency band. If both low and high band SNRs are higher than the threshold, rate 1 is selected. Only one SNR being above its threshold causes the signal to be encoded at a rate $\frac{1}{2}$. Both SNRs below the threshold indicate noise-only frame, encoded at a rate $\frac{1}{8}$.
 
@@ -122,7 +122,7 @@ A block diagram of the TIA/EIA IS-733 VAD is presented in Figure \ref{fig:IS733}
 
 \subsection{Summary}
 
-Some VAD algorithms have been standardised by various telecommunication standards institutes (ITU-T, ETSI, TIA/EIA). Those algorithms are predominantly based on simple features such as the energy of the signal or the zero-crossing rate, sometimes across different frequency ranges. While such measures are often sufficient to meet the requirements of the high SNR transmission found in telecommunications, their performance drops significantly whenever the noise power is high. Nevertheless, the standard algorithms serve as a convenient benchmark for the more recently proposed VAD features, described in Section \ref{sec:RobustVADs} which are aimed to be more noise-robust and useful in other speech processing tasks.
+Some VAD algorithms have been standardised by various telecommunication standards institutes (ITU-T, ETSI, TIA/EIA). Those algorithms are predominantly based on simple features such as the energy of the signal or the zero-crossing rate, sometimes across different frequency ranges. While such measures are often sufficient to meet the requirements of the high SNR transmission found in telecommunications, their performance drops significantly whenever the noise power is high. Nevertheless, the standard algorithms serve as a convenient benchmark for the more recently proposed VAD features, described in Section \ref{sec:RobustVADs} which are aimed to be more noise robust and useful in other speech processing tasks.
 
 %----------------------------------------------------------------------------------------
 %	SECTION 2 - Noise-robust VAD algorithms
@@ -131,7 +131,7 @@ Some VAD algorithms have been standardised by various telecommunication standard
 \section{Other VAD algorithms}
 \label{sec:RobustVADs}
 
-Apart from the standard VAD algorithms described in Section \ref{sec:StandardVADs}, many independent researchers have made numerous attempts to develop novel noise-robust Voice Activity Detection methods. Most of these research results either in an invention of the new features or identification of ways in which the existing ones might be improved. Ideally, the most robust feature should have no common values for the noise and speech frames. Figure \ref{fig:featureDist} shows the distribution of values for some of the features used by algorithms described in this section for the clean speech from the TIMIT \cite{TIMIT} database and a variety of noise types from the NOISEX-92 \cite{NOISEX} database. It is clear, that in both cases the values for the clean speech are mostly distinct from the ones for noise frames, however there is still some overlap between them which indicates a room for improvement.
+Apart from the standard VAD algorithms described in Section \ref{sec:StandardVADs}, many independent researchers have made numerous attempts to develop novel noise robust Voice Activity Detection methods. Most of these research results either in an invention of the new features or identification of ways in which the existing ones might be improved. Ideally, the most robust feature should have no common values for the noise and speech frames. Figure \ref{fig:featureDist} shows the distribution of values for some of the features used by algorithms described in this section for the clean speech from the TIMIT \cite{TIMIT} database and a variety of noise types from the NOISEX-92 \cite{NOISEX} database. It is clear that in both cases the values for the clean speech are mostly distinct from the ones for noise, however there is still some overlap between them which indicates a room for improvement.
 
 \begin{figure}[htbp]
 	\centering
@@ -143,7 +143,7 @@ Apart from the standard VAD algorithms described in Section \ref{sec:StandardVAD
 
 \subsection{Entropy-based VAD}
 
-In contrast to the standardised energy-based methods, some researchers investigated the idea of using entropy for Voice Activity Detection. Entropy, as originally defined by Shannon \cite{Shannon}, is a measure of uncertainty in a random variable, given by the equation:
+In contrast to the standardised energy-based methods, some researchers investigated an idea of using entropy for Voice Activity Detection. Entropy, as originally defined by Shannon \cite{Shannon}, is a measure of uncertainty in a random variable, given by the equation:
 
 \begin{equation}
 E = - \sum_{i=1}^{N} p_i \log_2 p_i
@@ -152,19 +152,19 @@ E = - \sum_{i=1}^{N} p_i \log_2 p_i
 
 where $p_i$ is the probability of the random variable having a value of $i$ among $N$ distinct values which it might take. In case of VAD, $p_i$ often relates to either a single bin in a histogram of the amplitudes of a signal or a single frequency in the magnitude power spectrum.
 
-The purely time domain approach to VAD using entropy has been explored by Weaver \emph{et al.} in \cite{Weaver}. A block diagram of the key parts of the algorithm is presented in Figure \ref{fig:Weaver}. The authors propose to first calculate the histogram of the amplitudes of the signal and then assign an entropy measure to each frame, as defined in Equation \ref{eq:entropy}, where $p_i$ is the normalised (such that $\sum_{i=1}^{N} p_i = 1$) mass of the $i$-th bin of the histogram.
+The purely time domain approach to VAD using entropy has been explored by Weaver \emph{et al.} in \cite{Weaver}. A block diagram of the key parts of the algorithm is presented in Figure \ref{fig:Weaver}. The authors propose to first calculate a histogram of the amplitudes of the signal and then assign an entropy measure to each frame, as defined in Equation \ref{eq:entropy}, where $p_i$ is the normalised (such that $\sum_{i=1}^{N} p_i = 1$) mass of the $i$-th bin of the histogram.
 
 \begin{figure}[htbp]
 	\centering
 		\includegraphics[width=0.9\columnwidth]{Figures/Chapter2/Weaver.png}
 		\rule{37em}{0.5pt}
-	\caption[Block diagram of the time-domain entropy-based VAD]{Block diagram of the time-domain entropy-based VAD \cite{Weaver}}
+	\caption[Block diagram of the time domain entropy-based VAD]{Block diagram of the time domain entropy-based VAD \cite{Weaver}}
 	\label{fig:Weaver}
 \end{figure}
 
-While this approach is more noise-robust than the simple energy-based methods, especially for the stationary narrowband noise types, its performance is significantly affected by the various coloured noises. In order to mitigate this weakness, the authors propose to use a weighting filter in order to enhance the typical speech frequencies, however it needs to be kept in mind that if we are faced with a noise with spectral characteristics very similar to speech (especially in case of the \emph{babble noise}), the filter would become essentially useless as it would emphasise the noise as well.
+While this approach could be more noise robust than the simple energy-based methods, especially for the stationary narrowband noise types, its performance is significantly affected by the various coloured noises. In order to mitigate this weakness, the authors propose to use a weighting filter in order to enhance the typical speech frequencies, however it needs to be kept in mind that if we are faced with a noise with spectral characteristics very similar to speech (especially in case of the \emph{babble noise}), the filter would become essentially useless as it would emphasise the noise as well.
 
-A frequency domain approach to using entropy for VAD has been considered by Renevey \emph{et al.} in \cite{Renevey}. Instead of first computing the histogram of the amplitudes of the input signal, the frequency-domain algorithm starts with calculating the power spectrum of each frame. Entropy of the spectrum is then calculated by means of the following equation:
+A frequency domain approach to using entropy for VAD has been considered by Renevey \emph{et al.} in \cite{Renevey}. Instead of first computing a histogram of the amplitudes of the input signal, the frequency domain algorithm starts with calculating the power spectrum of each frame. Entropy of the spectrum is then calculated by means of the following equation:
 
 \begin{equation}
 E( \left |  Y \left ( \omega, t \right ) \right |^{2} ) = - \sum_{i=1}^{L} P( \left |  Y \left ( \omega_i, t \right ) \right |^{2} ) \log \left( P( \left |  Y \left ( \omega_i, t \right ) \right |^{2} ) \right)
@@ -297,7 +297,7 @@ The authors propose to approximate the average powers from Equations \ref{eq:ape
 	\label{fig:PARADE}
 \end{figure}
 
-While this concept is likely to be robust to various non-stationary noise types, by definition it cannot cope with the unvoiced parts of speech, detection of which has to be performed by a hang-over scheme. In the original paper, the authors did not specify how to estimate the number of harmonics $\vartheta$ for each frame which is crucial to the proper working of the algorithm. A potential improvement might also come from an improved pitch detection method.
+The authors claim that this concept is robust to various non-stationary noise types, however by definition it cannot cope with the unvoiced parts of speech, detection of which has to be performed by a hang-over scheme. In the original paper, the authors did not specify how to estimate the number of harmonics $\vartheta$ for each frame which is crucial to the proper working of the algorithm. A potential improvement might also come from an improved pitch detection method.
 
 Another approach to using harmonic frequency components\footnote{This algorithm also builds on the idea of LRT described in Section \ref{ssec:LRT}. The main improvement comes however from utilising the spectral harmonicity therefore it has been included in this section} for VAD has been investigated by Tan \emph{et al.} in \cite{Tan}. The authors claim that under low SNRs the approach from \cite{RamirezMulti} is likely to fail since the LRs from the high-energy frames will not be strong enough to aid the proper classification of the low-energy frames. Therefore, they propose a new way of calculating the LRs for the voiced frames, defined in Equation \ref{eq:harmfreq} where $\vartheta$ is the number of harmonics within the resolution of the DFT and $f_0$ denotes the fundamental frequency. The algorithm calculates the LR only using the frequency bins which are multiples of the fundamental frequency.
 
@@ -324,4 +324,4 @@ The most noise-robust VAD algorithms are likely to be the ones which are based o
 
 This chapter presented a literature survey of the most commonly encountered approaches to Voice Activity Detection. In Section \ref{sec:StandardVADs} some standard algorithms have been described while Section \ref{sec:RobustVADs} reviewed the recent research efforts in the VAD area.
 
-In terms of noise-robustness, the standard algorithms are unlikely to achieve satisfactory performance under low SNR conditions since they are primarily based on features such as the energy or the zero-crossing rate which are easily degradable by high background noise levels. In such conditions, performance of the recently proposed VAD algorithms is expected to be much better.
+In terms of noise robustness, the standard algorithms are unlikely to achieve satisfactory performance under low SNR conditions since they are primarily based on features such as the energy or the zero-crossing rate which are easily degradable by high background noise levels. In such conditions, performance of the recently proposed VAD algorithms is expected to be much better.

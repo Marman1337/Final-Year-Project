@@ -14,7 +14,7 @@
 
 Voice Activity Detection (VAD) is a process of identifying parts of an audio recording which contain the presence of human voice as opposed to those which are only comprised of silence or the background noise. VAD is a relatively simple task in recordings which have high signal-to-noise ratios (SNR) in which voice can be distinguished from noise simply by computing the short-time energy of all frames and setting an appropriate threshold for their classification. However, in most modern applications, the signal is almost always corrupted to some extent by a background noise which makes the VAD performance deteriorate. While some types of noise can be relatively easily dealt with, i.e. those with spectral characteristics different from speech, in the presence of others, it can be very difficult to identify speech segments. One such noise type might be the \emph{babble noise} which consists of many speakers talking simultaneously. Additionally, a VAD decision is especially difficult for the unvoiced phonemes whose spectrum contains no periodicity and is often similar to that of white noise \cite{Kondoz, Michaelis}.
 
-There has been an active research in the VAD area from as early as 1975 when Rabiner and Sambur \cite{RabinerSambur} proposed a VAD algorithm (then referred to as \emph{algorithm for determining the endpoints of isolated utterances}) based on the aforementioned short-time energy and a zero-crossing rate. Such approach works reasonably well for signals with the SNR in the order of 30 dB and is suitable for a variety of applications which are not subject to a constant, high level of background noise, such as telecommunications, when a person speaks to a closely positioned microphone in a relatively calm environment. However since then there has been a need for much better performance, including algorithms whose robustness has to be achieved even at negative SNRs. A person driving a car, trying to communicate with their smartphone through its built-in speech recognition system (e.g. Apple Siri) might be one example of such application. Figure \ref{fig:corruptedSpeech} shows a comparison of the amplitude of a clean utterance with the same utterance corrupted by a car noise under -5 dB SNR. As it can be seen, some parts of the recording are completely submerged in the noise (especially during the second second of the recording) and their detection poses a considerable challenge for any VAD system. In robotics there is often a desire to communicate with the robot by speaking from a distance which naturally decreases the power of the received signal. Taking the detrimental effect of the background noise into consideration, the simple algorithms are likely to either fail completely or their performance might drop significantly.
+There has been an active research in the VAD area from as early as 1975 when Rabiner and Sambur \cite{RabinerSambur} proposed a VAD algorithm (then referred to as \emph{algorithm for determining the endpoints of isolated utterances}) based on the aforementioned short-time energy and a zero-crossing rate. Such approach works reasonably well for signals with the SNR in the order of 30 dB and is suitable for a variety of applications which are not subject to a constant, high level of background noise, such as telecommunications, when a person speaks to a closely positioned microphone in a relatively calm environment. However since then there has been a need for much better performance, including algorithms whose robustness has to be achieved even at negative SNRs. A person driving a car, trying to communicate with their smartphone through its built-in speech recognition system (e.g. Apple Siri) might be one example of such application. Figure \ref{fig:corruptedSpeech} shows a comparison of the amplitude of a clean utterance with the same utterance corrupted by a car noise under -5 dB SNR. As it can be seen, some parts of the recording are completely submerged in the noise (especially during the second second of the recording) and their detection poses a considerable challenge for any VAD system. In robotics there is often a desire to communicate with a robot by speaking from a distance which naturally decreases the power of the received signal. Taking the detrimental effect of the background noise into consideration, the simple algorithms are likely to either fail completely or their performance might drop significantly.
 
 \begin{figure}[htbp]
 	\centering
@@ -42,7 +42,7 @@ In Automatic Speech Recognition (ASR), it is important to first extract the voic
 	\centering
 		\includegraphics[width=1\columnwidth]{Figures/Chapter1/ASRVAD.png}
 		\rule{37em}{0.5pt}
-	\caption[Automatic Speech Recognition system with Voice Activity Detection module]{Block diagram of an Automatic Speech Recognition system with Voice Activity Detection module \cite{RamirezGorriz}}
+	\caption[Block diagram of an Automatic Speech Recognition system with Voice Activity Detection module]{Block diagram of an Automatic Speech Recognition system with Voice Activity Detection module \cite{RamirezGorriz}}
 	\label{fig:ASRVAD}
 \end{figure}
 
@@ -56,7 +56,7 @@ Figure \ref{fig:DTXVAD} shows a high-level structure of a dual-mode coding and t
 	\centering
 		\includegraphics[width=1\columnwidth]{Figures/Chapter1/DTXVAD.png}
 		\rule{37em}{0.5pt}
-	\caption[Dual-mode transmission system with Voice Activity Detection module]{Block diagram of an dual-mode transmission system with Voice Activity Detection module \cite{G729}}
+	\caption[Block diagram of a dual-mode transmission system with Voice Activity Detection module]{Block diagram of a dual-mode transmission system with Voice Activity Detection module \cite{G729}}
 	\label{fig:DTXVAD}
 \end{figure}
 
@@ -66,7 +66,7 @@ Speech enhancement aims to improve the intelligibility and quality of speech sig
 \begin{equation}
 |S(t,f)| = |Y(t,f)| - |N(t,f)|
 \end{equation}
-where $|Y(t,f)|$ is the amplitude spectrum of the corrupted speech, $|S(t,f)|$ of the clean speech and $|N(t,f)|$ of the noise. In order for this technique to work, one needs to estimate the spectrum of the noise, which in real-world applications where a variety of different, often nonstationary, noise types are encountered, is a difficult problem\footnote{In fact, noise estimation is another, related research field to Voice Activity Detection and some algorithms actually use noise estimation modules in their operation.}. A robust Voice Activity Detector can become very useful in this task by identifying the voice-inactive frames of a signal from which the noise statistics could be estimated. A precise VAD can also become useful in applications dealing with slowly varying piecewise stationary noises, where the noise statistics can be adaptively estimated based on the most recent VAD decisions.
+where $|Y(t,f)|$ is the amplitude spectrum of the corrupted speech, $|S(t,f)|$ of the clean speech and $|N(t,f)|$ of the noise. In order for this technique to work, one needs to estimate the spectrum of the noise which in real-world applications where a variety of different, often nonstationary noise types are encountered, is a difficult problem\footnote{In fact, noise estimation is another, related research field to Voice Activity Detection and some algorithms actually use noise estimation modules in their operation.}. A robust Voice Activity Detector can become very useful in this task by identifying the voice-inactive frames of a signal from which the noise statistics could be estimated. A precise VAD can also become useful in applications dealing with slowly varying piecewise stationary noises, where the noise statistics can be adaptively estimated based on the most recent VAD decisions.
 
 \subsection{Summary}
 
@@ -78,7 +78,7 @@ Voice Activity Detection algorithms are utilised in a variety of speech processi
 
 \section{Structure of a typical VAD system}
 
-Figure \ref{fig:VADStructure} shows a high-level structure of a Voice Activity Detector, however only the two middle blocks are considered a core of a typical VAD system. In the rest of this section, the operation of each block is going to be described in some detail. \bigskip
+Figure \ref{fig:VADStructure} shows a high-level structure of a Voice Activity Detector, however only the two middle blocks are considered to be a core of a typical VAD system. In the rest of this section, the operation of each block is going to be described in some detail. \bigskip
 
 \begin{figure}[htbp]
 	\centering
@@ -94,7 +94,7 @@ The noisy speech signal is first passed to a pre-processing module which might p
 
 \subsection{Feature Extraction}
 
-The purpose of the feature extraction module is to compute the speech features for each frame which are suitable for the speech/non-speech classification. These can be time domain \cite{Kida, Weaver}, frequency domain \cite{Tuske, LTSD, Tan, PARADE, RamirezMulti, Sohn, SohnInitial, Renevey}, cepstral-domain \cite{Kotcher} features or other, depending on the specific VAD algorithm. Ideally, in order to achieve the overall VAD system robustness, the selected signal characteristics should not be easily corruptible by the background noise. Additionally, the algorithms for feature extraction should be of low computational complexity for their potential usefulness in real-time applications. The output of this module is therefore a vector $\mathbf{x}$ of features for each of the frames computed in the pre-processing stage.
+The purpose of the feature extraction module is to compute the speech features for each frame which are suitable for speech/non-speech classification. These can be time domain \cite{Kida, Weaver}, frequency domain \cite{Tuske, LTSD, Tan, PARADE, RamirezMulti, Sohn, SohnInitial, Renevey}, cepstral domain \cite{Kotcher} features or other, depending on the specific VAD algorithm. Ideally, in order to achieve the overall VAD system robustness, the selected signal characteristics should not be easily corruptible by the background noise. Additionally, the algorithms for feature extraction should be of low computational complexity for their potential usefulness in real-time applications. The output of this module is therefore a vector $\mathbf{x}$ of features for each of the frames computed in the pre-processing stage.
 
 \subsection{Classification}
 
@@ -102,9 +102,9 @@ The classification module assigns a binary class (speech/non-speech) to each fra
 
 \subsection{Post-processing}
 
-The last module, post-processing, often tries to \emph{smooth} the VAD decisions (i.e. perform hanging-over) in order to reduce the number of false positives and false negatives. Smoothing is important in order to precisely detect the beginnings and endings of speech bursts which often have much lower energy than the rest of the signal. Additionally, if among 50 consecutive frames, each of 20 ms duration, only one is classified as speech, the post-processing module might change the decision for this particular frame since it is highly unlikely for speech to be active during such short-time window. The hang-over schemes  proposed in the literature are often based on simple heuristics \cite{G729} or other techniques such as Hidden Markov models \cite{Sohn}.
+The last module, post-processing, often tries to \emph{smooth} the VAD decisions (i.e. perform hanging-over) in order to reduce the number of false positives and false negatives. Smoothing is important in order to precisely detect the beginnings and endings of speech bursts which often have much lower energy than the rest of the signal. Additionally, if among 50 consecutive frames, each of 20 ms duration, only one is classified as speech, the post-processing module might change the decision for this particular frame since it is highly unlikely for speech to be active during such short-time window. The hang-over schemes  proposed in the literature are often based on simple heuristics \cite{G729, ETSIHangover} or other techniques such as Hidden Markov models \cite{Sohn}.
 
-The hang-over scheme is especially important for the VAD algorithms which are based on the harmonicity of voiced speech. Since the unvoiced parts do not have a fundamental frequency, the pitch-based algorithms by definition cannot classify such parts of the signal as speech. However, since the unvoiced phonemes are almost always surrounded by the voiced ones, an efficient hang-over scheme can help in reducing the false-negative rate (i.e. classification of speech segments as noise).
+A hang-over scheme is especially important for VAD algorithms which are based on the harmonicity of voiced speech. Since the unvoiced parts do not have a fundamental frequency, the pitch-based algorithms by definition cannot classify such parts of the signal as speech. However, since the unvoiced phonemes are almost always surrounded by the voiced ones, an efficient hang-over scheme can help in reducing the false-negative rate (i.e. classification of speech segments as noise).
 
 %----------------------------------------------------------------------------------------
 %	SECTION 4 - Thesis organisation
