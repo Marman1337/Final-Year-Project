@@ -187,6 +187,12 @@ All entropy-based approaches to VAD are most effective for the white noise and a
 
 `A Statistical Model-Based Voice Activity Detector' proposed by Sohn \emph{et al.} \cite{Sohn} is one of the most widely cited VAD algorithms due to its ease of implementation, robustness and extensibility. The idea of using a Likelihood Ratio Test (LRT) has been considered by many other researchers who tried to improve on the original approach \cite{ImprovedLikelihood, Cho}. The initial algorithm has been developed in \cite{SohnInitial} and extended to improve noise-robustness in \citep{Sohn}. A block diagram of Sohn's VAD is presented in Figure \ref{fig:Sohn}.
 
+The algorithm is based on a LRT to discriminate between the two hypotheses:
+\begin{itemize}
+\item[] $H_0$ - speech absent
+\item[] $H_1$ - speech present
+\end{itemize}
+
 \begin{figure}[htbp]
 	\centering
 		\includegraphics[width=0.9\columnwidth]{Figures/Chapter2/Sohn.png}
@@ -194,12 +200,6 @@ All entropy-based approaches to VAD are most effective for the white noise and a
 	\caption[Block diagram of the Statistical Model-Based VAD]{Block diagram of the Statistical Model-Based VAD \cite{Sohn}}
 	\label{fig:Sohn}
 \end{figure}
-
-The algorithm is based on a LRT to discriminate between the two hypotheses:
-\begin{itemize}
-\item[] $H_0$ - speech absent
-\item[] $H_1$ - speech present
-\end{itemize}
 
 The measure which is used for the preliminary VAD decision (i.e. before the hang-over scheme) is a combination of the likelihood ratios from each frequency bin $k$:
 
